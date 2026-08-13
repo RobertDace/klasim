@@ -1,0 +1,58 @@
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Game {
+  id          String       @id @default(cuid())
+  name        String       // Contoh: "Mobile Legends", "Valorant"
+  slug        String       @unique // Contoh: "mlbb", "valorant"
+  tournaments Tournament[]
+}
+
+model Tournament {
+  id        String   @id @default(cuid())
+  gameId    String
+  game      Game     @relation(fields: [gameId], references: [id])
+  name      String   // Contoh: "MPL ID Season 14"
+  slug      String   @unique // Contoh: "mpl-id-s14"
+  format    String   @default("MPL_BO3") // Identifier logika kalkulasi
+  teams     Team[]
+  matches   Match[]
+  createdAt DateTime @default(now())
+}
+
+model Team {
+  id           String     @id @default(cuid())
+  tournamentId String
+  tournament   Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  name         String     // Contoh: "RRQ Hoshi"
+  code         String     // Contoh: "RRQ"
+  logoUrl      String?
+  
+  homeMatches  Match[]    @relation("HomeTeam")
+  awayMatches  Match[]    @relation("AwayTeam")
+}
+
+model Match {
+  id           String     @id @default(cuid())
+  tournamentId String
+  tournament   Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  
+  week         Int
+  homeTeamId   String
+  awayTeamId   String
+  homeTeam     Team       @relation("HomeTeam", fields: [homeTeamId], references: [id])
+  awayTeam     Team       @relation("AwayTeam", fields: [awayTeamId], references: [id])
+  
+  homeScore    Int        @default(0)
+  awayScore    Int        @default(0)
+  isCompleted  Boolean    @default(false)
+  
+  createdAt    DateTime   @default(now())
+}
