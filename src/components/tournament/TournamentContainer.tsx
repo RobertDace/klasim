@@ -8,8 +8,9 @@ import StandingsTable from './StandingsTable';
 import MatchSimulator from './MatchSimulator';
 import PlayoffBracket from './PlayoffBracket';
 import ShareModal from '@/components/common/ShareModal';
+import ShareCardModal from '@/components/common/ShareCardModal';
 import { calculateMPLStandings, TeamData } from '@/lib/calculator';
-import { exportStandingsToExcel } from '@/lib/exportUtils';
+import { exportStandingsToExcel, exportStandingsToPdf } from '@/lib/exportUtils';
 import { encodeMatchScoresToUrl, decodeUrlToMatchScores } from '@/lib/shareUtils';
 
 interface TournamentContainerProps {
@@ -28,8 +29,9 @@ export default function TournamentContainer({
   const [viewMode, setViewMode] = useState<'ALL' | 'SEASON' | 'PLAYOFFS'>('ALL');
   const [resetKey, setResetKey] = useState(0);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [isCardModalOpen, setIsCardModalOpen] = useState(false);
 
-  // Load URL query params saat halaman dibuka dari shared link
+  // Load URL query params saat halaman dibuka dari tautan berbagi
   useEffect(() => {
     const simParam = searchParams.get('sim');
     if (simParam) {
@@ -88,7 +90,7 @@ export default function TournamentContainer({
     setResetKey((prev) => prev + 1);
   };
 
-  // Generate Current Share URL
+  // Generate URL Berbagi
   const currentOrigin =
     typeof window !== 'undefined'
       ? window.location.origin + window.location.pathname
@@ -98,16 +100,16 @@ export default function TournamentContainer({
 
   return (
     <div className="relative min-h-screen bg-[#05070c] text-slate-100 selection:bg-amber-400 selection:text-black">
-      {/* Background Ambient Layer */}
+      {/* Background Ambient Grid */}
       <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
         <div className="absolute -top-40 left-1/3 h-[600px] w-[600px] rounded-full bg-amber-500/10 blur-[160px]" />
         <div className="absolute top-1/2 -right-40 h-[500px] w-[500px] rounded-full bg-indigo-600/10 blur-[160px]" />
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:32px_32px]" />
       </div>
 
-      <div className="relative z-10 mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <div className="relative z-10 mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-6">
         {/* Navigation Bar Top */}
-        <div className="mb-6 flex items-center justify-between">
+        <div className="flex items-center justify-between">
           <Link
             href="/"
             className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3.5 py-2 font-mono text-xs font-bold text-slate-300 transition-all hover:border-amber-400/40 hover:bg-amber-400/10 hover:text-amber-400 active:scale-95"
@@ -119,28 +121,22 @@ export default function TournamentContainer({
           </Link>
 
           <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-slate-500">
-            KLASIM // MLBB MODULE
+            KLASIM // MOBA MODULE
           </span>
         </div>
 
         {/* Header Title Section */}
-        <header className="mb-8 border-b border-white/10 pb-6">
-          <div className="flex items-center gap-3">
-            <span className="inline-flex items-center gap-2 rounded-md border border-amber-500/30 bg-amber-500/10 px-3 py-1 font-mono text-[11px] font-extrabold uppercase tracking-widest text-amber-400">
-              <span className="h-2 w-2 rounded-full bg-amber-400 animate-pulse" />
-              SIMULATOR POKOK
-            </span>
-            <span className="font-mono text-xs font-semibold tracking-wider text-slate-400 uppercase">
-              MPL ID Professional League
-            </span>
-          </div>
-          <h1 className="mt-3 text-3xl font-black tracking-tight text-white sm:text-5xl uppercase leading-none">
+        <header className="border-b border-white/10 pb-6">
+          <span className="font-mono text-xs font-semibold tracking-wider text-slate-400 uppercase">
+            MPL ID Professional League Ruleset
+          </span>
+          <h1 className="mt-2 text-3xl font-black tracking-tight text-white sm:text-5xl uppercase leading-none">
             {tournamentName}
           </h1>
         </header>
 
-        {/* Unified Control Toolbar (Grup Tombol Aksi) */}
-        <div className="mb-8 flex flex-col justify-between gap-4 rounded-xl border border-white/10 bg-slate-950/80 p-2.5 backdrop-blur-md sm:flex-row sm:items-center">
+        {/* Unified Control Toolbar */}
+        <div className="flex flex-col justify-between gap-4 rounded-xl border border-white/10 bg-slate-950/80 p-2.5 backdrop-blur-md sm:flex-row sm:items-center">
           {/* Tab View Switcher */}
           <div className="flex gap-1">
             {[
@@ -153,7 +149,7 @@ export default function TournamentContainer({
                 onClick={() => setViewMode(tab.id as any)}
                 className={`rounded-lg px-3.5 py-2 font-mono text-xs font-bold transition-all ${
                   viewMode === tab.id
-                    ? 'bg-amber-400 text-black shadow-[0_0_15px_rgba(251,191,36,0.3)]'
+                    ? 'bg-amber-400 text-black shadow-md shadow-amber-400/20'
                     : 'text-slate-400 hover:bg-white/5 hover:text-white'
                 }`}
               >
@@ -162,11 +158,11 @@ export default function TournamentContainer({
             ))}
           </div>
 
-          {/* Action Buttons: Export Excel, Bagikan, Reset */}
+          {/* Action Buttons: Export Excel, Export PDF, Kartu Grafis, Bagikan Link, Reset */}
           <div className="flex flex-wrap items-center gap-2 border-t border-white/10 pt-2 sm:border-t-0 sm:pt-0">
             {/* Tombol Export Excel */}
             <button
-              onClick={() => exportStandingsToExcel(tournamentName, standings)}
+              onClick={() => exportStandingsToExcel(tournamentName, standings, normalizedMatches)}
               className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 font-mono text-[11px] font-bold text-emerald-400 transition-all hover:bg-emerald-500/20 active:scale-95"
             >
               <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -175,7 +171,29 @@ export default function TournamentContainer({
               EXPORT EXCEL
             </button>
 
-            {/* Tombol Bagikan Simulasi */}
+            {/* Tombol Export PDF */}
+            <button
+              onClick={() => exportStandingsToPdf(tournamentName, standings)}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-1.5 font-mono text-[11px] font-bold text-rose-400 transition-all hover:bg-rose-500/20 active:scale-95"
+            >
+              <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+              </svg>
+              EXPORT PDF
+            </button>
+
+            {/* Tombol Kartu Grafis (PNG) */}
+            <button
+              onClick={() => setIsCardModalOpen(true)}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-sky-400/40 bg-sky-400/10 px-3 py-1.5 font-mono text-[11px] font-bold text-sky-400 transition-all hover:bg-sky-400/20 active:scale-95"
+            >
+              <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              KARTU GRAFIS
+            </button>
+
+            {/* Tombol Bagikan Link */}
             <button
               onClick={() => setIsShareModalOpen(true)}
               className="inline-flex items-center gap-1.5 rounded-lg border border-amber-400/40 bg-amber-400/10 px-3 py-1.5 font-mono text-[11px] font-bold text-amber-400 transition-all hover:bg-amber-400/20 active:scale-95"
@@ -194,7 +212,7 @@ export default function TournamentContainer({
               SKOR REAL
             </button>
 
-            {/* Tombol Reset */}
+            {/* Tombol Kosongkan Skor */}
             <button
               onClick={handleClearAllScores}
               className="rounded-lg border border-rose-500/20 bg-rose-500/5 px-3 py-1.5 font-mono text-[11px] font-bold text-rose-300 transition-all hover:bg-rose-500/15"
@@ -218,18 +236,26 @@ export default function TournamentContainer({
 
         {/* Proyeksi Bagan Playoff */}
         {(viewMode === 'ALL' || viewMode === 'PLAYOFFS') && (
-          <div className={viewMode === 'ALL' ? 'mt-12' : ''}>
+          <div className={viewMode === 'ALL' ? 'mt-6' : ''}>
             <PlayoffBracket key={resetKey} standings={standings} />
           </div>
         )}
       </div>
 
-      {/* Share Modal Dialog */}
+      {/* Share Link Modal Dialog */}
       <ShareModal
         isOpen={isShareModalOpen}
         onClose={() => setIsShareModalOpen(false)}
         tournamentName={tournamentName}
         shareUrl={shareUrl}
+      />
+
+      {/* Share Social Card Modal Dialog */}
+      <ShareCardModal
+        isOpen={isCardModalOpen}
+        onClose={() => setIsCardModalOpen(false)}
+        tournamentName={tournamentName}
+        standings={standings}
       />
     </div>
   );

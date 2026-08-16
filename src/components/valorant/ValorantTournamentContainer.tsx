@@ -10,6 +10,7 @@ import {
   ValorantTeam,
   ValorantMatchData,
 } from '@/lib/valorantCalculator';
+import { exportValorantToExcel, exportValorantToPdf } from '@/lib/exportUtils';
 
 interface ValorantTournamentContainerProps {
   tournamentName: string;
@@ -25,7 +26,10 @@ export default function ValorantTournamentContainer({
   const [matches, setMatches] = useState<ValorantMatchData[]>(initialMatches);
   const [activeGroup, setActiveGroup] = useState<'A' | 'B'>('A');
 
-  const standings = calculateValorantStandings(teams, matches, activeGroup);
+  const standingsA = calculateValorantStandings(teams, matches, 'A');
+  const standingsB = calculateValorantStandings(teams, matches, 'B');
+
+  const currentStandings = activeGroup === 'A' ? standingsA : standingsB;
   const currentGroupMatches = matches.filter((m) => m.group === activeGroup);
 
   const handleScoreChange = (
@@ -50,7 +54,6 @@ export default function ValorantTournamentContainer({
 
   return (
     <div className="relative min-h-screen bg-[#05070c] text-slate-100 selection:bg-cyan-400 selection:text-black">
-      {/* Background Ambient Layer */}
       <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
         <div className="absolute -top-40 left-1/3 h-[600px] w-[600px] rounded-full bg-cyan-500/10 blur-[160px]" />
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:32px_32px]" />
@@ -74,8 +77,8 @@ export default function ValorantTournamentContainer({
           </span>
         </div>
 
-        {/* Header */}
-        <header className="flex flex-col justify-between gap-6 border-b border-white/10 pb-6 sm:flex-row sm:items-center">
+        {/* Header Section */}
+        <header className="flex flex-col justify-between gap-6 border-b border-white/10 pb-6 lg:flex-row lg:items-center">
           <div>
             <div className="flex items-center gap-3">
               <span className="inline-flex items-center gap-2 rounded-md border border-cyan-500/30 bg-cyan-500/10 px-3 py-1 font-mono text-[11px] font-extrabold uppercase tracking-widest text-cyan-400">
@@ -83,7 +86,7 @@ export default function ValorantTournamentContainer({
                 VCT OFFICIAL RULESET
               </span>
               <span className="font-mono text-xs font-semibold tracking-wider text-slate-400 uppercase">
-                VCT Pacific 2026
+                VCT PACIFIC STAGE 1
               </span>
             </div>
             <h1 className="mt-3 text-3xl font-black tracking-tight text-white sm:text-5xl uppercase leading-none">
@@ -91,15 +94,40 @@ export default function ValorantTournamentContainer({
             </h1>
           </div>
 
-          <button
-            onClick={handleResetMatches}
-            className="rounded-xl border border-rose-500/20 bg-rose-500/5 px-5 py-3 font-mono text-xs font-bold uppercase tracking-wider text-rose-300 transition-all hover:bg-rose-500/15 active:scale-95"
-          >
-            RESET SIMULASI
-          </button>
+          <div className="flex flex-wrap items-center gap-2">
+            {/* Tombol Export Excel VCT */}
+            <button
+              onClick={() => exportValorantToExcel(tournamentName, standingsA, standingsB, matches)}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3.5 py-2 font-mono text-xs font-bold text-emerald-400 transition-all hover:bg-emerald-500/20 active:scale-95"
+            >
+              <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              EXPORT EXCEL
+            </button>
+
+            {/* Tombol Export PDF VCT */}
+            <button
+              onClick={() => exportValorantToPdf(tournamentName, standingsA, standingsB)}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-cyan-500/30 bg-cyan-500/10 px-3.5 py-2 font-mono text-xs font-bold text-cyan-400 transition-all hover:bg-cyan-500/20 active:scale-95"
+            >
+              <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+              </svg>
+              EXPORT PDF
+            </button>
+
+            {/* Reset */}
+            <button
+              onClick={handleResetMatches}
+              className="rounded-lg border border-rose-500/20 bg-rose-500/5 px-3.5 py-2 font-mono text-xs font-bold uppercase text-rose-300 transition-all hover:bg-rose-500/15 active:scale-95"
+            >
+              RESET
+            </button>
+          </div>
         </header>
 
-        {/* Group Selector Toolbar */}
+        {/* Group Selector */}
         <div className="flex gap-2 rounded-xl border border-white/10 bg-slate-950/80 p-1.5 backdrop-blur-md max-w-md">
           <button
             onClick={() => setActiveGroup('A')}
@@ -126,7 +154,7 @@ export default function ValorantTournamentContainer({
         {/* Dashboard Grid */}
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 items-stretch">
           <div className="lg:col-span-7">
-            <ValorantStandingsTable standings={standings} groupName={activeGroup} />
+            <ValorantStandingsTable standings={currentStandings} groupName={activeGroup} />
           </div>
           <div className="lg:col-span-5">
             <ValorantMatchSimulator

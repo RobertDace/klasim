@@ -5,7 +5,9 @@ import { useState } from 'react';
 import Link from 'next/link';
 import PUBGMStandingsTable from './PUBGMStandingsTable';
 import PUBGMMatchInput from './PUBGMMatchInput';
+import PUBGMShareCardModal from './PUBGMShareCardModal';
 import { calculatePUBGMStandings, PUBGMTeam, PUBGMMatchResult } from '@/lib/pubgmCalculator';
+import { exportPubgmToExcel, exportPubgmToPdf } from '@/lib/exportUtils';
 
 interface PUBGMTournamentContainerProps {
   tournamentName: string;
@@ -17,6 +19,7 @@ export default function PUBGMTournamentContainer({
   teams,
 }: PUBGMTournamentContainerProps) {
   const [matches, setMatches] = useState<PUBGMMatchResult[]>([]);
+  const [isCardModalOpen, setIsCardModalOpen] = useState(false);
 
   const standings = calculatePUBGMStandings(teams, matches);
 
@@ -51,54 +54,66 @@ export default function PUBGMTournamentContainer({
           </Link>
 
           <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-slate-500">
-            KLASIM // PUBGM MODULE
+            KLASIM // BATTLE ROYALE MODULE
           </span>
         </div>
 
-        {/* Header Section */}
-        <header className="flex flex-col justify-between gap-6 border-b border-white/10 pb-6 sm:flex-row sm:items-center">
+        {/* Header Section with Export & Card Actions */}
+        <header className="flex flex-col justify-between gap-6 border-b border-white/10 pb-6 lg:flex-row lg:items-center">
           <div>
-            <div className="flex items-center gap-3">
-              <span className="inline-flex items-center gap-2 rounded-md border border-amber-500/30 bg-amber-500/10 px-3 py-1 font-mono text-[11px] font-extrabold uppercase tracking-widest text-amber-400">
-                <span className="h-2 w-2 rounded-full bg-amber-400 animate-pulse" />
-                PMWC OFFICIAL POINT SYSTEM
-              </span>
-              <span className="font-mono text-xs font-semibold tracking-wider text-slate-400 uppercase">
-                PUBG Mobile World Cup 2026
-              </span>
-            </div>
-            <h1 className="mt-3 text-3xl font-black tracking-tight text-white sm:text-5xl uppercase leading-none">
+            <span className="font-mono text-xs font-semibold tracking-wider text-slate-400 uppercase">
+              PUBG Mobile World Cup Ruleset
+            </span>
+            <h1 className="mt-2 text-3xl font-black tracking-tight text-white sm:text-5xl uppercase leading-none">
               {tournamentName}
             </h1>
           </div>
 
-          <button
-            onClick={handleResetMatches}
-            className="rounded-xl border border-rose-500/20 bg-rose-500/5 px-5 py-3 font-mono text-xs font-bold uppercase tracking-wider text-rose-300 transition-all hover:bg-rose-500/15 active:scale-95"
-          >
-            RESET SELURUH MATCH
-          </button>
+          <div className="flex flex-wrap items-center gap-2">
+            {/* Tombol Export Excel */}
+            <button
+              onClick={() => exportPubgmToExcel(tournamentName, standings, matches)}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3.5 py-2 font-mono text-xs font-bold text-emerald-400 transition-all hover:bg-emerald-500/20 active:scale-95"
+            >
+              <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              EXPORT EXCEL
+            </button>
+
+            {/* Tombol Export PDF */}
+            <button
+              onClick={() => exportPubgmToPdf(tournamentName, standings)}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-rose-500/30 bg-rose-500/10 px-3.5 py-2 font-mono text-xs font-bold text-rose-400 transition-all hover:bg-rose-500/20 active:scale-95"
+            >
+              <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+              </svg>
+              EXPORT PDF
+            </button>
+
+            {/* Tombol Kartu Grafis (PNG) */}
+            <button
+              onClick={() => setIsCardModalOpen(true)}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-sky-400/40 bg-sky-400/10 px-3.5 py-2 font-mono text-xs font-bold text-sky-400 transition-all hover:bg-sky-400/20 active:scale-95"
+            >
+              <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              KARTU GRAFIS
+            </button>
+
+            {/* Tombol Reset */}
+            <button
+              onClick={handleResetMatches}
+              className="rounded-lg border border-white/10 bg-white/5 px-3.5 py-2 font-mono text-xs font-bold text-slate-400 transition-all hover:bg-white/10 hover:text-white active:scale-95"
+            >
+              RESET
+            </button>
+          </div>
         </header>
 
-        {/* Match Timeline Log Tracker */}
-        {matches.length > 0 && (
-          <div className="flex items-center gap-2 overflow-x-auto rounded-xl border border-white/10 bg-slate-950/80 p-3 backdrop-blur-md">
-            <span className="font-mono text-[10px] font-bold text-slate-400 uppercase tracking-widest mr-2">
-              COMPLETED MATCHES ({matches.length}):
-            </span>
-            {matches.map((m) => (
-              <span
-                key={m.matchId}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 font-mono text-xs font-bold text-amber-400"
-              >
-                <span>#{m.matchNumber}</span>
-                <span className="text-slate-400">{m.mapName}</span>
-              </span>
-            ))}
-          </div>
-        )}
-
-        {/* Equal Height Dashboard Layout */}
+        {/* Dashboard Grid Layout */}
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 items-stretch">
           <div className="lg:col-span-7">
             <PUBGMStandingsTable standings={standings} />
@@ -112,6 +127,14 @@ export default function PUBGMTournamentContainer({
           </div>
         </div>
       </div>
+
+      {/* Share Social Card Modal Dialog */}
+      <PUBGMShareCardModal
+        isOpen={isCardModalOpen}
+        onClose={() => setIsCardModalOpen(false)}
+        tournamentName={tournamentName}
+        standings={standings}
+      />
     </div>
   );
 }
