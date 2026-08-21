@@ -172,7 +172,7 @@ export default function HomePage() {
   const [selectedGame, setSelectedGame] = useState<GameKey>('mlbb');
   const [activeScenarioIndex, setActiveScenarioIndex] = useState<number>(0);
 
-  // Active Section for Navbar Spy
+  // Active Section for Navbar Spy & Focus Mode
   const [activeSection, setActiveSection] = useState<'beranda' | 'modul' | 'lab' | 'tentang'>('beranda');
 
   // Section Refs
@@ -226,33 +226,61 @@ export default function HomePage() {
     };
   }, []);
 
-  // Scroll Spy Observer
+  // Center-Weighted Scroll & Focus Position Tracker (Flawless Bidirectional Scrolling)
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            if (entry.target === berandaRef.current) setActiveSection('beranda');
-            if (entry.target === modulRef.current) setActiveSection('modul');
-            if (entry.target === labRef.current) setActiveSection('lab');
-            if (entry.target === tentangRef.current) setActiveSection('tentang');
-          }
-        });
-      },
-      { threshold: 0.2, rootMargin: '-10% 0px -40% 0px' }
-    );
+    const handleScroll = () => {
+      const viewportTrigger = window.innerHeight * 0.45;
+      const sections = [
+        { id: 'beranda', ref: berandaRef },
+        { id: 'modul', ref: modulRef },
+        { id: 'lab', ref: labRef },
+        { id: 'tentang', ref: tentangRef },
+      ];
 
-    if (berandaRef.current) observer.observe(berandaRef.current);
-    if (modulRef.current) observer.observe(modulRef.current);
-    if (labRef.current) observer.observe(labRef.current);
-    if (tentangRef.current) observer.observe(tentangRef.current);
+      // Fallback: Di bagian paling bawah halaman
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 80) {
+        setActiveSection('tentang');
+        return;
+      }
 
-    return () => observer.disconnect();
+      // Fallback: Di bagian paling atas halaman
+      if (window.scrollY < 120) {
+        setActiveSection('beranda');
+        return;
+      }
+
+      // Periksa section mana yang memotong garis tengah viewport
+      for (const s of sections) {
+        const el = s.ref.current;
+        if (!el) continue;
+        const rect = el.getBoundingClientRect();
+        if (rect.top <= viewportTrigger && rect.bottom >= viewportTrigger) {
+          setActiveSection(s.id as any);
+          return;
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll, { passive: true });
+    handleScroll();
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
   }, []);
 
   const handleGameSelect = (gameKey: GameKey) => {
     setSelectedGame(gameKey);
     setActiveScenarioIndex(0);
+  };
+
+  const scrollToSection = (id: string) => {
+    const target = document.getElementById(id);
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   };
 
   const activeTournaments = [
@@ -289,6 +317,15 @@ export default function HomePage() {
       tagColor: 'text-cyan-400 border-cyan-500/30 bg-cyan-500/10',
       href: '/tournament/vct-pacific-2026',
     },
+  ];
+
+  const marqueeTelemetryItems = [
+    { label: 'DETERMINISTIC SIMULATION KERNEL', badge: 'v2.4 ACTIVE', color: 'text-amber-400 border-amber-400/40 bg-amber-400/10' },
+    { label: 'MPL ID TIEBREAKER RESOLVER', badge: 'H2H + MINI-LEAGUE', color: 'text-amber-300 border-amber-300/40 bg-amber-400/10' },
+    { label: 'PMWC 10-PTS MATRIX', badge: 'WWCD + PLACEMENT', color: 'text-emerald-400 border-emerald-400/40 bg-emerald-400/10' },
+    { label: 'VCT PACIFIC TACTICAL FPS', badge: 'MAP & ROUND DELTA', color: 'text-cyan-400 border-cyan-400/40 bg-cyan-400/10' },
+    { label: 'CALCULATION SPEED', badge: '0.02ms LATENCY', color: 'text-sky-400 border-sky-400/40 bg-sky-400/10' },
+    { label: 'EXPORT ENGINE', badge: 'EXCEL, PDF, GRAPHIC PNG', color: 'text-slate-300 border-white/20 bg-white/5' },
   ];
 
   return (
@@ -413,13 +450,61 @@ export default function HomePage() {
       {/* 3. FIXED NAVBAR */}
       <Navbar activeSection={activeSection} />
 
-      {/* 4. MAIN PAGE CONTENT */}
-      <main className="relative z-10 mx-auto max-w-7xl px-3.5 pt-24 pb-16 sm:px-6 sm:pt-28 lg:px-8 space-y-16 sm:space-y-24 md:space-y-28 font-mono">
-        {/* SEKSI 1: BERANDA / HERO */}
+      {/* 4. VERTICAL HUD TRACKER (Desktop/Tablet) */}
+      <aside
+        aria-label="Section HUD Navigator"
+        className="fixed right-4 sm:right-6 top-1/2 -translate-y-1/2 z-40 hidden lg:flex flex-col gap-3.5 select-none font-mono"
+      >
+        <div className="rounded-2xl border border-white/10 bg-slate-950/80 p-2.5 backdrop-blur-xl shadow-2xl space-y-3">
+          {[
+            { id: 'beranda', code: '01', label: 'HERO' },
+            { id: 'modul', code: '02', label: 'MODUL' },
+            { id: 'lab', code: '03', label: 'LAB' },
+            { id: 'tentang', code: '04', label: 'ABOUT' },
+          ].map((item) => {
+            const isActive = activeSection === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => scrollToSection(item.id)}
+                className={`group flex items-center gap-2.5 transition-all duration-200 text-left cursor-pointer ${
+                  isActive ? 'text-amber-400' : 'text-slate-500 hover:text-slate-300'
+                }`}
+              >
+                <div
+                  className={`h-2.5 w-2.5 rounded-full transition-all duration-300 ${
+                    isActive
+                      ? 'bg-amber-400 shadow-[0_0_10px_rgba(251,191,36,0.8)] scale-125'
+                      : 'bg-white/20 group-hover:bg-white/40'
+                  }`}
+                />
+                <span className={`text-[9px] font-extrabold tracking-wider ${isActive ? 'opacity-100' : 'opacity-60'}`}>
+                  {item.code}
+                </span>
+                <span
+                  className={`text-[8px] font-bold uppercase transition-all duration-200 overflow-hidden whitespace-nowrap ${
+                    isActive ? 'max-w-[60px] opacity-100' : 'max-w-0 opacity-0 group-hover:max-w-[60px] group-hover:opacity-80'
+                  }`}
+                >
+                  {item.label}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </aside>
+
+      {/* 5. MAIN PAGE CONTENT */}
+      <main className="relative z-10 mx-auto max-w-7xl px-3.5 pt-20 pb-16 sm:px-6 sm:pt-28 lg:px-8 space-y-16 sm:space-y-24 md:space-y-28 font-mono">
+        {/* SEKSI 1: BERANDA / HERO (FOCUS ISOLATION) */}
         <section
           id="beranda"
           ref={berandaRef}
-          className="space-y-6 sm:space-y-8 max-w-4xl pt-2 sm:pt-4 scroll-mt-24 sm:scroll-mt-32"
+          className={`transition-all duration-500 ease-out scroll-mt-24 sm:scroll-mt-32 space-y-6 sm:space-y-8 max-w-4xl pt-2 sm:pt-4 ${
+            activeSection === 'beranda'
+              ? 'opacity-100 scale-100 filter-none'
+              : 'opacity-50 sm:opacity-30 scale-[0.99] filter blur-[0.3px] hover:opacity-90'
+          }`}
         >
           <div className="inline-block border-l-2 border-amber-400 pl-2.5 sm:pl-3">
             <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-slate-400">
@@ -427,7 +512,7 @@ export default function HomePage() {
             </span>
           </div>
 
-          <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black uppercase tracking-tight text-white leading-[1.05] sm:leading-[0.95] font-sans">
+          <h1 className="text-2xl sm:text-5xl md:text-6xl lg:text-7xl font-black uppercase tracking-tight text-white leading-[1.1] sm:leading-[0.95] font-sans break-words">
             <span className="relative inline-block mr-2 sm:mr-3 overflow-hidden align-top rounded-sm">
               <span
                 className={`absolute inset-0 bg-amber-400 transition-all duration-300 ease-out ${
@@ -456,11 +541,11 @@ export default function HomePage() {
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 border-y border-white/10 py-3.5 sm:py-4 text-xs">
-            <div className="border-b sm:border-b-0 sm:border-r border-white/10 pb-2 sm:pb-0 sm:pr-4">
+            <div className="border-b sm:border-b-0 sm:border-r border-white/10 pb-2.5 sm:pb-0 sm:pr-4">
               <span className="block text-[9px] sm:text-[10px] text-slate-500 uppercase">Tiebreaker Logic</span>
               <span className="font-bold text-slate-200">Head-to-Head & Aggregate</span>
             </div>
-            <div className="border-b sm:border-b-0 sm:border-r border-white/10 pb-2 sm:pb-0 sm:pr-4">
+            <div className="border-b sm:border-b-0 sm:border-r border-white/10 pb-2.5 sm:pb-0 sm:pr-4">
               <span className="block text-[9px] sm:text-[10px] text-slate-500 uppercase">Supported Formats</span>
               <span className="font-bold text-slate-200">MOBA / BR / FPS</span>
             </div>
@@ -471,21 +556,49 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* SEKSI 2: MODUL TURNAMEN */}
+        {/* 6. INFINITE TELEMETRY MARQUEE TICKER (Running Text Aktif) */}
+        <section
+          aria-label="Live Telemetry Stream"
+          className="relative -mx-3.5 sm:-mx-6 lg:-mx-8 border-y border-white/10 bg-slate-950/60 py-3 backdrop-blur-md overflow-hidden select-none"
+        >
+          {/* Gradient Masks */}
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-12 sm:w-20 bg-gradient-to-r from-[#05070c] to-transparent z-10" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-12 sm:w-20 bg-gradient-to-l from-[#05070c] to-transparent z-10" />
+
+          {/* Marquee Content Double Loop */}
+          <div className="animate-marquee flex items-center gap-6 text-[11px] font-mono whitespace-nowrap cursor-default">
+            {[...marqueeTelemetryItems, ...marqueeTelemetryItems].map((item, idx) => (
+              <div key={idx} className="inline-flex items-center gap-2.5">
+                <span className="h-1.5 w-1.5 rounded-full bg-amber-400 animate-pulse" />
+                <span className="text-slate-300 font-bold tracking-wider">{item.label}</span>
+                <span className={`px-2 py-0.5 rounded text-[9px] font-extrabold uppercase border ${item.color}`}>
+                  {item.badge}
+                </span>
+                <span className="text-white/20 ml-2">///</span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* SEKSI 2: MODUL TURNAMEN (FOCUS ISOLATION) */}
         <section
           id="modul"
           ref={modulRef}
-          className="space-y-4 sm:space-y-6 pt-6 border-t border-white/10 scroll-mt-24 sm:scroll-mt-32"
+          className={`transition-all duration-500 ease-out space-y-4 sm:space-y-6 pt-6 border-t border-white/10 scroll-mt-24 sm:scroll-mt-32 ${
+            activeSection === 'modul'
+              ? 'opacity-100 scale-100 filter-none'
+              : 'opacity-50 sm:opacity-30 scale-[0.99] filter blur-[0.3px] hover:opacity-90'
+          }`}
         >
           <div className="flex items-center justify-between pb-1">
             <div className="flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-amber-400" />
+              <span className="h-2 w-2 rounded-full bg-amber-400 animate-pulse" />
               <h2 className="text-xs font-black uppercase tracking-widest text-slate-300">
                 MODUL TURNAMEN RESMI
               </h2>
             </div>
             <span className="text-[9px] sm:text-[10px] text-slate-500">
-              3 PRESET
+              3 PRESET RESMI
             </span>
           </div>
 
@@ -493,7 +606,7 @@ export default function HomePage() {
             {activeTournaments.map((t) => (
               <div
                 key={t.slug}
-                className="group relative flex flex-col justify-between rounded-2xl border border-white/10 bg-slate-950/80 p-5 sm:p-6 backdrop-blur-xl transition-all duration-300 hover:border-amber-400/50"
+                className="group relative flex flex-col justify-between rounded-2xl border border-white/10 bg-slate-950/80 p-5 sm:p-6 backdrop-blur-xl transition-all duration-300 hover:border-amber-400/50 hover:shadow-xl hover:shadow-amber-400/5"
               >
                 <div className="space-y-4 sm:space-y-5">
                   <div className="flex items-center justify-between">
@@ -528,7 +641,7 @@ export default function HomePage() {
                 <div className="mt-5 sm:mt-6 pt-3.5 sm:pt-4 border-t border-white/10">
                   <Link
                     href={t.href}
-                    className="inline-flex w-full items-center justify-between rounded-xl bg-amber-400 px-4 py-3 text-xs font-black uppercase text-black transition-all duration-200 hover:bg-amber-300 active:scale-95 shadow-md shadow-amber-400/10"
+                    className="inline-flex w-full items-center justify-between rounded-xl bg-amber-400 px-4 py-3 sm:py-3.5 text-xs font-black uppercase text-black transition-all duration-200 hover:bg-amber-300 active:scale-95 shadow-md shadow-amber-400/10"
                   >
                     <span>Buka Simulator</span>
                     <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -541,11 +654,15 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* SEKSI 3: DYNAMIC SCENARIO LAB & INTERACTIVE RULEBOOK */}
+        {/* SEKSI 3: DYNAMIC SCENARIO LAB & INTERACTIVE RULEBOOK (FOCUS ISOLATION) */}
         <section
           id="lab"
           ref={labRef}
-          className="space-y-6 pt-6 sm:pt-8 border-t border-white/10 scroll-mt-24 sm:scroll-mt-28"
+          className={`transition-all duration-500 ease-out space-y-6 pt-6 sm:pt-8 border-t border-white/10 scroll-mt-24 sm:scroll-mt-28 ${
+            activeSection === 'lab'
+              ? 'opacity-100 scale-100 filter-none'
+              : 'opacity-50 sm:opacity-30 scale-[0.99] filter blur-[0.3px] hover:opacity-90'
+          }`}
         >
           <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between pb-1">
             <div>
@@ -558,7 +675,7 @@ export default function HomePage() {
               </h2>
             </div>
             <div className="text-[9px] sm:text-[10px] text-slate-500 uppercase flex items-center gap-2">
-              <span>ACTIVE:</span>
+              <span>ACTIVE ENGINE:</span>
               <strong className={currentGameConfig.accentColor}>{currentGameConfig.game}</strong>
             </div>
           </div>
@@ -592,7 +709,7 @@ export default function HomePage() {
                       <button
                         key={sc.id}
                         onClick={() => setActiveScenarioIndex(idx)}
-                        className={`flex flex-col items-center justify-center py-2 px-1 text-center rounded-lg transition-all duration-200 active:scale-95 ${
+                        className={`flex flex-col items-center justify-center py-2.5 px-1 text-center rounded-lg transition-all duration-200 active:scale-95 min-h-[44px] cursor-pointer ${
                           isSelected
                             ? `${currentGameConfig.activeBtnBg} font-black shadow-md`
                             : 'text-slate-400 hover:text-white hover:bg-white/5 font-bold'
@@ -664,7 +781,7 @@ export default function HomePage() {
                 <div className="space-y-2 text-xs">
                   <button
                     onClick={() => handleGameSelect('mlbb')}
-                    className={`w-full text-left rounded-xl border p-3 transition-all duration-200 active:scale-[0.99] ${
+                    className={`w-full text-left rounded-xl border p-3.5 sm:p-3 transition-all duration-200 active:scale-[0.99] min-h-[48px] cursor-pointer ${
                       selectedGame === 'mlbb'
                         ? 'border-amber-400 bg-amber-400/10 shadow-md shadow-amber-400/10'
                         : 'border-white/5 bg-black/40 hover:border-white/20 active:bg-white/5'
@@ -685,7 +802,7 @@ export default function HomePage() {
 
                   <button
                     onClick={() => handleGameSelect('pubgm')}
-                    className={`w-full text-left rounded-xl border p-3 transition-all duration-200 active:scale-[0.99] ${
+                    className={`w-full text-left rounded-xl border p-3.5 sm:p-3 transition-all duration-200 active:scale-[0.99] min-h-[48px] cursor-pointer ${
                       selectedGame === 'pubgm'
                         ? 'border-emerald-400 bg-emerald-400/10 shadow-md shadow-emerald-400/10'
                         : 'border-white/5 bg-black/40 hover:border-white/20 active:bg-white/5'
@@ -706,7 +823,7 @@ export default function HomePage() {
 
                   <button
                     onClick={() => handleGameSelect('valorant')}
-                    className={`w-full text-left rounded-xl border p-3 transition-all duration-200 active:scale-[0.99] ${
+                    className={`w-full text-left rounded-xl border p-3.5 sm:p-3 transition-all duration-200 active:scale-[0.99] min-h-[48px] cursor-pointer ${
                       selectedGame === 'valorant'
                         ? 'border-cyan-400 bg-cyan-400/10 shadow-md shadow-cyan-400/10'
                         : 'border-white/5 bg-black/40 hover:border-white/20 active:bg-white/5'
@@ -739,8 +856,16 @@ export default function HomePage() {
         </section>
       </main>
 
-      {/* SEKSI 4: TENTANG / FOOTER */}
-      <div id="tentang" ref={tentangRef} className="scroll-mt-24 sm:scroll-mt-32">
+      {/* SEKSI 4: TENTANG / FOOTER (FOCUS ISOLATION) */}
+      <div
+        id="tentang"
+        ref={tentangRef}
+        className={`transition-all duration-500 ease-out scroll-mt-24 sm:scroll-mt-32 ${
+          activeSection === 'tentang'
+            ? 'opacity-100 scale-100 filter-none'
+            : 'opacity-50 sm:opacity-40 scale-[0.99] filter blur-[0.3px] hover:opacity-90'
+        }`}
+      >
         <Footer />
       </div>
     </div>

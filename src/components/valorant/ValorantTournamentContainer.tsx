@@ -5,6 +5,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import ValorantStandingsTable from './ValorantStandingsTable';
 import ValorantMatchSimulator from './ValorantMatchSimulator';
+import HeadToHeadMatrix from '@/components/tournament/HeadToHeadMatrix';
 import {
   calculateValorantStandings,
   ValorantTeam,
@@ -25,6 +26,7 @@ export default function ValorantTournamentContainer({
 }: ValorantTournamentContainerProps) {
   const [matches, setMatches] = useState<ValorantMatchData[]>(initialMatches);
   const [activeGroup, setActiveGroup] = useState<'A' | 'B'>('A');
+  const [viewMode, setViewMode] = useState<'ALL' | 'SEASON' | 'H2H'>('ALL');
 
   const standingsA = calculateValorantStandings(teams, matches, 'A');
   const standingsB = calculateValorantStandings(teams, matches, 'B');
@@ -127,43 +129,106 @@ export default function ValorantTournamentContainer({
           </div>
         </header>
 
-        {/* Group Selector */}
-        <div className="flex gap-2 rounded-xl border border-white/10 bg-slate-950/80 p-1.5 backdrop-blur-md max-w-md">
-          <button
-            onClick={() => setActiveGroup('A')}
-            className={`flex-1 rounded-lg py-2 font-mono text-xs font-bold transition-all ${
-              activeGroup === 'A'
-                ? 'bg-cyan-400 text-black shadow-[0_0_15px_rgba(34,211,238,0.3)]'
-                : 'text-slate-400 hover:bg-white/5 hover:text-white'
-            }`}
-          >
-            GROUP A (ALPHA)
-          </button>
-          <button
-            onClick={() => setActiveGroup('B')}
-            className={`flex-1 rounded-lg py-2 font-mono text-xs font-bold transition-all ${
-              activeGroup === 'B'
-                ? 'bg-cyan-400 text-black shadow-[0_0_15px_rgba(34,211,238,0.3)]'
-                : 'text-slate-400 hover:bg-white/5 hover:text-white'
-            }`}
-          >
-            GROUP B (OMEGA)
-          </button>
+        {/* Controls Toolbar: Group Selector & View Mode Switcher */}
+        <div className="flex flex-col justify-between gap-4 rounded-xl border border-white/10 bg-slate-950/80 p-2.5 backdrop-blur-md sm:flex-row sm:items-center">
+          {/* Group Selector */}
+          <div className="flex gap-1.5">
+            <button
+              onClick={() => setActiveGroup('A')}
+              className={`rounded-lg px-3.5 py-1.5 font-mono text-xs font-bold transition-all ${
+                activeGroup === 'A'
+                  ? 'bg-cyan-400 text-black shadow-[0_0_15px_rgba(34,211,238,0.3)]'
+                  : 'text-slate-400 hover:bg-white/5 hover:text-white'
+              }`}
+            >
+              GROUP A (ALPHA)
+            </button>
+            <button
+              onClick={() => setActiveGroup('B')}
+              className={`rounded-lg px-3.5 py-1.5 font-mono text-xs font-bold transition-all ${
+                activeGroup === 'B'
+                  ? 'bg-cyan-400 text-black shadow-[0_0_15px_rgba(34,211,238,0.3)]'
+                  : 'text-slate-400 hover:bg-white/5 hover:text-white'
+              }`}
+            >
+              GROUP B (OMEGA)
+            </button>
+          </div>
+
+          {/* View Mode Switcher */}
+          <div className="flex flex-wrap gap-1 border-t border-white/10 pt-2 sm:border-t-0 sm:pt-0">
+            {[
+              { id: 'ALL', label: 'SEMUA VIEW' },
+              { id: 'SEASON', label: 'TABEL KLASEMEN' },
+              { id: 'H2H', label: 'MATRIKS H2H' },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setViewMode(tab.id as any)}
+                className={`rounded-lg px-3 py-1.5 font-mono text-xs font-bold transition-all ${
+                  viewMode === tab.id
+                    ? 'bg-cyan-400/20 text-cyan-300 border border-cyan-400/40 shadow-[0_0_10px_rgba(34,211,238,0.15)]'
+                    : 'text-slate-400 hover:bg-white/5 hover:text-white'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
         </div>
 
-        {/* Dashboard Grid */}
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 items-stretch">
-          <div className="lg:col-span-7">
-            <ValorantStandingsTable standings={currentStandings} groupName={activeGroup} />
+        {/* Dashboard Grid: Standings & Match Simulator */}
+        {(viewMode === 'ALL' || viewMode === 'SEASON') && (
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 items-stretch">
+            <div className="lg:col-span-7">
+              <ValorantStandingsTable standings={currentStandings} groupName={activeGroup} />
+            </div>
+            <div className="lg:col-span-5">
+              <ValorantMatchSimulator
+                matches={currentGroupMatches}
+                teams={teams}
+                onScoreChange={handleScoreChange}
+              />
+            </div>
           </div>
-          <div className="lg:col-span-5">
-            <ValorantMatchSimulator
-              matches={currentGroupMatches}
-              teams={teams}
-              onScoreChange={handleScoreChange}
-            />
+        )}
+
+        {/* Matriks Head-to-Head */}
+        {(viewMode === 'ALL' || viewMode === 'H2H') && (
+          <div className={viewMode === 'ALL' ? 'mt-6' : ''}>
+            <div className={viewMode === 'H2H' ? 'grid grid-cols-1 gap-8 lg:grid-cols-12 items-start' : ''}>
+              <div className={viewMode === 'H2H' ? 'lg:col-span-7' : 'w-full'}>
+                <HeadToHeadMatrix
+                  teams={currentStandings.map((s) => ({
+                    id: s.teamId,
+                    name: s.teamName,
+                    code: s.teamCode,
+                    rank: s.rank,
+                  }))}
+                  matches={currentGroupMatches.map((m) => ({
+                    id: m.id,
+                    homeTeamId: m.homeTeamId,
+                    awayTeamId: m.awayTeamId,
+                    homeScore: m.homeMaps,
+                    awayScore: m.awayMaps,
+                    isCompleted: m.isCompleted,
+                  }))}
+                  accentColor="cyan"
+                  title={`Matriks Head-to-Head VCT Pacific // Group ${activeGroup}`}
+                />
+              </div>
+              {viewMode === 'H2H' && (
+                <div className="lg:col-span-5">
+                  <ValorantMatchSimulator
+                    matches={currentGroupMatches}
+                    teams={teams}
+                    onScoreChange={handleScoreChange}
+                  />
+                </div>
+              )}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

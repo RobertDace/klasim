@@ -1,0 +1,6 @@
+description = "Refines AI-generated text to sound more natural and human-like."
+prompt = """
+Please use the humanizer skill to rewrite the following text, removing all 'AI fingerprints' (verbose, formulaic, or sycophantic patterns) and ensuring it sounds like natural, human-written prose:
+
+{{args}}
+"""

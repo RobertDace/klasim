@@ -7,6 +7,7 @@ import { useSearchParams } from 'next/navigation';
 import StandingsTable from './StandingsTable';
 import MatchSimulator from './MatchSimulator';
 import PlayoffBracket from './PlayoffBracket';
+import HeadToHeadMatrix from './HeadToHeadMatrix';
 import ShareModal from '@/components/common/ShareModal';
 import ShareCardModal from '@/components/common/ShareCardModal';
 import { calculateMPLStandings, TeamData } from '@/lib/calculator';
@@ -26,7 +27,7 @@ export default function TournamentContainer({
 }: TournamentContainerProps) {
   const searchParams = useSearchParams();
   const [matches, setMatches] = useState(initialMatches);
-  const [viewMode, setViewMode] = useState<'ALL' | 'SEASON' | 'PLAYOFFS'>('ALL');
+  const [viewMode, setViewMode] = useState<'ALL' | 'SEASON' | 'H2H' | 'PLAYOFFS'>('ALL');
   const [resetKey, setResetKey] = useState(0);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isCardModalOpen, setIsCardModalOpen] = useState(false);
@@ -138,10 +139,11 @@ export default function TournamentContainer({
         {/* Unified Control Toolbar */}
         <div className="flex flex-col justify-between gap-4 rounded-xl border border-white/10 bg-slate-950/80 p-2.5 backdrop-blur-md sm:flex-row sm:items-center">
           {/* Tab View Switcher */}
-          <div className="flex gap-1">
+          <div className="flex flex-wrap gap-1">
             {[
               { id: 'ALL', label: 'SEMUA VIEW' },
               { id: 'SEASON', label: 'REGULAR SEASON' },
+              { id: 'H2H', label: 'MATRIKS H2H' },
               { id: 'PLAYOFFS', label: 'PLAYOFF BRACKET' },
             ].map((tab) => (
               <button
@@ -222,7 +224,7 @@ export default function TournamentContainer({
           </div>
         </div>
 
-        {/* Dashboard Grid Layout */}
+        {/* Dashboard Grid Layout: Standings & Match Simulator */}
         {(viewMode === 'ALL' || viewMode === 'SEASON') && (
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 items-stretch">
             <div className="lg:col-span-7">
@@ -230,6 +232,33 @@ export default function TournamentContainer({
             </div>
             <div className="lg:col-span-5">
               <MatchSimulator matches={normalizedMatches} onScoreChange={handleScoreChange} />
+            </div>
+          </div>
+        )}
+
+        {/* Matriks Head-to-Head */}
+        {(viewMode === 'ALL' || viewMode === 'H2H') && (
+          <div className={viewMode === 'ALL' ? 'mt-6' : ''}>
+            <div className={viewMode === 'H2H' ? 'grid grid-cols-1 gap-8 lg:grid-cols-12 items-start' : ''}>
+              <div className={viewMode === 'H2H' ? 'lg:col-span-7' : 'w-full'}>
+                <HeadToHeadMatrix
+                  teams={standings.map((s) => ({
+                    id: s.teamId,
+                    name: s.teamName,
+                    code: s.teamCode,
+                    logoUrl: s.logoUrl,
+                    rank: s.rank,
+                  }))}
+                  matches={normalizedMatches}
+                  accentColor="amber"
+                  title="Matriks Head-to-Head MPL ID (Cross-Table Grid)"
+                />
+              </div>
+              {viewMode === 'H2H' && (
+                <div className="lg:col-span-5">
+                  <MatchSimulator matches={normalizedMatches} onScoreChange={handleScoreChange} />
+                </div>
+              )}
             </div>
           </div>
         )}
