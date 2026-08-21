@@ -1,23 +1,23 @@
 // src/components/tournament/TournamentContainer.tsx
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
-import StandingsTable from './StandingsTable';
-import MatchSimulator from './MatchSimulator';
-import PlayoffBracket from './PlayoffBracket';
-import HeadToHeadMatrix from './HeadToHeadMatrix';
+import StandingsTable from '@/components/tournament/StandingsTable';
+import MatchSimulator from '@/components/tournament/MatchSimulator';
+import PlayoffBracket from '@/components/tournament/PlayoffBracket';
+import HeadToHeadMatrix from '@/components/tournament/HeadToHeadMatrix';
+import ScenarioSolverView from '@/components/tournament/ScenarioSolverView';
 import ShareModal from '@/components/common/ShareModal';
 import ShareCardModal from '@/components/common/ShareCardModal';
-import { calculateMPLStandings, TeamData } from '@/lib/calculator';
+import { calculateMPLStandings, TeamData, MatchData } from '@/lib/calculator';
 import { exportStandingsToExcel, exportStandingsToPdf } from '@/lib/exportUtils';
-import { encodeMatchScoresToUrl, decodeUrlToMatchScores } from '@/lib/shareUtils';
+import { encodeMatchScoresToUrl } from '@/lib/shareUtils';
 
 interface TournamentContainerProps {
   tournamentName: string;
   teams: TeamData[];
-  initialMatches: any[];
+  initialMatches: MatchData[];
 }
 
 export default function TournamentContainer({
@@ -25,55 +25,60 @@ export default function TournamentContainer({
   teams,
   initialMatches,
 }: TournamentContainerProps) {
-  const searchParams = useSearchParams();
-  const [matches, setMatches] = useState(initialMatches);
-  const [viewMode, setViewMode] = useState<'ALL' | 'SEASON' | 'H2H' | 'PLAYOFFS'>('ALL');
+  // State Skor Pertandingan
+  const [matches, setMatches] = useState<MatchData[]>(initialMatches);
   const [resetKey, setResetKey] = useState(0);
+
+  // State Modal Dialog
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isCardModalOpen, setIsCardModalOpen] = useState(false);
 
-  // Load URL query params saat halaman dibuka dari tautan berbagi
-  useEffect(() => {
-    const simParam = searchParams.get('sim');
-    if (simParam) {
-      const decodedScores = decodeUrlToMatchScores(simParam);
-      setMatches((prev) =>
-        prev.map((m) => {
-          if (decodedScores[m.id]) {
-            return {
-              ...m,
-              homeScore: decodedScores[m.id].homeScore,
-              awayScore: decodedScores[m.id].awayScore,
-              isCompleted: true,
-            };
-          }
-          return m;
-        })
-      );
-    }
-  }, [searchParams]);
+  // State View Switcher Tab (ALL, SEASON, H2H, PLAYOFFS, SOLVER)
+  const [viewMode, setViewMode] = useState<'ALL' | 'SEASON' | 'H2H' | 'PLAYOFFS' | 'SOLVER'>('ALL');
 
-  const normalizedMatches = matches.map((m) => {
-    const home = m.homeTeam || teams.find((t) => t.id === m.homeTeamId);
-    const away = m.awayTeam || teams.find((t) => t.id === m.awayTeamId);
+  // Normalisasi data pertandingan agar setiap match memiliki objek homeTeam & awayTeam
+  const normalizedMatches = useMemo(() => {
+    return matches.map((m) => {
+      const home = teams.find((t) => t.id === m.homeTeamId) || m.homeTeam || {
+        id: m.homeTeamId,
+        name: 'Home',
+        code: 'HOM',
+      };
+      const away = teams.find((t) => t.id === m.awayTeamId) || m.awayTeam || {
+        id: m.awayTeamId,
+        name: 'Away',
+        code: 'AWY',
+      };
+      return {
+        ...m,
+        homeTeam: home,
+        awayTeam: away,
+      };
+    });
+  }, [matches, teams]);
 
-    return {
-      ...m,
-      homeTeam: home || { id: m.homeTeamId, name: m.homeTeamId, code: m.homeTeamId },
-      awayTeam: away || { id: m.awayTeamId, name: m.awayTeamId, code: m.awayTeamId },
-    };
-  });
+  // Kalkulasi Klasemen secara Otomatis menggunakan Engine Deterministik MPL ID
+  const standings = useMemo(() => {
+    return calculateMPLStandings(teams, matches);
+  }, [teams, matches]);
 
-  const standings = calculateMPLStandings(teams, normalizedMatches);
-
+  // Handler Perubahan Skor Pertandingan
   const handleScoreChange = (matchId: string, homeScore: number, awayScore: number) => {
-    setMatches((prev) =>
-      prev.map((m) =>
-        m.id === matchId ? { ...m, homeScore, awayScore, isCompleted: true } : m
+    setMatches((prevMatches) =>
+      prevMatches.map((m) =>
+        m.id === matchId
+          ? {
+              ...m,
+              homeScore,
+              awayScore,
+              isCompleted: homeScore > 0 || awayScore > 0,
+            }
+          : m
       )
     );
   };
 
+  // Handler Reset Skor
   const handleResetToDefault = () => {
     setMatches(initialMatches);
     setResetKey((prev) => prev + 1);
@@ -100,7 +105,7 @@ export default function TournamentContainer({
   const shareUrl = encodedQuery ? `${currentOrigin}?sim=${encodedQuery}` : currentOrigin;
 
   return (
-    <div className="relative min-h-screen bg-[#05070c] text-slate-100 selection:bg-amber-400 selection:text-black">
+    <div className="relative min-h-screen bg-[#05070c] text-slate-100 selection:bg-amber-400 selection:text-black font-mono">
       {/* Background Ambient Grid */}
       <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
         <div className="absolute -top-40 left-1/3 h-[600px] w-[600px] rounded-full bg-amber-500/10 blur-[160px]" />
@@ -113,7 +118,7 @@ export default function TournamentContainer({
         <div className="flex items-center justify-between">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3.5 py-2 font-mono text-xs font-bold text-slate-300 transition-all hover:border-amber-400/40 hover:bg-amber-400/10 hover:text-amber-400 active:scale-95"
+            className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3.5 py-2 text-xs font-bold text-slate-300 transition-all hover:border-amber-400/40 hover:bg-amber-400/10 hover:text-amber-400 active:scale-95"
           >
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -121,17 +126,17 @@ export default function TournamentContainer({
             BERANDA
           </Link>
 
-          <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-slate-500">
+          <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
             KLASIM // MOBA MODULE
           </span>
         </div>
 
         {/* Header Title Section */}
         <header className="border-b border-white/10 pb-6">
-          <span className="font-mono text-xs font-semibold tracking-wider text-slate-400 uppercase">
+          <span className="text-xs font-semibold tracking-wider text-slate-400 uppercase">
             MPL ID Professional League Ruleset
           </span>
-          <h1 className="mt-2 text-3xl font-black tracking-tight text-white sm:text-5xl uppercase leading-none">
+          <h1 className="mt-2 text-3xl font-black tracking-tight text-white sm:text-5xl uppercase leading-none font-sans">
             {tournamentName}
           </h1>
         </header>
@@ -144,14 +149,15 @@ export default function TournamentContainer({
               { id: 'ALL', label: 'SEMUA VIEW' },
               { id: 'SEASON', label: 'REGULAR SEASON' },
               { id: 'H2H', label: 'MATRIKS H2H' },
+              { id: 'SOLVER', label: 'WHAT-IF SOLVER' },
               { id: 'PLAYOFFS', label: 'PLAYOFF BRACKET' },
             ].map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setViewMode(tab.id as any)}
-                className={`rounded-lg px-3.5 py-2 font-mono text-xs font-bold transition-all ${
+                className={`rounded-lg px-3.5 py-2 text-xs font-bold transition-all cursor-pointer ${
                   viewMode === tab.id
-                    ? 'bg-amber-400 text-black shadow-md shadow-amber-400/20'
+                    ? 'bg-amber-400 text-black shadow-md shadow-amber-400/20 font-black'
                     : 'text-slate-400 hover:bg-white/5 hover:text-white'
                 }`}
               >
@@ -165,29 +171,29 @@ export default function TournamentContainer({
             {/* Tombol Export Excel */}
             <button
               onClick={() => exportStandingsToExcel(tournamentName, standings, normalizedMatches)}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 font-mono text-[11px] font-bold text-emerald-400 transition-all hover:bg-emerald-500/20 active:scale-95"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-[11px] font-bold text-emerald-400 transition-all hover:bg-emerald-500/20 active:scale-95 cursor-pointer"
             >
               <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
-              EXPORT EXCEL
+              EXCEL
             </button>
 
             {/* Tombol Export PDF */}
             <button
               onClick={() => exportStandingsToPdf(tournamentName, standings)}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-1.5 font-mono text-[11px] font-bold text-rose-400 transition-all hover:bg-rose-500/20 active:scale-95"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-1.5 text-[11px] font-bold text-rose-400 transition-all hover:bg-rose-500/20 active:scale-95 cursor-pointer"
             >
               <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
               </svg>
-              EXPORT PDF
+              PDF
             </button>
 
-            {/* Tombol Kartu Grafis (PNG) */}
+            {/* Tombol Bagikan Kartu Grafis */}
             <button
               onClick={() => setIsCardModalOpen(true)}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-sky-400/40 bg-sky-400/10 px-3 py-1.5 font-mono text-[11px] font-bold text-sky-400 transition-all hover:bg-sky-400/20 active:scale-95"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-sky-500/30 bg-sky-500/10 px-3 py-1.5 text-[11px] font-bold text-sky-400 transition-all hover:bg-sky-500/20 active:scale-95 cursor-pointer"
             >
               <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -198,7 +204,7 @@ export default function TournamentContainer({
             {/* Tombol Bagikan Link */}
             <button
               onClick={() => setIsShareModalOpen(true)}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-amber-400/40 bg-amber-400/10 px-3 py-1.5 font-mono text-[11px] font-bold text-amber-400 transition-all hover:bg-amber-400/20 active:scale-95"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-amber-400/40 bg-amber-400/10 px-3 py-1.5 text-[11px] font-bold text-amber-400 transition-all hover:bg-amber-400/20 active:scale-95 cursor-pointer"
             >
               <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
@@ -209,7 +215,7 @@ export default function TournamentContainer({
             {/* Tombol Skor Real */}
             <button
               onClick={handleResetToDefault}
-              className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 font-mono text-[11px] font-bold text-slate-300 transition-all hover:border-amber-400/40 hover:bg-amber-400/10 hover:text-amber-400"
+              className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-[11px] font-bold text-slate-300 transition-all hover:border-amber-400/40 hover:bg-amber-400/10 hover:text-amber-400 cursor-pointer"
             >
               SKOR REAL
             </button>
@@ -217,7 +223,7 @@ export default function TournamentContainer({
             {/* Tombol Kosongkan Skor */}
             <button
               onClick={handleClearAllScores}
-              className="rounded-lg border border-rose-500/20 bg-rose-500/5 px-3 py-1.5 font-mono text-[11px] font-bold text-rose-300 transition-all hover:bg-rose-500/15"
+              className="rounded-lg border border-rose-500/20 bg-rose-500/5 px-3 py-1.5 text-[11px] font-bold text-rose-300 transition-all hover:bg-rose-500/15 cursor-pointer"
             >
               KOSONGKAN
             </button>
@@ -234,6 +240,17 @@ export default function TournamentContainer({
               <MatchSimulator matches={normalizedMatches} onScoreChange={handleScoreChange} />
             </div>
           </div>
+        )}
+
+        {/* What-If Scenario Solver View */}
+        {viewMode === 'SOLVER' && (
+          <ScenarioSolverView
+            teams={teams}
+            matches={normalizedMatches}
+            onApplyScenario={(updatedMatches) => {
+              setMatches(updatedMatches);
+            }}
+          />
         )}
 
         {/* Matriks Head-to-Head */}

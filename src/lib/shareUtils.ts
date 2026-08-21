@@ -1,7 +1,7 @@
 // src/lib/shareUtils.ts
 
 export interface MatchScoreState {
-  id: string;
+  id?: string;
   homeScore: number;
   awayScore: number;
   isCompleted: boolean;
@@ -12,7 +12,7 @@ export interface MatchScoreState {
  * Format: m1:2-0|m2:2-1
  */
 export function encodeMatchScoresToUrl(matches: MatchScoreState[]): string {
-  const activeMatches = matches.filter((m) => m.isCompleted);
+  const activeMatches = matches.filter((m) => m.isCompleted && m.id);
   if (activeMatches.length === 0) return '';
 
   const encodedString = activeMatches
@@ -43,8 +43,8 @@ export function decodeUrlToMatchScores(encodedQuery: string): Record<string, { h
         }
       }
     });
-  } catch {
-    return {};
+  } catch (error) {
+    console.error('Failed to decode match scores query:', error);
   }
 
   return result;

@@ -15,6 +15,8 @@ export interface MatchData {
   homeScore: number;
   awayScore: number;
   isCompleted: boolean;
+  homeTeam?: TeamData;
+  awayTeam?: TeamData;
 }
 
 export interface TeamStanding {
@@ -92,7 +94,7 @@ export function calculateMPLStandings(
       away.matchWins += 1;
       home.matchLosses += 1;
       away.headToHead[home.teamId].wins += 1;
-      home.headToHead[away.teamId].losses += 1;
+      away.headToHead[away.teamId].losses += 1;
     }
 
     home.matchPlayed += 1;
