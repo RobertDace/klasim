@@ -3,15 +3,18 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useAuth } from '@/context/AuthContext';
 
 interface NavbarProps {
   activeSection?: string;
 }
 
 export default function Navbar({ activeSection = 'beranda' }: NavbarProps) {
+  const { user, loading: authLoading, openLoginModal, logout } = useAuth();
   const [timeString, setTimeString] = useState('');
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
   // 1. Live WIB Clock
   useEffect(() => {
@@ -90,7 +93,7 @@ export default function Navbar({ activeSection = 'beranda' }: NavbarProps) {
           {/* Brand Terminal */}
           <button
             onClick={() => scrollToSection('beranda')}
-            className="group flex items-center gap-2.5 sm:gap-3 text-left active:scale-95 transition-transform"
+            className="group flex items-center gap-2.5 sm:gap-3 text-left active:scale-95 transition-transform cursor-pointer"
           >
             <div className="relative flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded border border-amber-400/40 bg-amber-400/10 font-mono text-xs sm:text-sm font-black text-amber-400 transition-colors group-hover:bg-amber-400 group-hover:text-black">
               <span>K</span>
@@ -115,7 +118,7 @@ export default function Navbar({ activeSection = 'beranda' }: NavbarProps) {
                 <button
                   key={item.id}
                   onClick={() => scrollToSection(item.id)}
-                  className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[11px] font-bold uppercase transition-all duration-200 ${
+                  className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[11px] font-bold uppercase transition-all duration-200 cursor-pointer ${
                     isActive
                       ? 'bg-amber-400 text-black shadow-sm font-black'
                       : 'text-slate-400 hover:bg-white/5 hover:text-white'
@@ -130,15 +133,70 @@ export default function Navbar({ activeSection = 'beranda' }: NavbarProps) {
             })}
           </nav>
 
-          {/* Action & Mobile Toggle */}
+          {/* Action & Auth Controls */}
           <div className="flex items-center gap-2">
             <Link
               href="/tournament/create"
-              className="inline-flex items-center gap-1.5 rounded-lg border border-amber-400/40 bg-amber-400/10 px-2.5 py-1.5 sm:px-3.5 sm:py-1.5 text-[10px] sm:text-[11px] font-black uppercase text-amber-400 transition-all duration-200 hover:bg-amber-400 hover:text-black active:scale-95"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-amber-400/40 bg-amber-400/10 px-2.5 py-1.5 sm:px-3 sm:py-1.5 text-[10px] sm:text-[11px] font-black uppercase text-amber-400 transition-all duration-200 hover:bg-amber-400 hover:text-black active:scale-95"
             >
               <span>+ BUAT</span>
               <span className="hidden sm:inline">TURNAMEN</span>
             </Link>
+
+            {/* Auth Button Desktop */}
+            {!authLoading && (
+              <div className="relative hidden sm:block">
+                {user ? (
+                  <div className="relative">
+                    <button
+                      onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                      className="flex items-center gap-2 rounded-lg border border-white/15 bg-white/5 px-2.5 py-1.5 text-[10px] sm:text-[11px] font-bold text-slate-200 hover:border-amber-400/40 hover:text-amber-400 transition-all active:scale-95 cursor-pointer"
+                    >
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                      <span className="max-w-[100px] truncate uppercase">{user.name}</span>
+                      <span className="text-[9px] text-slate-500">▼</span>
+                    </button>
+
+                    {/* User Dropdown */}
+                    {isUserMenuOpen && (
+                      <div className="absolute right-0 mt-2 w-48 rounded-xl border border-white/15 bg-slate-950/95 p-1.5 shadow-2xl backdrop-blur-2xl animate-in fade-in slide-in-from-top-2 duration-150 z-50">
+                        <div className="border-b border-white/10 px-3 py-2 text-[10px] text-slate-400">
+                          <span className="block font-bold text-white truncate">{user.name}</span>
+                          <span className="block text-[9px] text-slate-500 truncate">{user.email}</span>
+                        </div>
+
+                        <Link
+                          href="/my-tournaments"
+                          onClick={() => setIsUserMenuOpen(false)}
+                          className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-[11px] font-bold text-slate-300 hover:bg-amber-400/10 hover:text-amber-400 transition-all"
+                        >
+                          <span>🏆</span>
+                          <span>Turnamen Saya</span>
+                        </Link>
+
+                        <button
+                          onClick={() => {
+                            setIsUserMenuOpen(false);
+                            logout();
+                          }}
+                          className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-[11px] font-bold text-rose-400 hover:bg-rose-500/10 transition-all cursor-pointer"
+                        >
+                          <span>⎋</span>
+                          <span>Keluar (Logout)</span>
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <button
+                    onClick={openLoginModal}
+                    className="flex items-center gap-1.5 rounded-lg border border-white/15 bg-white/5 px-2.5 py-1.5 text-[10px] sm:text-[11px] font-bold text-slate-300 hover:border-white/30 hover:text-white transition-all active:scale-95 cursor-pointer"
+                  >
+                    <span>MASUK</span>
+                  </button>
+                )}
+              </div>
+            )}
 
             {/* Mobile Burger HUD Button */}
             <button
@@ -191,6 +249,44 @@ export default function Navbar({ activeSection = 'beranda' }: NavbarProps) {
                   </button>
                 );
               })}
+            </div>
+
+            {/* Auth Section in Mobile Drawer */}
+            <div className="pt-2">
+              {user ? (
+                <div className="rounded-xl border border-white/10 bg-white/5 p-3 space-y-2">
+                  <div className="text-[10px] text-slate-400 flex items-center justify-between">
+                    <span>AKUN AKTIF:</span>
+                    <strong className="text-white uppercase">{user.name}</strong>
+                  </div>
+                  <Link
+                    href="/my-tournaments"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="flex w-full items-center justify-center rounded-lg border border-amber-400/40 bg-amber-400/10 py-2.5 text-xs font-bold text-amber-400 uppercase"
+                  >
+                    🏆 Turnamen Saya
+                  </Link>
+                  <button
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      logout();
+                    }}
+                    className="w-full text-center text-[10px] text-rose-400 py-1"
+                  >
+                    Keluar (Logout)
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    openLoginModal();
+                  }}
+                  className="flex w-full items-center justify-center rounded-xl border border-white/15 bg-white/10 py-3 text-xs font-bold text-white uppercase"
+                >
+                  MASUK / DAFTAR AKUN
+                </button>
+              )}
             </div>
           </div>
 
