@@ -1,10 +1,10 @@
-// src/app/mlbb/builder/page.tsx
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Navbar from '@/components/ui/Navbar';
 import Footer from '@/components/ui/Footer';
+import { toPng } from 'html-to-image';
 import {
   heroes as allHeroes,
   items as allItems,
@@ -49,6 +49,10 @@ export default function BuildWorkshopPage() {
   const [level, setLevel] = useState<number>(15);
   const [buildTitle, setBuildTitle] = useState<string>('Tournament High-Impact Build');
   const [copiedSuccess, setCopiedSuccess] = useState<boolean>(false);
+  const [shareUrlCopied, setShareUrlCopied] = useState<boolean>(false);
+  const [isExportingCard, setIsExportingCard] = useState<boolean>(false);
+  const [downloadSuccess, setDownloadSuccess] = useState<boolean>(false);
+  const cardRef = useRef<HTMLDivElement>(null);
 
   // Modals
   const [isHeroModalOpen, setIsHeroModalOpen] = useState(false);
@@ -82,6 +86,36 @@ export default function BuildWorkshopPage() {
       }
     } catch {
       // ignore
+    }
+
+    // Hydrate from URL query parameters if present
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const heroParam = params.get('hero');
+      const itemsParam = params.get('items');
+      const spellParam = params.get('spell');
+      const emblemParam = params.get('emblem');
+      const titleParam = params.get('title');
+
+      if (heroParam) {
+        const foundHero = allHeroes.find(h => h.slug === heroParam.toLowerCase() || h.name.toLowerCase() === heroParam.toLowerCase());
+        if (foundHero) setSelectedHeroSlug(foundHero.slug);
+      }
+      if (titleParam) setBuildTitle(titleParam);
+      if (spellParam) {
+        const foundSpell = allSpells.find(s => s.id === spellParam || s.slug === spellParam);
+        if (foundSpell) setSelectedSpellId(foundSpell.id);
+      }
+      if (emblemParam) {
+        const foundEmblem = allEmblems.find(e => e.id === emblemParam || e.slug === emblemParam);
+        if (foundEmblem) setSelectedEmblemId(foundEmblem.id);
+      }
+      if (itemsParam) {
+        const slugs = itemsParam.split(',');
+        const hydrated = slugs.slice(0, 6).map(slug => allItems.find(i => i.slug === slug.trim() || i.id === slug.trim()) || null);
+        while (hydrated.length < 6) hydrated.push(null);
+        setEquippedItems(hydrated);
+      }
     }
   }, []);
 
@@ -258,6 +292,40 @@ export default function BuildWorkshopPage() {
     setTimeout(() => setCopiedSuccess(false), 2500);
   };
 
+  const handleDownloadCard = async () => {
+    if (!cardRef.current) return;
+    try {
+      setIsExportingCard(true);
+      const dataUrl = await toPng(cardRef.current, {
+        cacheBust: true,
+        pixelRatio: 2,
+        quality: 0.95,
+      });
+
+      const link = document.createElement('a');
+      link.download = `klasim-${hero.slug}-custom-build.png`;
+      link.href = dataUrl;
+      link.click();
+
+      setDownloadSuccess(true);
+      setTimeout(() => setDownloadSuccess(false), 3000);
+    } catch (err) {
+      console.error('Failed to export card image:', err);
+      alert('Gagal mengekspor kartu grafis. Silakan coba kembali.');
+    } finally {
+      setIsExportingCard(false);
+    }
+  };
+
+  const handleCopyShareUrl = () => {
+    if (typeof window === 'undefined') return;
+    const itemSlugs = equippedItems.map(i => i?.slug || '').filter(Boolean).join(',');
+    const url = `${window.location.origin}/mlbb/builder?hero=${encodeURIComponent(hero.slug)}&items=${encodeURIComponent(itemSlugs)}&spell=${encodeURIComponent(spell?.id || '')}&emblem=${encodeURIComponent(emblem?.id || '')}&title=${encodeURIComponent(buildTitle)}`;
+    navigator.clipboard.writeText(url);
+    setShareUrlCopied(true);
+    setTimeout(() => setShareUrlCopied(false), 2500);
+  };
+
   return (
     <div className="min-h-screen bg-[#05070c] text-white selection:bg-amber-400 selection:text-black">
       <Navbar activeSection="mlbb" />
@@ -285,18 +353,54 @@ export default function BuildWorkshopPage() {
               {/* Quick Actions */}
               <div className="flex flex-wrap items-center gap-2 font-mono text-xs">
                 <button
+                  onClick={handleDownloadCard}
+                  disabled={isExportingCard}
+                  className="rounded-xl border border-amber-400/50 bg-amber-400 px-4 py-2.5 font-black text-black hover:bg-amber-300 transition-all flex items-center gap-2 cursor-pointer shadow-lg shadow-amber-400/20 disabled:opacity-50"
+                  title="Unduh Kartu Infografis Format HD PNG"
+                >
+                  {isExportingCard ? (
+                    <>
+                      <span className="h-3 w-3 rounded-full border-2 border-black border-t-transparent animate-spin" />
+                      <span>MEMPROSES...</span>
+                    </>
+                  ) : downloadSuccess ? (
+                    <>
+                      <span>✓</span>
+                      <span>KARTU TERUNDUH!</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>📸</span>
+                      <span>UNDUH KARTU (PNG)</span>
+                    </>
+                  )}
+                </button>
+
+                <button
+                  onClick={handleCopyShareUrl}
+                  className="rounded-xl border border-cyan-400/40 bg-cyan-400/10 px-4 py-2.5 font-bold text-cyan-400 hover:bg-cyan-400 hover:text-black transition-all flex items-center gap-2 cursor-pointer shadow-lg"
+                  title="Salin tautan permanen untuk dibagikan ke teman"
+                >
+                  <span>{shareUrlCopied ? '✓' : '🔗'}</span>
+                  <span>{shareUrlCopied ? 'Tautan Tersalin!' : 'Bagikan Tautan'}</span>
+                </button>
+
+                <button
                   onClick={copyBuildSummary}
-                  className="rounded-xl border border-amber-400/40 bg-amber-400/10 px-4 py-2.5 font-bold text-amber-400 hover:bg-amber-400 hover:text-black transition-all flex items-center gap-2 cursor-pointer shadow-lg"
+                  className="rounded-xl border border-white/20 bg-white/5 px-4 py-2.5 font-bold text-slate-300 hover:bg-white/10 hover:text-white transition-all flex items-center gap-2 cursor-pointer shadow-lg"
+                  title="Salin ringkasan teks untuk chat WhatsApp/Discord"
                 >
                   <span>{copiedSuccess ? '✓' : '📋'}</span>
-                  <span>{copiedSuccess ? 'Tersalin!' : 'Salin Ringkasan Build'}</span>
+                  <span>{copiedSuccess ? 'Tersalin!' : 'Salin Teks'}</span>
                 </button>
+
                 <button
                   onClick={saveCurrentBuild}
-                  className="rounded-xl bg-amber-400 px-4 py-2.5 font-bold text-black hover:bg-amber-300 transition-all flex items-center gap-2 cursor-pointer shadow-lg shadow-amber-400/20"
+                  className="rounded-xl border border-amber-400/30 bg-amber-400/10 px-4 py-2.5 font-bold text-amber-400 hover:bg-amber-400 hover:text-black transition-all flex items-center gap-2 cursor-pointer shadow-lg"
+                  title="Simpan build ke penyimpanan browser"
                 >
                   <span>💾</span>
-                  <span>Simpan Build</span>
+                  <span>Simpan</span>
                 </button>
               </div>
             </div>
@@ -627,6 +731,195 @@ export default function BuildWorkshopPage() {
                     ))
                   )}
                 </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Printable Tournament Broadcast Infographic Card Section */}
+        <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-12 space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-4">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="h-2 w-2 rounded-full bg-amber-400 animate-pulse" />
+                <span className="font-mono text-xs font-bold uppercase tracking-wider text-amber-400">
+                  KLASIM BROADCAST SPEC // HIGH-RESOLUTION INFOGRAPHIC
+                </span>
+              </div>
+              <h2 className="font-sans text-xl sm:text-2xl font-black uppercase text-white mt-1">
+                KARTU GRAFIS BUILD TURNAMEN
+              </h2>
+              <p className="text-xs text-slate-400 font-sans mt-0.5">
+                Infografis visual beresolusi tinggi siap diunduh untuk dibagikan ke Discord, WhatsApp, atau media sosial.
+              </p>
+            </div>
+
+            <button
+              onClick={handleDownloadCard}
+              disabled={isExportingCard}
+              className="inline-flex items-center gap-2 rounded-xl bg-amber-400 px-5 py-2.5 font-mono text-xs font-black uppercase text-black hover:bg-amber-300 transition-all active:scale-95 shadow-lg shadow-amber-400/20 disabled:opacity-50 cursor-pointer shrink-0"
+            >
+              {isExportingCard ? (
+                <>
+                  <span className="h-3 w-3 rounded-full border-2 border-black border-t-transparent animate-spin" />
+                  <span>MEMPROSES GAMBAR...</span>
+                </>
+              ) : downloadSuccess ? (
+                <>
+                  <span>✓</span>
+                  <span>KARTU BERHASIL DIUNDUH!</span>
+                </>
+              ) : (
+                <>
+                  <span>📸</span>
+                  <span>UNDUH KARTU GRAFIS (PNG)</span>
+                </>
+              )}
+            </button>
+          </div>
+
+          {/* Printable Card Canvas Captured by toPng */}
+          <div className="overflow-x-auto pb-4">
+            <div
+              ref={cardRef}
+              style={{ width: '880px' }}
+              className="relative overflow-hidden rounded-3xl border-2 border-amber-400/50 bg-[#060812] p-8 text-white shadow-2xl shrink-0 select-none font-mono"
+            >
+              {/* Corner Ambient Glows */}
+              <div className="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full bg-amber-500/20 blur-3xl" />
+              <div className="pointer-events-none absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-cyan-500/20 blur-3xl" />
+
+              {/* Card Header Bar */}
+              <div className="relative z-10 flex items-center justify-between border-b border-white/10 pb-4 mb-6">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-400 font-sans text-lg font-black text-black shadow-lg shadow-amber-400/30">
+                    K
+                  </div>
+                  <div>
+                    <div className="font-sans text-sm font-black tracking-widest text-white uppercase">
+                      KLASIM MLBB PRO BUILD SPEC
+                    </div>
+                    <div className="text-[10px] text-amber-400 font-bold uppercase tracking-wider">
+                      TOURNAMENT-GRADE EQUIPMENT TELEMETRY
+                    </div>
+                  </div>
+                </div>
+
+                <div className="text-right">
+                  <span className="rounded-lg border border-amber-400/40 bg-amber-400/10 px-3 py-1 text-xs font-black text-amber-400">
+                    LEVEL {level} SIMULATION
+                  </span>
+                </div>
+              </div>
+
+              {/* Main Card Grid */}
+              <div className="relative z-10 grid grid-cols-12 gap-6 items-center">
+                {/* Hero Showcase (Col 4) */}
+                <div className="col-span-4 flex flex-col items-center text-center">
+                  <div className="relative aspect-[4/5] w-full rounded-2xl overflow-hidden border-2 border-amber-400/60 shadow-2xl bg-black">
+                    <img src={hero.image} alt={hero.name} className="h-full w-full object-cover" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent" />
+                    <div className="absolute bottom-3 left-3 right-3 text-left">
+                      <span className="text-[9px] text-amber-400 font-bold uppercase tracking-wider">
+                        {hero.title || 'THE TACTICAL APEX'}
+                      </span>
+                      <h3 className="text-2xl font-black text-white uppercase font-sans leading-tight">
+                        {hero.name}
+                      </h3>
+                      <div className="flex items-center gap-1.5 mt-1 text-[9px] text-slate-300">
+                        <span>{hero.roles.join(', ')}</span>
+                        <span>·</span>
+                        <span className="text-amber-300 font-bold">{hero.lane[0] || 'Flex'}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Build Details (Col 8) */}
+                <div className="col-span-8 space-y-4">
+                  <div>
+                    <span className="text-[10px] text-slate-400 uppercase tracking-widest block">NAMA RACIKAN BUILD:</span>
+                    <h4 className="text-xl font-black text-white uppercase font-sans truncate">
+                      {buildTitle}
+                    </h4>
+                  </div>
+
+                  {/* 6 Equipment Item Rack */}
+                  <div className="rounded-2xl border border-white/10 bg-black/60 p-3 space-y-2">
+                    <div className="flex items-center justify-between text-[10px]">
+                      <span className="font-bold text-slate-400 uppercase tracking-wider">6 EQUIPMENT ITEMS:</span>
+                      <span className="font-bold text-amber-400">💰 {calculatedStats.totalCost.toLocaleString()} Gold</span>
+                    </div>
+                    <div className="grid grid-cols-6 gap-2">
+                      {equippedItems.map((item, idx) => (
+                        <div
+                          key={idx}
+                          className="relative aspect-square rounded-xl border border-amber-400/30 bg-slate-900 p-1 flex flex-col items-center justify-center overflow-hidden"
+                        >
+                          {item ? (
+                            <>
+                              <img src={item.image} alt={item.name} className="h-full w-full object-contain p-0.5 rounded" />
+                              <div className="absolute bottom-0 inset-x-0 bg-black/80 text-[7px] text-center text-amber-300 font-bold truncate px-0.5">
+                                {item.name.split(' ')[0]}
+                              </div>
+                            </>
+                          ) : (
+                            <span className="text-[9px] text-slate-600 font-bold">SLOT {idx + 1}</span>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Spell & Emblem Bar */}
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="flex items-center gap-2.5 rounded-xl border border-cyan-400/30 bg-cyan-950/20 p-2.5">
+                      <div className="relative h-10 w-10 rounded-full border border-cyan-400/50 overflow-hidden bg-slate-900 shrink-0">
+                        {spell && <img src={spell.image} alt={spell.name} className="h-full w-full object-contain rounded-full" />}
+                      </div>
+                      <div className="truncate">
+                        <span className="text-[8px] text-cyan-400 uppercase tracking-widest block font-bold">BATTLE SPELL</span>
+                        <span className="text-xs font-black text-white truncate block">{spell?.name || 'Flicker'}</span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2.5 rounded-xl border border-purple-400/30 bg-purple-950/20 p-2.5">
+                      <div className="relative h-10 w-10 rounded-xl border border-purple-400/50 overflow-hidden bg-slate-900 shrink-0">
+                        {emblem && <img src={emblem.image} alt={emblem.name} className="h-full w-full object-contain p-0.5" />}
+                      </div>
+                      <div className="truncate">
+                        <span className="text-[8px] text-purple-400 uppercase tracking-widest block font-bold">CUSTOM EMBLEM</span>
+                        <span className="text-xs font-black text-white truncate block">{emblem?.name || 'Assassin'}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Calculated Stats Matrix Bar */}
+                  <div className="grid grid-cols-4 gap-2 text-center text-[10px]">
+                    <div className="rounded-xl border border-white/5 bg-white/[0.02] p-2">
+                      <span className="block text-[8px] text-slate-500 uppercase">Max Health</span>
+                      <span className="text-xs font-bold text-emerald-400">{calculatedStats.finalHp.toLocaleString()} HP</span>
+                    </div>
+                    <div className="rounded-xl border border-white/5 bg-white/[0.02] p-2">
+                      <span className="block text-[8px] text-slate-500 uppercase">Physical ATK</span>
+                      <span className="text-xs font-bold text-rose-400">+{calculatedStats.finalPhyAtk}</span>
+                    </div>
+                    <div className="rounded-xl border border-white/5 bg-white/[0.02] p-2">
+                      <span className="block text-[8px] text-slate-500 uppercase">Phys/Mag DEF</span>
+                      <span className="text-xs font-bold text-cyan-400">{calculatedStats.finalPhyDef}/{calculatedStats.finalMagDef}</span>
+                    </div>
+                    <div className="rounded-xl border border-white/5 bg-white/[0.02] p-2">
+                      <span className="block text-[8px] text-slate-500 uppercase">CDR / ATK SPD</span>
+                      <span className="text-xs font-bold text-amber-400">{calculatedStats.finalCdr}% / {calculatedStats.finalAtkSpeed}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Card Footer Bar */}
+              <div className="relative z-10 flex items-center justify-between border-t border-white/10 pt-4 mt-6 text-[9px] text-slate-500">
+                <span>VERIFIKASI TELEMETRI: DETERMINISTIK RESMI KLASIM</span>
+                <span className="text-amber-400 font-bold">WWW.KLASIM.COM // MLBB PRO WORKSHOP</span>
               </div>
             </div>
           </div>
