@@ -13,6 +13,7 @@ import {
   type MLBBTierStat,
   type MLBBHeroRelation,
 } from '@/data/mlbb';
+import DraftAiAdvisor from '@/components/mlbb/DraftAiAdvisor';
 
 interface DraftSlot {
   type: 'ban' | 'pick';
@@ -338,6 +339,19 @@ export default function DraftSimulatorPage() {
             </div>
           </div>
         )}
+
+        {/* AI Draft Advisor & Tactical Telemetry Engine */}
+        <DraftAiAdvisor
+          currentStep={currentStep || null}
+          activeSlot={activeSlot}
+          draftMode={draftMode}
+          bluePicks={bluePicks}
+          redPicks={redPicks}
+          blueBans={blueBans}
+          redBans={redBans}
+          usedHeroIds={usedHeroIds}
+          onSelectHero={handleSelectHero}
+        />
 
         {/* 5v5 Arena Board Layout (Blue vs Red) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
