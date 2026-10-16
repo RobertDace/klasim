@@ -1,0 +1,107 @@
+[
+  {
+    "id": "5e0b6bcf-c296-4117-b0d4-4d6dae8f1618",
+    "name": "Mage",
+    "attributes": {
+      "magic_power": 30,
+      "magic_penetration": 8,
+      "cooldown_reduction": "5%"
+    },
+    "created_at": "2025-08-10T05:05:59.688408+00:00",
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/5/5e/Custom_Mage_Emblem.png",
+    "mpl_id": "20006",
+    "slug": "mage",
+    "image": "/mlbb/emblems/mage.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/5/5e/Custom_Mage_Emblem.png"
+  },
+  {
+    "id": "20ca33c9-d514-45d0-a956-98beb83e86ef",
+    "name": "Fighter",
+    "attributes": {
+      "hybrid_defense": 8,
+      "adaptive_attack": 22,
+      "hybrid_lifesteal": "10%"
+    },
+    "created_at": "2025-08-10T05:05:59.688408+00:00",
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/b/ba/Custom_Fighter_Emblem.png",
+    "mpl_id": "20007",
+    "slug": "fighter",
+    "image": "/mlbb/emblems/fighter.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/b/ba/Custom_Fighter_Emblem.png"
+  },
+  {
+    "id": "548cd559-72f6-45b4-a0d5-f4b7aafcb2a9",
+    "name": "Support",
+    "attributes": {
+      "healing_effect": "12%",
+      "movement_speed": "6%",
+      "cooldown_reduction": "10%"
+    },
+    "created_at": "2025-08-10T05:05:59.688408+00:00",
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/c/c7/Custom_Support_Emblem.png",
+    "mpl_id": "20008",
+    "slug": "support",
+    "image": "/mlbb/emblems/support.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/c/c7/Custom_Support_Emblem.png"
+  },
+  {
+    "id": "19b50db4-0112-4bc6-8801-b106c92900c9",
+    "name": "Common",
+    "attributes": {
+      "hp": 275,
+      "hybrid_regen": 12,
+      "adaptive_attack": 22
+    },
+    "created_at": "2025-08-10T05:05:59.688408+00:00",
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/7/7f/Basic_Common_Emblem.png",
+    "mpl_id": "20001",
+    "slug": "common",
+    "image": "/mlbb/emblems/common.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/7/7f/Basic_Common_Emblem.png"
+  },
+  {
+    "id": "0477a4cd-825b-408f-92dc-d5e9229c7a50",
+    "name": "Marksman",
+    "attributes": {
+      "lifesteal": "5%",
+      "attack_speed": "15%",
+      "adaptive_attack": 16
+    },
+    "created_at": "2025-08-10T05:05:59.688408+00:00",
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/4/4c/Custom_Marksman_Emblem.png",
+    "mpl_id": "20012",
+    "slug": "marksman",
+    "image": "/mlbb/emblems/marksman.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/4/4c/Custom_Marksman_Emblem.png"
+  },
+  {
+    "id": "c0c1e80e-c705-4a36-ae5f-f930130489ba",
+    "name": "Tank",
+    "attributes": {
+      "hp": 500,
+      "hp_regen": 4,
+      "hybrid_defense": 10
+    },
+    "created_at": "2025-08-10T05:05:59.688408+00:00",
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/e/ec/Custom_Tank_Emblem.png",
+    "mpl_id": "20003",
+    "slug": "tank",
+    "image": "/mlbb/emblems/tank.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/e/ec/Custom_Tank_Emblem.png"
+  },
+  {
+    "id": "6f783459-4751-414f-b371-85282443cfd4",
+    "name": "Assassin",
+    "attributes": {
+      "movement_speed": "3%",
+      "adaptive_attack": 10,
+      "adaptive_penetration": 14
+    },
+    "created_at": "2025-08-10T05:05:59.688408+00:00",
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/9/94/Custom_Assassin_Emblem.png",
+    "mpl_id": "20005",
+    "slug": "assassin",
+    "image": "/mlbb/emblems/assassin.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/9/94/Custom_Assassin_Emblem.png"
+  }
+]

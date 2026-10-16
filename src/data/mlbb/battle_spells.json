@@ -1,0 +1,167 @@
+[
+  {
+    "id": "d8bbd0c3-3d55-4d45-926a-cc3b834c318b",
+    "name": "Bloody Retribution",
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/4/4c/Bloody_Retribution.png",
+    "description": "Unique Active - Retribution''s damage against creeps and minions is increased to 150%. When cast on an enemy hero, deals them 100 True Damage and steals HP equal to 250 plus 20% of the caster''s extra HP from them for 4 seconds. Retribution is upgraded when the total number of creep kills, hero kills, and assists reaches 5",
+    "cooldown": 35,
+    "created_at": "2025-09-18T07:05:02.933264+00:00",
+    "slug": "bloody-retribution",
+    "image": "/mlbb/spells/bloody-retribution.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/4/4c/Bloody_Retribution.png"
+  },
+  {
+    "id": "4b128f1d-6404-4e60-a219-9b9c4bdd74aa",
+    "name": "Aegis",
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/e/e5/Aegis.png",
+    "description": "Gain a 750 (+90*Hero Level) shield for 5s",
+    "cooldown": 75,
+    "created_at": "2025-08-16T17:13:22.672973+00:00",
+    "slug": "aegis",
+    "image": "/mlbb/spells/aegis.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/e/e5/Aegis.png"
+  },
+  {
+    "id": "b68d9e4c-db6e-4107-a36f-ea24b16fb978",
+    "name": "Revitalize",
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/f/f9/Revitalize.png",
+    "description": "Summons a Healing Spring that restores 2.5% Max HP every 0.5 second for 5 seconds (maximum of 25% Max HP).\nIncreases the Shield and HP Regen by 25% for allies within the area of effect (this effect is cannot be stacked up).",
+    "cooldown": 100,
+    "created_at": "2025-08-16T17:13:22.672973+00:00",
+    "slug": "revitalize",
+    "image": "/mlbb/spells/revitalize.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/f/f9/Revitalize.png"
+  },
+  {
+    "id": "c4ec9da3-fa75-473a-9abf-f0e1d8fae6c4",
+    "name": "Sprint",
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/b/bb/Sprint.png",
+    "description": "Gains up to 50% extra Movement Speed and slow immunity for 6s. The extra Movement Speed gradually decays after 2s.",
+    "cooldown": 100,
+    "created_at": "2025-08-16T17:13:22.672973+00:00",
+    "slug": "sprint",
+    "image": "/mlbb/spells/sprint.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/b/bb/Sprint.png"
+  },
+  {
+    "id": "1eab9502-3e1c-47cc-aad8-e947b6dc79df",
+    "name": "Retribution",
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/f/fb/Retribution.png",
+    "description": "",
+    "cooldown": 35,
+    "created_at": "2025-08-16T17:13:22.672973+00:00",
+    "slug": "retribution",
+    "image": "/mlbb/spells/retribution.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/f/fb/Retribution.png"
+  },
+  {
+    "id": "4bd8e270-d8a4-4638-8cd7-e1b25f67e86a",
+    "name": "Ice Retribution",
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/b/bd/Ice_Retribution.png",
+    "description": "Unique Active - Retribution's damage against creeps and minions is increased to 150%. When cast on an enemy hero, deals them 100 True Damage and steals 72-100 Movement Speed (scales with level) from them for 4 seconds. Retribution is upgraded when the total number of creep kills, hero kills, and assists reaches 5.",
+    "cooldown": 35,
+    "created_at": "2025-09-18T07:03:56.072631+00:00",
+    "slug": "ice-retribution",
+    "image": "/mlbb/spells/ice-retribution.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/b/bd/Ice_Retribution.png"
+  },
+  {
+    "id": "a812d5d9-149b-48b0-b77e-fcf2bc2fe7ae",
+    "name": "Flame Retribution",
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/9/9f/Flame_Retribution.png",
+    "description": "Unique Active - Retribution's damage against creeps and minions is increased to 150%. When cast on an enemy hero, deals them 100 True Damage and steals 58-100 Physical Attack and Magic Power (scales with level) from them for 4 seconds. Retribution is upgraded when the total number of creep kills, hero kills, and assists reaches 5.",
+    "cooldown": 35,
+    "created_at": "2025-09-18T07:03:56.072631+00:00",
+    "slug": "flame-retribution",
+    "image": "/mlbb/spells/flame-retribution.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/9/9f/Flame_Retribution.png"
+  },
+  {
+    "id": "aa9d509d-79bd-4486-b7d3-eb724cb72f3e",
+    "name": "Vengeance",
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/8/85/Vengeance.png",
+    "description": "In the next 3 seconds, each time the hero takes damage deals 40% of the damage taken as Magic Damage to the enemy.\nGains 35% Damage Reduction during the period.",
+    "cooldown": 75,
+    "created_at": "2025-08-16T17:13:22.672973+00:00",
+    "slug": "vengeance",
+    "image": "/mlbb/spells/vengeance.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/8/85/Vengeance.png"
+  },
+  {
+    "id": "6d22e467-4ef4-4113-8236-abe0a446a7f6",
+    "name": "Arrival",
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/3/33/Arrival.png",
+    "description": "After channeling for 3s, teleport to the target allied Turret, Base, Minion, or trap and gain 60% extra Movement Speed (decays over 3s) afterward. if the channeling is canceled or interupted, 30s of the spelll cooldown will be refunded",
+    "cooldown": 75,
+    "created_at": "2025-08-16T17:13:22.672973+00:00",
+    "slug": "arrival",
+    "image": "/mlbb/spells/arrival.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/3/33/Arrival.png"
+  },
+  {
+    "id": "41a50416-346b-4570-a453-01d9b0a9b507",
+    "name": "Execute",
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/b/b6/Execute.png",
+    "description": "Deals 100 (+10 × Hero Level) (+enemy's 13% Lost HP) True Damage to the designated enemy hero.\nThis damage ignores shield. If the target is slain by this skill, its cooldown will be reduced by 40%.",
+    "cooldown": 90,
+    "created_at": "2025-08-16T17:13:22.672973+00:00",
+    "slug": "execute",
+    "image": "/mlbb/spells/execute.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/b/b6/Execute.png"
+  },
+  {
+    "id": "234c17a1-89ce-4289-b5df-9e2625a4a8b6",
+    "name": "Flameshot",
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/f/f2/Flameshot.png",
+    "description": "Fires a Flaming Shot in a designated direction, dealing 160 (+60% Total Magic Power)–640 +180% Total Magic Power) Magic Damage (scales on distance) and slowing the target by 30% for 0.5 second.\nCasting the skill knocks back nearby enemies.",
+    "cooldown": 50,
+    "created_at": "2025-08-16T17:13:22.672973+00:00",
+    "slug": "flameshot",
+    "image": "/mlbb/spells/flameshot.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/f/f2/Flameshot.png"
+  },
+  {
+    "id": "672c6fa7-ca0f-4aef-82b7-897accfc392a",
+    "name": "Flicker",
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/1/1e/Flicker.png",
+    "description": "Moves a certain distance in a designated direction. Then gains 6 (+1 × Hero Level) Physical and Magic Defense for 1 second.",
+    "cooldown": 120,
+    "created_at": "2025-08-16T17:13:22.672973+00:00",
+    "slug": "flicker",
+    "image": "/mlbb/spells/flicker.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/1/1e/Flicker.png"
+  },
+  {
+    "id": "62a0cb78-66c8-4066-831c-91c49eefc0af",
+    "name": "Inspire",
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/c/c4/Inspire.png",
+    "description": "For up to 6  Basic Attacks within the next 5 seconds, increase Attack Speed to 1.5 times and the Attack Speed cap to 500%.\nThe Basic Attacks also ignore 8(+1*Hero Level) of target's Hybrid Defense and restore 60 (+15% Total Physical Attack) (+10% Total Magic Power) HP on hit.",
+    "cooldown": 75,
+    "created_at": "2025-08-16T17:13:22.672973+00:00",
+    "slug": "inspire",
+    "image": "/mlbb/spells/inspire.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/c/c4/Inspire.png"
+  },
+  {
+    "id": "5c127219-bbdd-4373-99fb-e34ec4c341c1",
+    "name": "Petrify",
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/6/6d/Petrify.png",
+    "description": "Deals 100 (+15 × Hero Level) Magic Damage to nearby enemies and petrifies them for 0.8s. Enemies hit will also be slowed by 50% for 0.8s afterward.",
+    "cooldown": 75,
+    "created_at": "2025-08-16T17:13:22.672973+00:00",
+    "slug": "petrify",
+    "image": "/mlbb/spells/petrify.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/6/6d/Petrify.png"
+  },
+  {
+    "id": "46bae42c-7ede-4cd7-8666-3a851cb8ffa6",
+    "name": "Purify",
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/2/22/Purify.png",
+    "description": "Immediately removes all negative effects.\nIn the next 1.2 seconds, gains control immunity and 15% Movement Speed.",
+    "cooldown": 90,
+    "created_at": "2025-08-16T17:13:22.672973+00:00",
+    "slug": "purify",
+    "image": "/mlbb/spells/purify.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/2/22/Purify.png"
+  }
+]

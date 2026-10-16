@@ -15,6 +15,7 @@ export default function Navbar({ activeSection = 'beranda' }: NavbarProps) {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [isMlbbDropdownOpen, setIsMlbbDropdownOpen] = useState(false);
 
   // 1. Live WIB Clock
   useEffect(() => {
@@ -46,19 +47,33 @@ export default function Navbar({ activeSection = 'beranda' }: NavbarProps) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const scrollToSection = (id: string) => {
+  const handleNavClick = (item: { id: string; label: string; code: string; href: string }) => {
     setIsMobileMenuOpen(false);
-    const target = document.getElementById(id);
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setIsMlbbDropdownOpen(false);
+    if (item.href.startsWith('/#')) {
+      const targetId = item.href.replace('/#', '');
+      const target = document.getElementById(targetId);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        return;
+      }
     }
   };
 
+  const mlbbSubItems = [
+    { href: '/mlbb/heroes', label: 'HERO HUB & BUILDS', desc: '133 Hero, Skill, Scaling & Builds', icon: '🛡️' },
+    { href: '/mlbb/tier-list', label: 'META TIER LIST', desc: 'Ranking S+ sampai C per Lane', icon: '🏆' },
+    { href: '/mlbb/draft', label: 'DRAFT SIMULATOR 5v5', desc: 'Simulasi Pick/Ban & Sinergi Tim', icon: '⚔️' },
+    { href: '/mlbb/counter-pick', label: 'COUNTER PICK FINDER', desc: 'Rekomendasi Counter 1-5 Hero', icon: '🎯' },
+    { href: '/mlbb/items', label: 'DATABASE ITEM', desc: '90 Equipment, Pasif Unik & Komparator', icon: '📦' },
+  ];
+
   const navItems = [
-    { id: 'beranda', label: 'BERANDA', code: '01' },
-    { id: 'modul', label: 'MODUL TURNAMEN', code: '02' },
-    { id: 'lab', label: 'SCENARIO LAB', code: '03' },
-    { id: 'tentang', label: 'TENTANG', code: '04' },
+    { id: 'beranda', label: 'BERANDA', code: '01', href: '/' },
+    { id: 'mlbb', label: 'MLBB META', code: '02', href: '/mlbb/heroes', isHighlight: true },
+    { id: 'modul', label: 'MODUL TURNAMEN', code: '03', href: '/#modul' },
+    { id: 'lab', label: 'SCENARIO LAB', code: '04', href: '/#lab' },
+    { id: 'tentang', label: 'TENTANG', code: '05', href: '/#tentang' },
   ];
 
   return (
@@ -91,8 +106,9 @@ export default function Navbar({ activeSection = 'beranda' }: NavbarProps) {
         {/* Main Navigation Bar */}
         <div className="mx-auto flex max-w-7xl items-center justify-between px-3.5 py-2.5 sm:px-6 lg:px-8">
           {/* Brand Terminal */}
-          <button
-            onClick={() => scrollToSection('beranda')}
+          <Link
+            href="/"
+            onClick={() => handleNavClick({ id: 'beranda', label: 'BERANDA', code: '01', href: '/' })}
             className="group flex items-center gap-2.5 sm:gap-3 text-left active:scale-95 transition-transform cursor-pointer"
           >
             <div className="relative flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded border border-amber-400/40 bg-amber-400/10 font-mono text-xs sm:text-sm font-black text-amber-400 transition-colors group-hover:bg-amber-400 group-hover:text-black">
@@ -108,16 +124,77 @@ export default function Navbar({ activeSection = 'beranda' }: NavbarProps) {
                 STANDINGS TELEMETRY
               </span>
             </div>
-          </button>
+          </Link>
 
           {/* Desktop Nav Items */}
           <nav className="hidden md:flex items-center gap-1 border border-white/10 bg-slate-950/80 p-1 rounded-xl">
             {navItems.map((item) => {
               const isActive = activeSection === item.id;
+
+              if (item.id === 'mlbb') {
+                return (
+                  <div
+                    key={item.id}
+                    className="relative"
+                    onMouseEnter={() => setIsMlbbDropdownOpen(true)}
+                    onMouseLeave={() => setIsMlbbDropdownOpen(false)}
+                  >
+                    <Link
+                      href={item.href}
+                      onClick={() => handleNavClick(item)}
+                      className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[11px] font-bold uppercase transition-all duration-200 cursor-pointer ${
+                        isActive || isMlbbDropdownOpen
+                          ? 'bg-amber-400 text-black shadow-sm font-black'
+                          : 'text-slate-400 hover:bg-white/5 hover:text-white'
+                      }`}
+                    >
+                      <span className={`text-[9px] ${isActive || isMlbbDropdownOpen ? 'text-black/70' : 'text-slate-600'}`}>
+                        {item.code}
+                      </span>
+                      <span>{item.label}</span>
+                      <span className="text-[8px] opacity-70">▼</span>
+                    </Link>
+
+                    {/* Floating MLBB Meta Dropdown */}
+                    {isMlbbDropdownOpen && (
+                      <div className="absolute left-0 mt-1 w-64 rounded-2xl border border-white/15 bg-slate-950/95 p-2 shadow-2xl backdrop-blur-2xl z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+                        <div className="border-b border-white/10 px-3 py-1.5 text-[9px] text-amber-400 font-mono font-bold tracking-wider">
+                          MLBB META SUITE (MOLEBUILD)
+                        </div>
+                        <div className="space-y-1 mt-1">
+                          {mlbbSubItems.map((sub) => (
+                            <Link
+                              key={sub.href}
+                              href={sub.href}
+                              onClick={() => {
+                                setIsMlbbDropdownOpen(false);
+                                setIsMobileMenuOpen(false);
+                              }}
+                              className="group flex items-start gap-2.5 rounded-xl px-2.5 py-2 text-left transition-all hover:bg-amber-400/10 cursor-pointer"
+                            >
+                              <span className="text-base shrink-0 mt-0.5">{sub.icon}</span>
+                              <div className="min-w-0">
+                                <div className="text-[11px] font-bold text-white group-hover:text-amber-400 transition-colors font-sans">
+                                  {sub.label}
+                                </div>
+                                <div className="text-[9px] text-slate-400 truncate font-sans">
+                                  {sub.desc}
+                                </div>
+                              </div>
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+
               return (
-                <button
+                <Link
                   key={item.id}
-                  onClick={() => scrollToSection(item.id)}
+                  href={item.href}
+                  onClick={() => handleNavClick(item)}
                   className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[11px] font-bold uppercase transition-all duration-200 cursor-pointer ${
                     isActive
                       ? 'bg-amber-400 text-black shadow-sm font-black'
@@ -128,7 +205,7 @@ export default function Navbar({ activeSection = 'beranda' }: NavbarProps) {
                     {item.code}
                   </span>
                   <span>{item.label}</span>
-                </button>
+                </Link>
               );
             })}
           </nav>
@@ -232,21 +309,48 @@ export default function Navbar({ activeSection = 'beranda' }: NavbarProps) {
               {navItems.map((item) => {
                 const isActive = activeSection === item.id;
                 return (
-                  <button
-                    key={item.id}
-                    onClick={() => scrollToSection(item.id)}
-                    className={`flex w-full items-center justify-between rounded-xl border p-3.5 text-left text-xs font-bold uppercase transition-all ${
-                      isActive
-                        ? 'border-amber-400 bg-amber-400/10 text-amber-400 shadow-md shadow-amber-400/10'
-                        : 'border-white/10 bg-black/40 text-slate-300 active:bg-white/5'
-                    }`}
-                  >
-                    <div className="flex items-center gap-2.5">
-                      <span className="text-[10px] text-slate-500 font-normal">{item.code}</span>
-                      <span>{item.label}</span>
-                    </div>
-                    {isActive && <span className="text-amber-400 text-xs">●</span>}
-                  </button>
+                  <div key={item.id} className="space-y-1.5">
+                    <Link
+                      href={item.href}
+                      onClick={() => handleNavClick(item)}
+                      className={`flex w-full items-center justify-between rounded-xl border p-3.5 text-left text-xs font-bold uppercase transition-all ${
+                        isActive
+                          ? 'border-amber-400 bg-amber-400/10 text-amber-400 shadow-md shadow-amber-400/10'
+                          : 'border-white/10 bg-black/40 text-slate-300 active:bg-white/5'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <span className="text-[10px] text-slate-500 font-normal">{item.code}</span>
+                        <span>{item.label}</span>
+                        {item.id === 'mlbb' && (
+                          <span className="rounded bg-amber-400/20 px-1 py-0.2 text-[8px] font-mono text-amber-300 border border-amber-400/30">
+                            5 FITUR
+                          </span>
+                        )}
+                      </div>
+                      {isActive && <span className="text-amber-400 text-xs">●</span>}
+                    </Link>
+
+                    {/* Expandable sub-items for MLBB on Mobile */}
+                    {item.id === 'mlbb' && (
+                      <div className="grid grid-cols-1 gap-1.5 pl-3 border-l-2 border-amber-400/40 ml-3 py-1">
+                        {mlbbSubItems.map((sub) => (
+                          <Link
+                            key={sub.href}
+                            href={sub.href}
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            className="flex items-center justify-between rounded-lg bg-black/40 border border-white/5 px-3 py-2 text-slate-300 hover:text-amber-400 hover:border-amber-400/30 transition-all text-[11px] font-mono"
+                          >
+                            <span className="flex items-center gap-2">
+                              <span>{sub.icon}</span>
+                              <span className="font-bold">{sub.label}</span>
+                            </span>
+                            <span className="text-[9px] text-slate-500">→</span>
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 );
               })}
             </div>

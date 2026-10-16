@@ -1,0 +1,1540 @@
+[
+  {
+    "id": "1433cb2c-1ad9-4f7d-b594-793ac4c9e6b6",
+    "name": "Rapid Boots",
+    "type": "Movement",
+    "price": 720,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/a/a4/Rapid_Boots.png",
+    "stats": {
+      "hp_regen": "+12",
+      "movement_speed": "+65",
+      "slow_reduction": "*0.35"
+    },
+    "passive_description": "Unique Passive - Side Effect: Loses 20 Movement Speed for 5 seconds upon dealing or taking damage.",
+    "created_at": "2025-08-12T08:05:07.185464+00:00",
+    "mpl_id": "3561",
+    "slug": "rapid-boots",
+    "image": "/mlbb/items/rapid-boots.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/a/a4/Rapid_Boots.png"
+  },
+  {
+    "id": "53b5fd94-2ab6-4b0b-beee-7ef0533dac37",
+    "name": "Vampire Mallet",
+    "type": "Attack",
+    "price": 400,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/f/f9/Vampire_Mallet.png",
+    "stats": {
+      "lifesteal": "+0.08",
+      "Physical Attack": "+8"
+    },
+    "passive_description": null,
+    "created_at": "2026-08-15T15:59:33.960598+00:00",
+    "mpl_id": "1004",
+    "slug": "vampire-mallet",
+    "image": "/mlbb/items/vampire-mallet.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/f/f9/Vampire_Mallet.png"
+  },
+  {
+    "id": "558b4905-faad-4920-971f-1213ce1efa09",
+    "name": "Magic Wand",
+    "type": "Magic",
+    "price": 820,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/b/bc/Magic_Wand.png",
+    "stats": {
+      "magic_power": "+45"
+    },
+    "passive_description": null,
+    "created_at": "2026-08-15T16:08:00.331452+00:00",
+    "mpl_id": "2101",
+    "slug": "magic-wand",
+    "image": "/mlbb/items/magic-wand.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/b/bc/Magic_Wand.png"
+  },
+  {
+    "id": "314d8e72-41ac-4240-80be-f4305897e7f0",
+    "name": "Power Crystal",
+    "type": "Magic",
+    "price": 220,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/f/fd/Power_Crystal.png",
+    "stats": {
+      "mana": "+280"
+    },
+    "passive_description": null,
+    "created_at": "2026-08-17T07:49:15.993474+00:00",
+    "mpl_id": "1102",
+    "slug": "power-crystal",
+    "image": "/mlbb/items/power-crystal.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/f/fd/Power_Crystal.png"
+  },
+  {
+    "id": "9d4988cb-f1ff-4020-a152-09bfa42ea847",
+    "name": "Thunder Belt",
+    "type": "Defense",
+    "price": 1820,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/d/dd/Thunder_Belt.png",
+    "stats": {
+      "hp": "+600",
+      "magic_defense": "+15",
+      "movement_speed": "+20",
+      "physical_defense": "+15"
+    },
+    "passive_description": "Unique Passive - Thunderbolt: Every 4 seconds, the next Basic Attack deals 50 (+100% Extra Physical Defense) (+100% Extra Magic Defense) extra True Damage to the target and enemies around them, and briefly slows them by 99%. Hybrid Defense permanently increases by 1 each time the attack hits an enemy hero. (This effect is reduced to 50% for Marksmen and Mages)",
+    "created_at": "2025-08-19T04:45:23.211515+00:00",
+    "mpl_id": "2212",
+    "slug": "thunder-belt",
+    "image": "/mlbb/items/thunder-belt.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/d/dd/Thunder_Belt.png"
+  },
+  {
+    "id": "3efcfc92-3d58-470f-abee-20d29a7803e4",
+    "name": "Knife",
+    "type": "Attack",
+    "price": 280,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/5/58/Knife.png",
+    "stats": {
+      "attack_speed": "*0.1"
+    },
+    "passive_description": null,
+    "created_at": "2026-08-17T14:59:41.415654+00:00",
+    "mpl_id": "1002",
+    "slug": "knife",
+    "image": "/mlbb/items/knife.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/5/58/Knife.png"
+  },
+  {
+    "id": "7b359779-ca5b-463e-b901-8f55016aa2d2",
+    "name": "Iron Hunting Bow",
+    "type": "Attack",
+    "price": 450,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/b/be/Iron_Hunting_Bow.png",
+    "stats": {
+      "physical_attack": "+10",
+      "cooldown_reduction": "*0.05"
+    },
+    "passive_description": null,
+    "created_at": "2026-08-28T10:55:28.860384+00:00",
+    "mpl_id": "1005",
+    "slug": "iron-hunting-bow",
+    "image": "/mlbb/items/iron-hunting-bow.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/b/be/Iron_Hunting_Bow.png"
+  },
+  {
+    "id": "93514bd9-2483-40ef-b301-86a6c796e2be",
+    "name": "Antique Cuirass",
+    "type": "Defense",
+    "price": 2170,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/4/40/Antique_Cuirass.png",
+    "stats": {
+      "hp": "+920",
+      "hp_regen": "+4",
+      "physical_defense": "+40"
+    },
+    "passive_description": "Unique Passive - Deter: When hit by a skill, reduces the attacker's Physical Damage by 6% for 2 seconds (this effect stacks up to 3 times).",
+    "created_at": "2025-08-12T08:05:07.185464+00:00",
+    "mpl_id": "3203",
+    "slug": "antique-cuirass",
+    "image": "/mlbb/items/antique-cuirass.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/4/40/Antique_Cuirass.png"
+  },
+  {
+    "id": "9d21f19b-e352-4d3e-b6b0-8c742a8078e7",
+    "name": "Malefic Gun",
+    "type": "Attack",
+    "price": 2120,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/7/72/Malefic_Gun.png",
+    "stats": {
+      "attack_speed": "*0.2",
+      "physical_attack": "+40"
+    },
+    "passive_description": "Unique Passive - Armor Buster: Increase Physical Penetration by 30%.\nUnique Passive - Malefic Energy: Increases Basic Attack range by 12%. When hitting a target, gains 10% Movement Speed for 0.5 seconds.",
+    "created_at": "2025-08-12T08:05:07.185464+00:00",
+    "mpl_id": "3015",
+    "slug": "malefic-gun",
+    "image": "/mlbb/items/malefic-gun.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/7/72/Malefic_Gun.png"
+  },
+  {
+    "id": "27361867-2d35-4ad8-8d4d-ba0266b04109",
+    "name": "Blade of Despair",
+    "type": "Attack",
+    "price": 3010,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/d/d5/Blade_of_Despair.png",
+    "stats": {
+      "movement_speed": "*0.5",
+      "physical_attack": "+160"
+    },
+    "passive_description": "Dealing damage to non-Minion enemies below 50% HP grants 25% extra Physical Attack for 2 seconds (takes effect before the damage is dealt).",
+    "created_at": "2025-08-12T08:05:07.185464+00:00",
+    "mpl_id": "3008",
+    "slug": "blade-of-despair",
+    "image": "/mlbb/items/blade-of-despair.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/d/d5/Blade_of_Despair.png"
+  },
+  {
+    "id": "2184fd07-4ced-48d6-b6f0-04f99122a4e0",
+    "name": "Lightning Truncheon",
+    "type": "Magic",
+    "price": 2250,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/e/ee/Lightning_Truncheon.png",
+    "stats": {
+      "mana": "+400",
+      "magic_power": "+75",
+      "cd_reduction": "*0.1"
+    },
+    "passive_description": "Unique Passive - Resonate: Every 6 seconds, the next skill echoes, dealing 170 (+85% Magic Power) extra Magic Damage to all enemies in range.",
+    "created_at": "2025-08-12T08:05:07.185464+00:00",
+    "mpl_id": "3110",
+    "slug": "lightning-truncheon",
+    "image": "/mlbb/items/lightning-truncheon.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/e/ee/Lightning_Truncheon.png"
+  },
+  {
+    "id": "1b705193-8465-4ec5-8ae2-2fa116195df4",
+    "name": "Wind of Nature",
+    "type": "Defense",
+    "price": 1910,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/e/e3/Wind_of_Nature.png",
+    "stats": {
+      "lifesteal": "+10",
+      "attack_speed": "+20",
+      "physical_defense": "+30"
+    },
+    "passive_description": "Immune to all physical damage for 2 seconds (60s cooldown).",
+    "created_at": "2025-08-12T08:05:07.185464+00:00",
+    "mpl_id": null,
+    "slug": "wind-of-nature",
+    "image": "/mlbb/items/wind-of-nature.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/e/e3/Wind_of_Nature.png"
+  },
+  {
+    "id": "49c4ef2a-d6e0-4c9a-b2d9-49740e7f4772",
+    "name": "Demon Shoes",
+    "type": "Movement",
+    "price": 720,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/1/17/Demon_Shoes.png",
+    "stats": {
+      "mana_regen": "+10",
+      "movement_speed": "+40"
+    },
+    "passive_description": "Unique Passive - Mysticism: Getting a kill or assist on an enemy Minion will restore 4% Mana. (An assist occurs when a Minion dies within 2 seconds after taking damage from the hero.)",
+    "created_at": "2025-08-17T10:43:35.49465+00:00",
+    "mpl_id": "2308",
+    "slug": "demon-shoes",
+    "image": "/mlbb/items/demon-shoes.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/1/17/Demon_Shoes.png"
+  },
+  {
+    "id": "2f707623-6044-4dc4-8183-5095409c5078",
+    "name": "Immortality",
+    "type": "Defense",
+    "price": 2120,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/8/84/Immortality.png",
+    "stats": {
+      "hp": "+800",
+      "physical_defense": "+15"
+    },
+    "passive_description": "Unique Passive - Immortal: Resurrect 2.5 seconds upon death and gets 16% Max HP and a shield that can absorb 150(+70*Hero Level）damage. Shield lasts 3 seconds. This effect has a 210 seconds cooldown.",
+    "created_at": "2025-08-12T08:05:07.185464+00:00",
+    "mpl_id": "3207",
+    "slug": "immortality",
+    "image": "/mlbb/items/immortality.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/8/84/Immortality.png"
+  },
+  {
+    "id": "60d82125-ae14-43f5-9368-cadd62bb070a",
+    "name": "Endless Battle",
+    "type": "Attack",
+    "price": 2330,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/2/2b/Endless_Battle.png",
+    "stats": {
+      "hp": "+250",
+      "mana_regen": "+5",
+      "movement_speed": "*0.05",
+      "physical_attack": "+60",
+      "cooldown_reduction": "*0.1"
+    },
+    "passive_description": "Unique Passive - Divine Justice: After casting a skill, the next Basic Attack within 3 seconds deals (60% Total Physical Attack) extra True Damage and recovers 80 (+40% of Total Physical Attack) HP (1.5 seconds cooldown).",
+    "created_at": "2025-08-18T13:45:41.097529+00:00",
+    "mpl_id": "3004",
+    "slug": "endless-battle",
+    "image": "/mlbb/items/endless-battle.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/2/2b/Endless_Battle.png"
+  },
+  {
+    "id": "a80b1b94-e5a3-4c09-af16-3112a6ae9985",
+    "name": "Malefic Roar",
+    "type": "Attack",
+    "price": 2060,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/1/12/Malefic_Roar.png",
+    "stats": {
+      "physical_attack": "+60"
+    },
+    "passive_description": "Unique Passive - Armor Buster: Increase Physical Penetration by 30%.\nUnique Passive - Breaker: When attacking an enemy, gains 0.% extra Physical Penetration for each point of the enemy's Physical Defense, capped at 30%.",
+    "created_at": "2025-08-18T13:53:21.664467+00:00",
+    "mpl_id": "3001",
+    "slug": "malefic-roar",
+    "image": "/mlbb/items/malefic-roar.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/1/12/Malefic_Roar.png"
+  },
+  {
+    "id": "85ca390d-2fd5-4428-84ca-cdda78d395d2",
+    "name": "Corrosion Scythe",
+    "type": "Attack",
+    "price": 2050,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/f/f3/Corrosion_Scythe.png",
+    "stats": {
+      "attack_speed": "*0.3",
+      "movement_speed": "*0.05",
+      "physical_attack": "+30"
+    },
+    "passive_description": "Unique Passive - Corrosive: Basic Attacks gain 80 extra Physical Damage and slow the target by 8% (halved for ranged Basic Attacks) for 1.5 seconds. Stacks up to 5 times.\nUnique Passive - Impulse: Basic Attacks grant 6% extra Attack Speed for 3 seconds, capped at 5 stacks.",
+    "created_at": "2025-08-18T13:24:10.323448+00:00",
+    "mpl_id": "2008",
+    "slug": "corrosion-scythe",
+    "image": "/mlbb/items/corrosion-scythe.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/f/f3/Corrosion_Scythe.png"
+  },
+  {
+    "id": "b2ce2b22-7d97-45d9-bc09-ddf95a13e7aa",
+    "name": "Holy Crystal",
+    "type": "Magic",
+    "price": 3000,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/6/64/Holy_Crystal.png",
+    "stats": {
+      "magic_power": "+185"
+    },
+    "passive_description": "Unique Passive - Mystery: Gains 21%-35% extra Magic Power (scales with level)",
+    "created_at": "2025-08-17T00:46:57.456419+00:00",
+    "mpl_id": "3102",
+    "slug": "holy-crystal",
+    "image": "/mlbb/items/holy-crystal.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/6/64/Holy_Crystal.png"
+  },
+  {
+    "id": "fbd7ae0a-37da-493e-aed1-9932a2ea5317",
+    "name": "Berserker Fury",
+    "type": "Attack",
+    "price": 2390,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/6/6c/Berserker%27s_Fury.png",
+    "stats": {
+      "crit_chance": "+25",
+      "physical_attack": "+65"
+    },
+    "passive_description": "Unique Attribute: +40% Crit Damage\nUnique Passive - Doom: Critical strikes grant 5% extra Physical Attack for 2 seconds.",
+    "created_at": "2025-08-12T08:05:07.185464+00:00",
+    "mpl_id": "3003",
+    "slug": "berserker-fury",
+    "image": "/mlbb/items/berserker-fury.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/6/6c/Berserker%27s_Fury.png"
+  },
+  {
+    "id": "74901507-8882-467c-9d4a-e0b4b817d8d5",
+    "name": "Great Dragon Spear",
+    "type": "Attack",
+    "price": 2140,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/d/d4/Great_Dragon_Spear.png",
+    "stats": {
+      "physiccal_attack": "+70",
+      "cooldown_reduction": "*0.1"
+    },
+    "passive_description": "Unique Passive - Supreme Warrior: After casting an Ultimate, increase Movement Speed by 30% for 7.5 seconds. This effect has a 15 seconds cooldown.",
+    "created_at": "2025-08-17T10:34:13.97882+00:00",
+    "mpl_id": "3014",
+    "slug": "great-dragon-spear",
+    "image": "/mlbb/items/great-dragon-spear.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/d/d4/Great_Dragon_Spear.png"
+  },
+  {
+    "id": "30b36662-b7db-46c6-9a63-346eae2b1c45",
+    "name": "Swift Boots",
+    "type": "Movement",
+    "price": 720,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/0/07/Swift_Boots.png",
+    "stats": {
+      "attack_speed": "*0.15",
+      "movement_speed": "+40"
+    },
+    "passive_description": "",
+    "created_at": "2025-08-17T13:10:39.873973+00:00",
+    "mpl_id": "2305",
+    "slug": "swift-boots",
+    "image": "/mlbb/items/swift-boots.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/0/07/Swift_Boots.png"
+  },
+  {
+    "id": "a6ec810a-08da-4bbf-a137-8d23531920c9",
+    "name": "Arcane Boots",
+    "type": "Movement",
+    "price": 720,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/1/15/Arcane_Boots.png",
+    "stats": {
+      "magic_power": "+15",
+      "movement_speed": "+40",
+      "magic_penetration": "+10"
+    },
+    "passive_description": "",
+    "created_at": "2025-08-17T14:57:06.270551+00:00",
+    "mpl_id": "2304",
+    "slug": "arcane-boots",
+    "image": "/mlbb/items/arcane-boots.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/1/15/Arcane_Boots.png"
+  },
+  {
+    "id": "3fd98472-74a6-4f2e-8f2c-82e12251ca28",
+    "name": "Hunter Strike",
+    "type": "Attack",
+    "price": 2010,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/b/b9/Hunter_Strike.png",
+    "stats": {
+      "physical_attack": "+80",
+      "cooldown_reduction": "*0.1"
+    },
+    "passive_description": "Unique Attribute: +15 Physical Penetration\nUnique Passive - Retribution: Dealing damage to the same enemy hero or creep 5 times in a row grants 50% extra Movement Speed that decays over 3 seconds (8 seconds cooldown).",
+    "created_at": "2025-08-18T14:07:09.375505+00:00",
+    "mpl_id": "3009",
+    "slug": "hunter-strike",
+    "image": "/mlbb/items/hunter-strike.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/b/b9/Hunter_Strike.png"
+  },
+  {
+    "id": "dde20fc5-a6fa-4f15-8a03-46b43698f724",
+    "name": "Warrior Boots",
+    "type": "Movement",
+    "price": 720,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/4/4b/Warrior_Boots.png",
+    "stats": {
+      "movement_speed": "+40",
+      "physical_defense": "+18"
+    },
+    "passive_description": "Unique Passive - Valor: Gains 4 extra Physical Defense for 3 seconds when taking Physical Damage, up to 20.",
+    "created_at": "2025-08-17T15:45:45.440639+00:00",
+    "mpl_id": "2301",
+    "slug": "warrior-boots",
+    "image": "/mlbb/items/warrior-boots.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/4/4b/Warrior_Boots.png"
+  },
+  {
+    "id": "382823c5-fac2-4cc4-859d-3f54d6b2b793",
+    "name": "Demon Hunter Sword",
+    "type": "Attack",
+    "price": 2180,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/1/1a/Demon_Hunter_Sword.png",
+    "stats": {
+      "lifesteal": "*0.08",
+      "attack_speed": "*0.2",
+      "physical_attack": "+35"
+    },
+    "passive_description": "Unique Passive - Engulf: Basic Attacks deal 8% of the target's current HP as extra physical damage (capped at 60 against minions).\nUnique Passive - Devour: Basic Attacks grant 2% Lifesteal for 3 seconds (stacks up to 5 times).",
+    "created_at": "2025-08-18T13:09:50.392331+00:00",
+    "mpl_id": "2006",
+    "slug": "demon-hunter-sword",
+    "image": "/mlbb/items/demon-hunter-sword.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/1/1a/Demon_Hunter_Sword.png"
+  },
+  {
+    "id": "d946f868-c61d-4433-80f3-3feec9b1af98",
+    "name": "Tought Boots",
+    "type": "Movement",
+    "price": 720,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/8/89/Tough_Boots.png",
+    "stats": {
+      "magic_defense": "+18",
+      "movement_speed": "+40"
+    },
+    "passive_description": "Unique Passive - Fortitude: CC and Slow Duration reduced by 25%.",
+    "created_at": "2025-08-17T15:44:13.324294+00:00",
+    "mpl_id": "3422",
+    "slug": "tought-boots",
+    "image": "/mlbb/items/tought-boots.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/8/89/Tough_Boots.png"
+  },
+  {
+    "id": "2c6757ba-8522-4d3c-a894-407f2c4f16e9",
+    "name": "Sea Halberd",
+    "type": "Attack",
+    "price": 2050,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/8/83/Sea_Halberd.png",
+    "stats": {
+      "attack_speed": "*0.2",
+      "physical_attack": "+80"
+    },
+    "passive_description": "Unique Passive - Lifebane: Dealing damage to a target will reduce the Shield and HP Regen effects on them to 60% of normal for 3 seconds.\nUnique Passive - Punish: Increase damage by 8% against enemy heroes with higher extra HP.",
+    "created_at": "2025-08-18T14:01:12.066163+00:00",
+    "mpl_id": "3013",
+    "slug": "sea-halberd",
+    "image": "/mlbb/items/sea-halberd.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/8/83/Sea_Halberd.png"
+  },
+  {
+    "id": "5e7dbecb-76e4-4c51-808c-712efa14974a",
+    "name": "Blade of the Heptaseas",
+    "type": "Attack",
+    "price": 1950,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/e/ed/Blade_of_the_Heptaseas.png",
+    "stats": {
+      "hp": "+250",
+      "physical_attack": "+70",
+      "physical_penetration": "+15"
+    },
+    "passive_description": "If no damage is taken or dealt within 5s, the next Basic Attack will deal extra Physical Damage equal to 160 plus 40% Physical Attack, and inflict 40% slow effects upon the target for 1.5s.",
+    "created_at": "2025-08-18T12:47:25.422301+00:00",
+    "mpl_id": "3007",
+    "slug": "blade-of-the-heptaseas",
+    "image": "/mlbb/items/blade-of-the-heptaseas.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/e/ed/Blade_of_the_Heptaseas.png"
+  },
+  {
+    "id": "5b97529a-e569-400f-b8f8-7e9a76b42e7a",
+    "name": "Rose Gold Meteor",
+    "type": "Attack",
+    "price": 2030,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/2/2b/Rose_Gold_Meteor.png",
+    "stats": {
+      "lifesteal": "*0.1",
+      "attack_speed": "*0.2",
+      "physical_attack": "+40"
+    },
+    "passive_description": "Unique Passive - Dragon Scale: Every 1% Lifesteal increases Hybrid Defense by 1, up to 50 (effect is halved for non-Fighter heroes).\nUnique Passive - Lifeline: When taking damage that reduces HP below 30%, gains a (120*Hero Level) shield (increases with level) and 50% Movement Speed that rapidly decays over 3 seconds. This effect has a 60 seconds cooldown.",
+    "created_at": "2025-08-18T14:04:57.719826+00:00",
+    "mpl_id": "3012",
+    "slug": "rose-gold-meteor",
+    "image": "/mlbb/items/rose-gold-meteor.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/2/2b/Rose_Gold_Meteor.png"
+  },
+  {
+    "id": "32da3955-3a13-4a18-ac27-7d9b064f3fa2",
+    "name": "Magic Boots",
+    "type": "Movement",
+    "price": 720,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/5/5a/Magic_Shoes.png",
+    "stats": {
+      "hp": "+150",
+      "movement_speed": "+40",
+      "cooldown_reduction": "*0.1"
+    },
+    "passive_description": "",
+    "created_at": "2025-08-17T15:42:20.294859+00:00",
+    "mpl_id": "3432",
+    "slug": "magic-boots",
+    "image": "/mlbb/items/magic-boots.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/5/5a/Magic_Shoes.png"
+  },
+  {
+    "id": "2fdc8a09-3e4c-465f-a326-e21a92c93468",
+    "name": "Regular Spear",
+    "type": "Attack",
+    "price": 600,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/3/32/Regular_Spear.png",
+    "stats": {
+      "attack_speed": "+0.10",
+      "physical_attack": "+20"
+    },
+    "passive_description": null,
+    "created_at": "2026-08-15T16:02:23.901639+00:00",
+    "mpl_id": "1006",
+    "slug": "regular-spear",
+    "image": "/mlbb/items/regular-spear.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/3/32/Regular_Spear.png"
+  },
+  {
+    "id": "0ca98826-ae22-42fd-8caf-0ac50dfedbd8",
+    "name": "Clock of Destiny",
+    "type": "Magic",
+    "price": 2030,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/4/4a/Clock_of_Destiny.png",
+    "stats": {
+      "hp": "+400",
+      "mana": "+400",
+      "magic_power": "+45",
+      "cooldown_reduction": "*0.1"
+    },
+    "passive_description": "Gains 30 HP and 5 magic power every 30 seconds, up to 10 stacks.",
+    "created_at": "2025-08-12T08:05:07.185464+00:00",
+    "mpl_id": "3113",
+    "slug": "clock-of-destiny",
+    "image": "/mlbb/items/clock-of-destiny.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/4/4a/Clock_of_Destiny.png"
+  },
+  {
+    "id": "56ebec3a-c038-46a2-a7eb-f108142013b4",
+    "name": "Magic Resist Cloak",
+    "type": "Defense",
+    "price": 220,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/4/4c/Magic_Resist_Cloak.png",
+    "stats": {
+      "magic_defense": "+14"
+    },
+    "passive_description": null,
+    "created_at": "2026-08-15T16:03:26.470486+00:00",
+    "mpl_id": "1203",
+    "slug": "magic-resist-cloak",
+    "image": "/mlbb/items/magic-resist-cloak.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/4/4c/Magic_Resist_Cloak.png"
+  },
+  {
+    "id": "6c3c144b-fe6d-4fa5-b597-4f0240825528",
+    "name": "Golden Staff",
+    "type": "Attack",
+    "price": 2000,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/8/80/Golden_Staff.png",
+    "stats": {
+      "attack_speed": "*0.15",
+      "physical_attack": "+55"
+    },
+    "passive_description": "Unique Passive - Swift: Every 1% extra Crit Chance gained is converted into 1% extra Attack Speed.\nUnique Passive - Endless Strike: After every 2 non-Crit Basic Attacks, the Attack Speed of the next Basic Attack is increased by 80% (and Attack Speed cap is increased to 500%) and triggers Attack Effects an additional 2 time(s).",
+    "created_at": "2025-08-18T14:19:53.01157+00:00",
+    "mpl_id": "2009",
+    "slug": "golden-staff",
+    "image": "/mlbb/items/golden-staff.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/8/80/Golden_Staff.png"
+  },
+  {
+    "id": "fcd26ef5-82d9-412b-91eb-f75385976ef1",
+    "name": "Vit",
+    "type": "Defense",
+    "price": 300,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/e/ea/Vitality_Crystal.png",
+    "stats": {
+      "hp": "+230"
+    },
+    "passive_description": null,
+    "created_at": "2026-08-15T16:08:57.407533+00:00",
+    "mpl_id": "1201",
+    "slug": "vit",
+    "image": "/mlbb/items/vit.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/e/ea/Vitality_Crystal.png"
+  },
+  {
+    "id": "72f33a36-d847-4bd7-b092-79269fd6c044",
+    "name": "Elegant Gem",
+    "type": "Magic",
+    "price": 700,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/d/d4/Elegant_Gem.png",
+    "stats": {
+      "hp": "+300",
+      "mana": "+380"
+    },
+    "passive_description": "Unique Passive - Gift: When HP drops below 50%, recovers 15% of HP over the next 3 seconds. When Mana drops below 50%, restores 15% of Mana over the next 3 seconds. Cooldown: 60 seconds.",
+    "created_at": "2025-08-30T06:46:01.715703+00:00",
+    "mpl_id": "2105",
+    "slug": "elegant-gem",
+    "image": "/mlbb/items/elegant-gem.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/d/d4/Elegant_Gem.png"
+  },
+  {
+    "id": "f0e350a8-9b23-4216-ba1a-03f7849d07d3",
+    "name": "Fleeting Time",
+    "type": "Attack",
+    "price": 2050,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/7/71/Fleeting_Time.png",
+    "stats": {
+      "hp": "+600",
+      "adaptive_attack": "+30",
+      "cooldown_reduction": "*0.15"
+    },
+    "passive_description": "",
+    "created_at": "2025-08-18T14:14:04.935393+00:00",
+    "mpl_id": "3109",
+    "slug": "fleeting-time",
+    "image": "/mlbb/items/fleeting-time.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/7/71/Fleeting_Time.png"
+  },
+  {
+    "id": "75399009-bb48-4da7-ab68-599a14b0d7c9",
+    "name": "Swift Crossbow",
+    "type": "Attack",
+    "price": 1000,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/a/a1/Swift_Crossbow.png",
+    "stats": {
+      "attack_speed": "*0.2"
+    },
+    "passive_description": "Unique Passive - Crossbow: Each Basic Attack deals 40 extra Adaptive Damage.\nUnique Passive - Impulse: Basic Attacks grant 3% extra Attack Speed for 3 seconds, capped at 5 stacks.",
+    "created_at": "2026-08-17T15:01:26.65932+00:00",
+    "mpl_id": "1007",
+    "slug": "swift-crossbow",
+    "image": "/mlbb/items/swift-crossbow.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/a/a1/Swift_Crossbow.png"
+  },
+  {
+    "id": "1b0549bd-fd16-4460-bed5-f43b4e7fa005",
+    "name": "Cursed Helmet",
+    "type": "Defense",
+    "price": 1910,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/8/80/Cursed_Helmet.png",
+    "stats": {
+      "hp": "+1200",
+      "magic_defense": "+20"
+    },
+    "passive_description": "Unique Passive - Burning Soul: Deals (1.2% Total HP) Magic Damage to nearby enemies per second. This damage is increased by 125(+15*Hero Level)% against creeps and minions.\nUnique Passive - Curse: Dealing damage with Burning Soul will reduce the target's Hybrid Defense by 3 for 3 seconds. Stacks up to 3 times.",
+    "created_at": "2025-08-19T04:43:41.032894+00:00",
+    "mpl_id": null,
+    "slug": "cursed-helmet",
+    "image": "/mlbb/items/cursed-helmet.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/8/80/Cursed_Helmet.png"
+  },
+  {
+    "id": "ad17db6e-8002-48c1-a561-bd794da0e283",
+    "name": "Brute Force Breastplate",
+    "type": "Defense",
+    "price": 2070,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/f/f6/Brute_Force_Breastplate.png",
+    "stats": {
+      "hp": "+800",
+      "physical_defense": "+20",
+      "cooldown_reduction": "*0.1"
+    },
+    "passive_description": "Unique Passive - Brute Force: Each second after dealing damage, gain 8 extra Adaptive Attack and 2% extra Movement Speed for 4 seconds, up to 6 stacks. Gain 25% extra Control Duration Reduction at full stacks.",
+    "created_at": "2025-08-19T04:33:52.637778+00:00",
+    "mpl_id": "3208",
+    "slug": "brute-force-breastplate",
+    "image": "/mlbb/items/brute-force-breastplate.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/f/f6/Brute_Force_Breastplate.png"
+  },
+  {
+    "id": "f8f538b8-5cf0-4fd4-a4e6-dff974a0b715",
+    "name": "Guardian Helmet",
+    "type": "Defense",
+    "price": 2500,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/a/a3/Guardian_Helmet.png",
+    "stats": {
+      "hp": "+1800",
+      "hp_regen": "+20"
+    },
+    "passive_description": "Unique Passive - Recovery: Recovers (2.5% Total HP) HP per second (reduced to (0.5% Total HP) HP per second over 5 seconds after taking damage).",
+    "created_at": "2025-08-19T04:42:41.634601+00:00",
+    "mpl_id": "3202",
+    "slug": "guardian-helmet",
+    "image": "/mlbb/items/guardian-helmet.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/a/a3/Guardian_Helmet.png"
+  },
+  {
+    "id": "9f95098c-0aa7-46c2-a6c4-6e8d4ce9e1f7",
+    "name": "Queen's Wings",
+    "type": "Defense",
+    "price": 2250,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/f/f4/Queen%27s_Wings.png",
+    "stats": {
+      "hp": "+750",
+      "spell_vamp": "*0.1",
+      "adaptive_attack": "+30",
+      "cooldown_reduction": "*0.1"
+    },
+    "passive_description": "Unique Passive - Demonize: When HP drops below 40%, gains 30% Damage Reduction for 3 seconds and reduces skill cooldowns by 2 seconds. This effect has a 60 seconds cooldown.\nUnique Passive - Defiance: For every 1% HP lost, damage is increased by 0.25%, up to 15%.",
+    "created_at": "2025-08-19T04:47:02.374148+00:00",
+    "mpl_id": "2208",
+    "slug": "queens-wings",
+    "image": "/mlbb/items/queens-wings.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/f/f4/Queen%27s_Wings.png"
+  },
+  {
+    "id": "bd3e52c0-6890-4eee-ad81-9815f3b65eaf",
+    "name": "Haas Claws",
+    "type": "Attack",
+    "price": 2020,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/f/fd/Haas%27_Claws.png",
+    "stats": {
+      "crit_chance": "*0.2",
+      "attack_speed": "*0.15",
+      "physical_attack": "+40"
+    },
+    "passive_description": "Unique Attribute: +20% Lifesteal\nUnique Passive - Frenzy: Critical strikes grant 20% extra Attack Speed for 2 seconds.",
+    "created_at": "2025-08-18T14:10:58.847483+00:00",
+    "mpl_id": "3002",
+    "slug": "haas-claws",
+    "image": "/mlbb/items/haas-claws.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/f/fd/Haas%27_Claws.png"
+  },
+  {
+    "id": "70ae58cf-dc12-42f2-832f-75f9bbbfc0e1",
+    "name": "Oracle",
+    "type": "Defense",
+    "price": 1860,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/1/17/Oracle.png",
+    "stats": {
+      "hp": "+850",
+      "magic_defense": "+20",
+      "physical_defense": "+20",
+      "cooldown_reduction": "*0.1"
+    },
+    "passive_description": "Unique Passive - Bless: Received Shield and HP Regen effects are increased by 30%.",
+    "created_at": "2025-08-19T04:40:11.183244+00:00",
+    "mpl_id": "3204",
+    "slug": "oracle",
+    "image": "/mlbb/items/oracle.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/1/17/Oracle.png"
+  },
+  {
+    "id": "3585dc9e-2722-44f6-9bbb-100b777c5a86",
+    "name": "Radiant Armor",
+    "type": "Defense",
+    "price": 1880,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/d/d8/Radiant_Armor.png",
+    "stats": {
+      "hp": "+950",
+      "hp_regen": "+12",
+      "magic_defense": "+40"
+    },
+    "passive_description": "Unique Passive - Holy Blessing: Taking Magic Damage grants 5(+1*Hero Level) Magic Defense for 5 seconds, up to 6 stacks ( can only gain 1 stack(s) every 0.4 seconds).",
+    "created_at": "2025-08-19T04:31:21.099922+00:00",
+    "mpl_id": "3210",
+    "slug": "radiant-armor",
+    "image": "/mlbb/items/radiant-armor.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/d/d8/Radiant_Armor.png"
+  },
+  {
+    "id": "45e33c00-9674-44d3-950b-073425a1f922",
+    "name": "Dominance Ice",
+    "type": "Defense",
+    "price": 2010,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/e/e3/Dominance_Ice.png",
+    "stats": {
+      "hp": "+250",
+      "movement_speed": "*0.05",
+      "physical_defense": "+55"
+    },
+    "passive_description": "Unique Passive - Arctic Cold: Taking damage will reduce the Attack Speed of the attacker to 80% of normal for 1 second.\nUnique Passive - Lifebane: Taking damage will reduce the Shield and HP Regen effects of the attacker to 60% of normal for 1 second.",
+    "created_at": "2025-08-19T04:35:51.955845+00:00",
+    "mpl_id": "3206",
+    "slug": "dominance-ice",
+    "image": "/mlbb/items/dominance-ice.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/e/e3/Dominance_Ice.png"
+  },
+  {
+    "id": "9b0c5b28-b617-42e8-8bdb-5aef5514b6ce",
+    "name": "Winter Crown",
+    "type": "Attack",
+    "price": 1910,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/9/9d/Winter_Crown.png",
+    "stats": {
+      "hp": "+400",
+      "adaptive_attack": "+45",
+      "cooldown_reduction": "*0.05"
+    },
+    "passive_description": "Unique Active - Frozen: Becomes frozen, untarge, and immune to damage for 2 seconds (100 seconds cooldown). Cannot move or cast skills while frozen, but skills already cast won't be interrupted.",
+    "created_at": "2025-08-18T14:12:26.269471+00:00",
+    "mpl_id": "2107",
+    "slug": "winter-crown",
+    "image": "/mlbb/items/winter-crown.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/9/9d/Winter_Crown.png"
+  },
+  {
+    "id": "c49ed4f8-8b73-42c8-87e2-fa83bccade0d",
+    "name": "Wind of Nature",
+    "type": "Attack",
+    "price": 1910,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/e/e3/Wind_of_Nature.png",
+    "stats": {
+      "lifesteal": "*0.1",
+      "attack_speed": "*0.2",
+      "physical_attack": "+30"
+    },
+    "passive_description": "Unique Active - Wind Chant: Become immune to all Physical Damage for 2 seconds (duration is halved for non-Marksmen; 90 seconds cooldown).",
+    "created_at": "2025-08-18T14:18:40.757908+00:00",
+    "mpl_id": "2011",
+    "slug": "wind-of-nature",
+    "image": "/mlbb/items/wind-of-nature.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/e/e3/Wind_of_Nature.png"
+  },
+  {
+    "id": "8408352d-1f00-4c68-b3ba-7abc320588ce",
+    "name": "Sky Piercer",
+    "type": "Attack",
+    "price": 1500,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/4/4f/Sky_Piercer.png",
+    "stats": {},
+    "passive_description": "Unique Passive - Lethality: After dealing damage to an enemy hero, executes the hero if their HP is lower than 4%. Gains 10 stack(s) of Lethality for each kill and loses 30% current stack(s) for each death. Each stack of Lethality increases the HP threshold of the execute effect by 0.1%, stacking up 80 times.",
+    "created_at": "2025-08-18T14:15:05.293677+00:00",
+    "mpl_id": "2014",
+    "slug": "sky-piercer",
+    "image": "/mlbb/items/sky-piercer.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/4/4f/Sky_Piercer.png"
+  },
+  {
+    "id": "ecbb6233-af4e-4543-ab1f-b73dfb61f520",
+    "name": "Dreadnaught Armor",
+    "type": "Defense",
+    "price": 730,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/0/0f/Dreadnaught_Armor.png",
+    "stats": {
+      "physical_defense": "+30"
+    },
+    "passive_description": "Unique Passive - Deter: When hit by a skill, reduces the attacker's Physical Damage by 4% for 2 seconds (this effect stacks up to 3 times).",
+    "created_at": "2025-08-23T09:57:28.947267+00:00",
+    "mpl_id": "2205",
+    "slug": "dreadnaught-armor",
+    "image": "/mlbb/items/dreadnaught-armor.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/0/0f/Dreadnaught_Armor.png"
+  },
+  {
+    "id": "12a26bf0-e5e1-46ff-8875-4a5268fff74b",
+    "name": "Mystic Container",
+    "type": "Magic",
+    "price": 500,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/2/23/Mystic_Container.png",
+    "stats": {
+      "spell_vamp": "+0.08",
+      "magic_power": "+15"
+    },
+    "passive_description": null,
+    "created_at": "2026-08-15T16:05:07.443857+00:00",
+    "mpl_id": "1105",
+    "slug": "mystic-container",
+    "image": "/mlbb/items/mystic-container.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/2/23/Mystic_Container.png"
+  },
+  {
+    "id": "33f7772c-06b3-4780-86af-2c79c41c5892",
+    "name": "Silence Robe",
+    "type": "Defense",
+    "price": 1020,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/a/a4/Silence_Robe.png",
+    "stats": {},
+    "passive_description": "",
+    "created_at": "2025-08-23T09:53:34.686191+00:00",
+    "mpl_id": "2203",
+    "slug": "silence-robe",
+    "image": "/mlbb/items/silence-robe.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/a/a4/Silence_Robe.png"
+  },
+  {
+    "id": "71a22f00-526e-494b-8062-f5b9efe496bd",
+    "name": "Starlium Scythe",
+    "type": "Magic",
+    "price": 2120,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/2/26/Starlium_Scythe.png",
+    "stats": {
+      "mana_regen": "+6",
+      "magic_power": "+70",
+      "hybrid_lifesteal": "*0.08",
+      "cooldown_reduction": "*0.1"
+    },
+    "passive_description": "Unique Passive - Crisis: After casting a skill, the next Basic Attack within 3 seconds deals 100 (+100% Total Magic Power) extra True Damage and reduces the target's Movement Speed by 40% for 1.5 seconds (5 seconds cooldown).",
+    "created_at": "2025-08-19T05:20:12.139914+00:00",
+    "mpl_id": "3106",
+    "slug": "starlium-scythe",
+    "image": "/mlbb/items/starlium-scythe.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/2/26/Starlium_Scythe.png"
+  },
+  {
+    "id": "a67fa43a-b139-4b0b-9d0f-43537ef95a24",
+    "name": "Windtalker",
+    "type": "Attack",
+    "price": 1880,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/4/45/Windtalker.png",
+    "stats": {
+      "crit_chance": "*0.2",
+      "attack_speed": "*0.35",
+      "movement_speed": "+20"
+    },
+    "passive_description": "Unique Passive - Typhoon: Every 5–2 seconds (reduced by 0.2 seconds for each Basic Attack), the next Basic Attack will hit up to 3 enemy units for 150–362 Magic Damage. (This attack can Crit and the damage increases to 200% against Minions.)",
+    "created_at": "2025-08-18T14:09:07.103185+00:00",
+    "mpl_id": "3005",
+    "slug": "windtalker",
+    "image": "/mlbb/items/windtalker.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/4/45/Windtalker.png"
+  },
+  {
+    "id": "49d80544-79e7-4382-a011-91b704264c7f",
+    "name": "Molten Essence",
+    "type": "Defense",
+    "price": 800,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/8/8c/Molten_Essence.png",
+    "stats": {
+      "hp": "+450"
+    },
+    "passive_description": "Unique Passive - Burning Soul: Deals (0.6% Total HP) Magic Damage to nearby enemies per second. This damage is increased by 125(+15*Hero Level)% against creeps and minions.",
+    "created_at": "2025-08-23T09:51:22.092802+00:00",
+    "mpl_id": "2202",
+    "slug": "molten-essence",
+    "image": "/mlbb/items/molten-essence.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/8/8c/Molten_Essence.png"
+  },
+  {
+    "id": "b264d9e5-2d6c-4343-a9ea-210212e1d05f",
+    "name": "Azure Blade",
+    "type": "Attack",
+    "price": 599,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/6/6d/Azure_Blade.png",
+    "stats": {
+      "mana_regen": "+5",
+      "cooldown_reduction": "*0.05"
+    },
+    "passive_description": "Unique Passive - Judgement: After casting a skill, the next Basic Attack within 3 seconds deals 50 extra True Damage (1.5 seconds cooldown).",
+    "created_at": "2025-09-13T13:05:57.174109+00:00",
+    "mpl_id": "2103",
+    "slug": "azure-blade",
+    "image": "/mlbb/items/azure-blade.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/6/6d/Azure_Blade.png"
+  },
+  {
+    "id": "a2e62bd7-ba81-43cd-9b63-1a8e0ddcbe7f",
+    "name": "Feather of Heaven",
+    "type": "Magic",
+    "price": 2030,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/e/ed/Feather_of_Heaven.png",
+    "stats": {
+      "lifesteal": "*0.1",
+      "magic_power": "+55",
+      "attack_speed": "*0.2",
+      "cooldown_reduction": "*0.05"
+    },
+    "passive_description": "Unique Passive - Affliction: Each Basic Attack deals extra 50 (+30% Total Magic Power) Magic Damage.\nUnique Passive - Impulse: Basic Attacks grant 6% extra Attack Speed for 3 seconds, capped at 5 stacks.",
+    "created_at": "2025-08-19T05:21:51.575493+00:00",
+    "mpl_id": "2108",
+    "slug": "feather-of-heaven",
+    "image": "/mlbb/items/feather-of-heaven.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/e/ed/Feather_of_Heaven.png"
+  },
+  {
+    "id": "cdbfc89a-2fac-4466-ba07-1fba1e357847",
+    "name": "Genius Wand",
+    "type": "Magic",
+    "price": 2000,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/2/20/Genius_Wand.png",
+    "stats": {
+      "magic_power": "+75",
+      "movement_speed": "*0.05"
+    },
+    "passive_description": "Unique Attribute: +10 Magic Penetration\nUnique Passive - Magic: Dealing Magic Damage to enemy heroes will reduce their Magic Defense by 3+(0.3*Hero Level) for 2 seconds. Stacks up to 3 times.",
+    "created_at": "2025-08-19T05:25:44.094966+00:00",
+    "mpl_id": "3111",
+    "slug": "genius-wand",
+    "image": "/mlbb/items/genius-wand.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/2/20/Genius_Wand.png"
+  },
+  {
+    "id": "c7e4e03f-4c5c-45ff-8535-65a74229b52d",
+    "name": "Enchanted Talisman",
+    "type": "Magic",
+    "price": 1870,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/2/21/Enchanted_Talisman.png",
+    "stats": {
+      "hp": "+250",
+      "magic_power": "+50",
+      "cooldown_reduction": "*0.2"
+    },
+    "passive_description": "Unique Passive - Mana Spring: Regenerates 15% of Max Mana every 10 seconds.\nUnique Passive - Magic Mastery: Max Cooldown Reduction is increased by 5%.",
+    "created_at": "2025-08-19T05:14:41.714653+00:00",
+    "mpl_id": "2106",
+    "slug": "enchanted-talisman",
+    "image": "/mlbb/items/enchanted-talisman.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/2/21/Enchanted_Talisman.png"
+  },
+  {
+    "id": "59a45ae3-4662-4bee-8471-73751dcee211",
+    "name": "Divine Glaive",
+    "type": "Magic",
+    "price": 1970,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/9/9a/Divine_Glaive.png",
+    "stats": {
+      "magic_power": "+65"
+    },
+    "passive_description": "Unique Attribute: +40% Magic Penetration\nUnique Passive - Spellbreaker: When attacking an enemy, gains 0.1% extra Magic Penetration for each point of the enemy's Magic Defense, capped at 20%.",
+    "created_at": "2025-08-19T05:36:42.249636+00:00",
+    "mpl_id": "3101",
+    "slug": "divine-glaive",
+    "image": "/mlbb/items/divine-glaive.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/9/9a/Divine_Glaive.png"
+  },
+  {
+    "id": "78f73686-df75-42b1-8bb1-fbf9d5f33a70",
+    "name": "Glowing Wand",
+    "type": "Magic",
+    "price": 2150,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/7/7a/Glowing_Wand.png",
+    "stats": {
+      "hp": "+400",
+      "magic_power": "+75",
+      "movement_speed": "*0.05"
+    },
+    "passive_description": "Unique Passive - Scorch: Dealing Magic Damage burns the targets for 3 seconds, also dealing extra Magic Damage equal to 1% of the target's Max HP per second.\nUnique Passive - Lifebane: Dealing damage to the target will reduce the Shield and HP Regen effects on them to 60% of normal for 3 seconds.",
+    "created_at": "2025-08-19T05:18:23.807839+00:00",
+    "mpl_id": "3105",
+    "slug": "glowing-wand",
+    "image": "/mlbb/items/glowing-wand.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/7/7a/Glowing_Wand.png"
+  },
+  {
+    "id": "cd59334a-2214-4e1b-a528-1ea8ae74458a",
+    "name": "Blade Armor",
+    "type": "Defense",
+    "price": 1910,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/d/d9/Blade_Armor.png",
+    "stats": {
+      "physical_defense": "+80"
+    },
+    "passive_description": "Unique Attribute: +20% Crit Damage Reduction\nUnique Passive - Bladed Armor: When struck by a Basic Attack, deals Physical Damage equal to 30 (+2% Total Physical Defense)% of the incoming damage (calculated before Damage Reduction) to the attacker and slows them by 15% for 1 second.",
+    "created_at": "2025-08-19T04:48:59.717406+00:00",
+    "mpl_id": "2207",
+    "slug": "blade-armor",
+    "image": "/mlbb/items/blade-armor.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/d/d9/Blade_Armor.png"
+  },
+  {
+    "id": "8120169f-564a-4188-b506-6ae5dc3298ab",
+    "name": "Fury Hammer",
+    "type": "Attack",
+    "price": 830,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/5/52/Fury_Hammer.png",
+    "stats": {
+      "physical _attack": "+35"
+    },
+    "passive_description": "Unique Attribute: +12 Physical Penetration",
+    "created_at": "2025-08-25T07:24:21.746169+00:00",
+    "mpl_id": "2004",
+    "slug": "fury-hammer",
+    "image": "/mlbb/items/fury-hammer.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/5/52/Fury_Hammer.png"
+  },
+  {
+    "id": "3a11d865-1fff-4d8f-b919-5023703fb31a",
+    "name": "Blood Wings",
+    "type": "Magic",
+    "price": 2100,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/4/44/Blood_Wings.png",
+    "stats": {
+      "magic_power": "+90"
+    },
+    "passive_description": "Unique Passive - Guard: Gains a 800 (+100% Magic Power) Shield that will regenerate 20 seconds after being damaged. The Shield also grants 30 Movement Speed while it lasts and 150 Movement Speed for 1 second after it breaks.",
+    "created_at": "2025-08-19T05:30:32.541836+00:00",
+    "mpl_id": "3108",
+    "slug": "blood-wings",
+    "image": "/mlbb/items/blood-wings.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/4/44/Blood_Wings.png"
+  },
+  {
+    "id": "073715ca-dfbb-4540-a029-348e4c42e976",
+    "name": "Legion Sword",
+    "type": "Attack",
+    "price": 910,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/1/1e/Legion_Sword.png",
+    "stats": {
+      "physical_attack": "+60"
+    },
+    "passive_description": "",
+    "created_at": "2025-08-30T06:44:17.141792+00:00",
+    "mpl_id": "2001",
+    "slug": "legion-sword",
+    "image": "/mlbb/items/legion-sword.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/1/1e/Legion_Sword.png"
+  },
+  {
+    "id": "85779626-b5f7-445b-b77d-c44074f94e2c",
+    "name": "Flask of the Oasis",
+    "type": "Magic",
+    "price": 1850,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/c/c5/Flask_of_the_Oasis.png",
+    "stats": {
+      "hp": "+300",
+      "magic_power": "+60",
+      "cooldown_reduction": "*0.1"
+    },
+    "passive_description": "Unique Attribute: +12% Healing Effect\nUnique Passive - Blessing: When casting a healing or shield skill, if the target's HP is below 35%, or falls below 35% within 3 seconds, they will get a (100*Hero Level) shield that lasts 3 seconds. When this effect triggers, it also reduces the cooldown of the caster's skills by 2 seconds. (This effect can only trigger once every 60 seconds on the same target, and will not trigger on self-only healing and shield skills.)",
+    "created_at": "2025-08-19T05:24:06.585246+00:00",
+    "mpl_id": "3112",
+    "slug": "flask-of-the-oasis",
+    "image": "/mlbb/items/flask-of-the-oasis.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/c/c5/Flask_of_the_Oasis.png"
+  },
+  {
+    "id": "37d85658-320c-42d8-9744-2ea29755d444",
+    "name": "Ice Queen Wand",
+    "type": "Magic",
+    "price": 2040,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/d/da/Ice_Queen_Wand.png",
+    "stats": {
+      "hp": "+300",
+      "spell_vamp": "*0.1",
+      "magic_power": "+75",
+      "movement_speed": "*0.07"
+    },
+    "passive_description": "Unique Passive - Ice Bound: When a skill deals damage to an enemy hero, it will also slow them by 10% for 2 seconds (stacks up to 3 times). This effect has a 1 second cooldown.",
+    "created_at": "2025-08-19T05:32:14.304394+00:00",
+    "mpl_id": "3104",
+    "slug": "ice-queen-wand",
+    "image": "/mlbb/items/ice-queen-wand.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/d/da/Ice_Queen_Wand.png"
+  },
+  {
+    "id": "b5543f4a-6463-48f1-812f-ad08633494a1",
+    "name": "Concentrated Energy",
+    "type": "Magic",
+    "price": 2020,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/4/4e/Concentrated_Energy.png",
+    "stats": {
+      "hp": "+400",
+      "magic_power": "+70"
+    },
+    "passive_description": "Unique Attribute: +20% Hybrid Lifesteal\nUnique Passive - Recharge: Increases Magic Power by 5 after dealing Magic Damage (this effect stacks up to 6 times and can only gain 1 stack every 0.4 second). When reaching full stacks, increases Magic Damage by 12% for 5 seconds.",
+    "created_at": "2025-08-19T05:35:51.065765+00:00",
+    "mpl_id": "3103",
+    "slug": "concentrated-energy",
+    "image": "/mlbb/items/concentrated-energy.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/4/4e/Concentrated_Energy.png"
+  },
+  {
+    "id": "0565f7fd-0dbd-469b-badf-5e3fce18cdc6",
+    "name": "Ares Belt",
+    "type": "Defense",
+    "price": 700,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/0/04/Ares_Belt.png",
+    "stats": {
+      "hp": "+600"
+    },
+    "passive_description": null,
+    "created_at": "2026-04-04T07:05:01.571996+00:00",
+    "mpl_id": "2201",
+    "slug": "ares-belt",
+    "image": "/mlbb/items/ares-belt.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/0/04/Ares_Belt.png"
+  },
+  {
+    "id": "8f518770-5b2a-42ab-8408-5fd26febaab0",
+    "name": "Steel Legplates",
+    "type": "Defense",
+    "price": 630,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/3/3c/Steel_Legplates.png",
+    "stats": {
+      "physical_defense": "+35"
+    },
+    "passive_description": null,
+    "created_at": "2025-11-04T04:49:46.245767+00:00",
+    "mpl_id": "2206",
+    "slug": "steel-legplates",
+    "image": "/mlbb/items/steel-legplates.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/3/3c/Steel_Legplates.png"
+  },
+  {
+    "id": "e8e3ad98-b9d5-46b5-8383-8833c46fa82e",
+    "name": "Dagger",
+    "type": "Attack",
+    "price": 250,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/4/45/Dagger.png",
+    "stats": {
+      "physical_attack": "+15"
+    },
+    "passive_description": null,
+    "created_at": "2026-08-15T16:06:59.353924+00:00",
+    "mpl_id": "1001",
+    "slug": "dagger",
+    "image": "/mlbb/items/dagger.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/4/45/Dagger.png"
+  },
+  {
+    "id": "334e9608-b9cc-49e1-8d5c-c65f9ac3648a",
+    "name": "Magic Necklace",
+    "type": "Magic",
+    "price": 120,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/c/cd/Magic_Necklace.png",
+    "stats": {
+      "mana_regen": "+2"
+    },
+    "passive_description": null,
+    "created_at": "2026-04-04T07:01:07.598115+00:00",
+    "mpl_id": "1103",
+    "slug": "magic-necklace",
+    "image": "/mlbb/items/magic-necklace.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/c/cd/Magic_Necklace.png"
+  },
+  {
+    "id": "df4f42ce-eb60-4f6b-816c-68421f01d21a",
+    "name": "Tome Of Evil",
+    "type": "Magic",
+    "price": 950,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/0/0a/Tome_of_Evil.png",
+    "stats": {},
+    "passive_description": null,
+    "created_at": "2026-03-13T15:55:32.473967+00:00",
+    "mpl_id": "2102",
+    "slug": "tome-of-evil",
+    "image": "/mlbb/items/tome-of-evil.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/0/0a/Tome_of_Evil.png"
+  },
+  {
+    "id": "c7e0a07e-09fe-4d68-8838-059780b18cb9",
+    "name": "Black Ice Shield",
+    "type": "Defense",
+    "price": 780,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/5/5d/Black_Ice_Shield.png",
+    "stats": {
+      "magic_defense": "+20",
+      "physical_defense": "+20"
+    },
+    "passive_description": "Unique Passive - Fortress Shield: For each enemy hero within 5 units, Physical & Magic Defense is increased by 4, up to 20",
+    "created_at": "2025-11-05T06:41:32.383473+00:00",
+    "mpl_id": "2204",
+    "slug": "black-ice-shield",
+    "image": "/mlbb/items/black-ice-shield.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/5/5d/Black_Ice_Shield.png"
+  },
+  {
+    "id": "6847c2ba-632d-47cd-a32b-b02272e2ce74",
+    "name": "Exotic Veil",
+    "type": "Magic",
+    "price": 600,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/e/e9/Exotic_Veil.png",
+    "stats": {
+      "magic_power": "+30",
+      "movement_speed": "*0.05"
+    },
+    "passive_description": null,
+    "created_at": "2026-04-05T05:09:09.748128+00:00",
+    "mpl_id": "2104",
+    "slug": "exotic-veil",
+    "image": "/mlbb/items/exotic-veil.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/e/e9/Exotic_Veil.png"
+  },
+  {
+    "id": "e75e7598-984b-4b90-94ac-1cc52e2572a4",
+    "name": "Ogre Tomahawk",
+    "type": "Attack",
+    "price": 650,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/3/3d/Ogre_Tomahawk.png",
+    "stats": {
+      "hp": "+230",
+      "physical_attack": "+25"
+    },
+    "passive_description": null,
+    "created_at": "2026-08-28T10:53:53.138834+00:00",
+    "mpl_id": "2002",
+    "slug": "ogre-tomahawk",
+    "image": "/mlbb/items/ogre-tomahawk.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/3/3d/Ogre_Tomahawk.png"
+  },
+  {
+    "id": "3b9afea2-47d3-450f-8ee6-c1235d19a4ba",
+    "name": "Book of Sages",
+    "type": "Magic",
+    "price": 450,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/3/35/Book_of_Sages.png",
+    "stats": {
+      "magic_power": "+8",
+      "cooldown_reduction": "*0.05"
+    },
+    "passive_description": null,
+    "created_at": "2026-08-17T07:46:26.203571+00:00",
+    "mpl_id": "1104",
+    "slug": "book-of-sages",
+    "image": "/mlbb/items/book-of-sages.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/3/35/Book_of_Sages.png"
+  },
+  {
+    "id": "ac2550be-da50-465c-8a7c-c194e86cb20c",
+    "name": "Javelin",
+    "type": "Attack",
+    "price": 320,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/1/1d/Javelin.png",
+    "stats": {
+      "crit_chance": "*0.08"
+    },
+    "passive_description": null,
+    "created_at": "2026-08-17T07:52:02.556096+00:00",
+    "mpl_id": "1003",
+    "slug": "javelin",
+    "image": "/mlbb/items/javelin.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/1/1d/Javelin.png"
+  },
+  {
+    "id": "06d1ae63-36c9-4cca-8923-35c87785a217",
+    "name": "Healing Necklace",
+    "type": "Defense",
+    "price": 140,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/d/d7/Healing_Necklace.png",
+    "stats": {
+      "hp_regen": "+4"
+    },
+    "passive_description": null,
+    "created_at": "2026-04-04T07:10:28.093903+00:00",
+    "mpl_id": "1204",
+    "slug": "healing-necklace",
+    "image": "/mlbb/items/healing-necklace.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/d/d7/Healing_Necklace.png"
+  },
+  {
+    "id": "f329107b-40f5-40bf-b30b-f05be730bc86",
+    "name": "Leather Jerkin",
+    "type": "Defense",
+    "price": 220,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/5/58/Leather_Jerkin.png",
+    "stats": {
+      "physical_defense": "+14"
+    },
+    "passive_description": null,
+    "created_at": "2026-08-15T15:10:11.823801+00:00",
+    "mpl_id": "1202",
+    "slug": "leather-jerkin",
+    "image": "/mlbb/items/leather-jerkin.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/5/58/Leather_Jerkin.png"
+  },
+  {
+    "id": "421314fd-557c-427b-8e74-b016c8dcf33a",
+    "name": "Chastise Pauldron",
+    "type": "Defense",
+    "price": 2100,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/2/2f/Chastise_Pauldron.png",
+    "stats": {
+      "hp": "+1200",
+      "physical_defense": "+15"
+    },
+    "passive_description": "Unique Passive - Twilight: Upon taking more than 500 damage in a single instance, the excess damage beyond that amount is reduced by 20 (+0.2% Total HP)%.\nUnique Passive - Redemption: When incoming damage reduces HP below 30%, recover 20% Max HP over the next 4 seconds. This effect has a 60 seconds cooldown.",
+    "created_at": "2025-08-19T04:32:45.760144+00:00",
+    "mpl_id": "3212",
+    "slug": "chastise-pauldron",
+    "image": "/mlbb/items/chastise-pauldron.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/2/2f/Chastise_Pauldron.png"
+  },
+  {
+    "id": "0f52e11b-4c01-4652-8a64-c3bfc6a489b8",
+    "name": "War Axe",
+    "type": "Attack",
+    "price": 2100,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/7/70/War_Axe.png",
+    "stats": {
+      "hp": "+400",
+      "spell_vamp": "*0.12",
+      "physical_attack": "+35",
+      "cooldown_reduction": "*0.1"
+    },
+    "passive_description": "Unique Passive - Fighting Spirit: Attacks grants 12 extra Physical Attack per second for 4 seconds, up to 6 stacks. Deals 10% extra True Damage based on the damage dealt (no damage reduction counted) at full stacks. (Marksmen, Mages, and Supports only receive 50% of these stacked effects.)",
+    "created_at": "2025-08-18T14:17:18.891978+00:00",
+    "mpl_id": "2013",
+    "slug": "war-axe",
+    "image": "/mlbb/items/war-axe.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/7/70/War_Axe.png"
+  },
+  {
+    "id": "41468f7c-e36e-40fd-b9cb-796235ec44c7",
+    "name": "Boots",
+    "type": "Movement",
+    "price": 250,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/5/59/Boots.png",
+    "stats": {
+      "movement_speed": "+20"
+    },
+    "passive_description": null,
+    "created_at": "2026-04-05T05:10:29.658983+00:00",
+    "mpl_id": "1301",
+    "slug": "boots",
+    "image": "/mlbb/items/boots.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/5/59/Boots.png"
+  },
+  {
+    "id": "cd1861a0-a850-4ac3-92ee-83707e358f77",
+    "name": "My",
+    "type": "Magic",
+    "price": 300,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/2/2c/Mystery_Codex.png",
+    "stats": {
+      "magic_power": "+15"
+    },
+    "passive_description": null,
+    "created_at": "2026-08-15T14:59:55.47738+00:00",
+    "mpl_id": "1101",
+    "slug": "my",
+    "image": "/mlbb/items/my.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/2/2c/Mystery_Codex.png"
+  },
+  {
+    "id": "ece51f8f-c4c8-47cb-9992-314e83af317b",
+    "name": "Wishing Lantern",
+    "type": "Magic",
+    "price": 2250,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/0/07/Wishing_Lantern.png",
+    "stats": {
+      "mana": "+400",
+      "magic_power": "+75",
+      "cd_reduction": "*0.1"
+    },
+    "passive_description": "Unique Passive - Butterfly Goddess: For every 800 Magic Damage dealt to an enemy hero (calculated before Damage Reduction), a Butterfly Goddess is summoned to attack the enemy hero, dealing Magic Damage equal to 8% of their Current HP.",
+    "created_at": "2025-08-19T05:29:18.560109+00:00",
+    "mpl_id": "2112",
+    "slug": "wishing-lantern",
+    "image": "/mlbb/items/wishing-lantern.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/0/07/Wishing_Lantern.png"
+  },
+  {
+    "id": "be2d8081-2e3a-4caf-9a5a-035fe9bb9a36",
+    "name": "Magic Blade",
+    "type": "Attack",
+    "price": 1050,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/a/ae/Magic_Blade.png",
+    "stats": {
+      "lifesteal": "*0.1",
+      "physical_attack": "+35"
+    },
+    "passive_description": "Unique Passive - Lifeline: When taking damage that reduces HP below 30%, gains a (+60*Hero Level) shield (increases with level) and 50% Movement Speed that rapidly decays over 3 seconds. This effect has a 60 seconds cooldown.",
+    "created_at": "2025-10-28T06:28:37.429192+00:00",
+    "mpl_id": "2005",
+    "slug": "magic-blade",
+    "image": "/mlbb/items/magic-blade.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/a/ae/Magic_Blade.png"
+  },
+  {
+    "id": "1fd8dc16-d93d-4123-aefd-6890b3238cf3",
+    "name": "Expert Gloves",
+    "type": "Attack",
+    "price": 500,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/1/13/Expert_Gloves.png",
+    "stats": {
+      "adaptive_attack": "+30"
+    },
+    "passive_description": null,
+    "created_at": "2026-04-05T05:07:36.666607+00:00",
+    "mpl_id": "1008",
+    "slug": "expert-gloves",
+    "image": "/mlbb/items/expert-gloves.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/1/13/Expert_Gloves.png"
+  },
+  {
+    "id": "935b8690-0f50-4cea-9d0a-cbc6ff89bf24",
+    "name": "Hero's Ring",
+    "type": "Defense",
+    "price": 450,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/9/91/Hero%27s_Ring.png",
+    "stats": {
+      "hp": "+150",
+      "cooldown_reduction": "*0.05"
+    },
+    "passive_description": null,
+    "created_at": "2026-04-05T05:06:09.014673+00:00",
+    "mpl_id": "1205",
+    "slug": "heros-ring",
+    "image": "/mlbb/items/heros-ring.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/9/91/Hero%27s_Ring.png"
+  },
+  {
+    "id": "e1c04ec9-7e5e-423c-97f4-b8e8f922133d",
+    "name": "Rogue Meteor",
+    "type": "Attack",
+    "price": 900,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/7/75/Rogue_Meteor.png/",
+    "stats": {
+      "crit_chance": "*0.1",
+      "attack_speed": "*0.15"
+    },
+    "passive_description": null,
+    "created_at": "2026-09-18T13:38:48.519005+00:00",
+    "mpl_id": "2003",
+    "slug": "rogue-meteor",
+    "image": "/mlbb/items/rogue-meteor.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/7/75/Rogue_Meteor.png/"
+  },
+  {
+    "id": "f8e4e2b5-2b5d-42ab-9b2d-f99520df1f90",
+    "name": "Athena's Shield",
+    "type": "Defense",
+    "price": 2150,
+    "image_url": "https://static.wikia.nocookie.net/mobile-legends/images/2/21/Valkyrie%27s_Shield.png",
+    "stats": {
+      "hp": "+900",
+      "hp_regen": "+2",
+      "magic_defense": "+48"
+    },
+    "passive_description": "Unique Passive - Shield: Upon taking Magic Damage from enemy hero skills or Basic Attacks, reduces Magic Damage taken by 25% for 3 second (including the damage that triggers the effect)s. Regains this effect 5 seconds after leaving combat.",
+    "created_at": "2025-08-19T04:38:07.212534+00:00",
+    "mpl_id": "3205",
+    "slug": "athenas-shield",
+    "image": "/mlbb/items/athenas-shield.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/2/21/Valkyrie%27s_Shield.png"
+  }
+]
