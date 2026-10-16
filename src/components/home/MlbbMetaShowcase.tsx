@@ -199,6 +199,22 @@ export default function MlbbMetaShowcase() {
         { label: 'Lane Shifts', val: 'Analyzed' },
       ],
     },
+    {
+      id: 'guides',
+      category: 'draft',
+      title: 'Macro Strategy & Laning Codex',
+      badge: 'MACRO CODEX',
+      badgeColor: 'border-amber-400/40 bg-amber-400/10 text-amber-400',
+      icon: '🧭',
+      href: '/mlbb/guides',
+      description: 'Panduan taktik makro turnamen: 5 Role Masterclasses, Map Objectives Clock (Lord & Turtle), kalkulator Retri, teknik Freeze/Slow/Proxy Wave, dan Matrix Talent Emblem.',
+      metrics: [
+        { label: 'Roles', val: '5 Pro Classes' },
+        { label: 'Timers', val: '0:00 - 18:00+' },
+        { label: 'Wave Control', val: '4 Wave Types' },
+      ],
+      highlight: true,
+    },
   ];
 
   const filteredModules = moduleFilter === 'all'
@@ -498,13 +514,13 @@ export default function MlbbMetaShowcase() {
         </div>
       )}
 
-      {/* 3. 9 PRO FLAGSHIP MODULES BENTO SHOWCASE */}
+      {/* 3. 10 PRO FLAGSHIP MODULES BENTO SHOWCASE */}
       <div className="space-y-4">
         {/* Module Category Filter Pills */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
           <div className="flex items-center gap-2">
             <span className="text-xs font-bold uppercase text-white tracking-wider">
-              9 MODUL PRO MLBB
+              10 MODUL PRO MLBB
             </span>
             <span className="text-[10px] text-slate-500 font-mono">
               [ PILIH KATEGORI ]
@@ -513,8 +529,8 @@ export default function MlbbMetaShowcase() {
 
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
             {[
-              { id: 'all', label: 'SEMUA MODUL (9)' },
-              { id: 'draft', label: 'DRAFT & TIER (4)' },
+              { id: 'all', label: 'SEMUA MODUL (10)' },
+              { id: 'draft', label: 'DRAFT & TIER (5)' },
               { id: 'builds', label: 'BUILDS & WORKSHOP (2)' },
               { id: 'database', label: 'DATABASE & SCALING (3)' },
             ].map((f) => (

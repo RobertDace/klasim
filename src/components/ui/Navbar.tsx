@@ -69,6 +69,7 @@ export default function Navbar({ activeSection = 'beranda' }: NavbarProps) {
     { href: '/mlbb/compare', label: 'DUAL HERO COMPARATOR', desc: 'Perbandingan Duel 2 Hero Head-to-Head', icon: '⚖️' },
     { href: '/mlbb/builder', label: 'CUSTOM BUILD CREATOR', desc: 'Workshop Racik 6 Item & Emblem', icon: '🛠️' },
     { href: '/mlbb/builds', label: 'TOURNAMENT BUILDS', desc: '365+ Build Resmi MPL & M-Series', icon: '🎖️' },
+    { href: '/mlbb/guides', label: 'STRATEGY & MACRO HUB', desc: '5 Role Masterclasses, Map Timers & Waves', icon: '🧭' },
     { href: '/mlbb/patch-notes', label: 'PATCH NOTES & META', desc: 'Analisis Buff, Nerf & Pergeseran Meta', icon: '📈' },
   ];
 
