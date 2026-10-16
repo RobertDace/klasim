@@ -141,6 +141,43 @@ export default function TournamentContainer({
           </h1>
         </header>
 
+        {/* MLBB Meta & Draft Quick Links for MPL ID Tournament */}
+        <div className="flex flex-wrap items-center justify-between gap-2.5 rounded-xl border border-amber-400/20 bg-amber-400/5 px-3 py-2 text-xs backdrop-blur-md">
+          <div className="flex items-center gap-2">
+            <span className="h-2 w-2 rounded-full bg-amber-400 animate-pulse" />
+            <span className="font-bold text-slate-300 uppercase tracking-wider text-[11px]">
+              MLBB TOURNAMENT COMMAND SUITE:
+            </span>
+          </div>
+
+          <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none">
+            <Link
+              href="/mlbb/draft"
+              className="inline-flex items-center gap-1 rounded-lg border border-amber-400/40 bg-amber-400/10 px-2.5 py-1 text-[10px] font-black uppercase text-amber-400 hover:bg-amber-400 hover:text-black transition-all active:scale-95 whitespace-nowrap"
+            >
+              <span>⚔️ 5v5 Draft Simulator</span>
+            </Link>
+            <Link
+              href="/mlbb/tier-list"
+              className="inline-flex items-center gap-1 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-[10px] font-bold uppercase text-slate-300 hover:border-emerald-400 hover:text-emerald-400 transition-all active:scale-95 whitespace-nowrap"
+            >
+              <span>🏆 Meta Tier List</span>
+            </Link>
+            <Link
+              href="/mlbb/heroes"
+              className="inline-flex items-center gap-1 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-[10px] font-bold uppercase text-slate-300 hover:border-cyan-400 hover:text-cyan-400 transition-all active:scale-95 whitespace-nowrap"
+            >
+              <span>🛡️ 133 Hero Hub</span>
+            </Link>
+            <Link
+              href="/mlbb/builds"
+              className="inline-flex items-center gap-1 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-[10px] font-bold uppercase text-slate-300 hover:border-purple-400 hover:text-purple-400 transition-all active:scale-95 whitespace-nowrap"
+            >
+              <span>🎖️ 365+ Pro Builds</span>
+            </Link>
+          </div>
+        </div>
+
         {/* Unified Control Toolbar */}
         <div className="flex flex-col justify-between gap-3 sm:gap-4 rounded-2xl border border-white/10 bg-slate-950/80 p-2 sm:p-2.5 backdrop-blur-md">
           {/* Tab View Switcher (Horizontal Swipe Rail di Mobile) */}

@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Navbar from '@/components/ui/Navbar';
 import Footer from '@/components/ui/Footer';
+import MlbbMetaShowcase from '@/components/home/MlbbMetaShowcase';
 
 // Config Data untuk 3 Ekosistem Game Resmi
 const ruleEnginePresets = {
@@ -173,11 +174,12 @@ export default function HomePage() {
   const [activeScenarioIndex, setActiveScenarioIndex] = useState<number>(0);
 
   // Active Section for Navbar Spy & Focus Mode
-  const [activeSection, setActiveSection] = useState<'beranda' | 'modul' | 'lab' | 'tentang'>('beranda');
+  const [activeSection, setActiveSection] = useState<'beranda' | 'modul' | 'mlbb' | 'lab' | 'tentang'>('beranda');
 
   // Section Refs
   const berandaRef = useRef<HTMLDivElement>(null);
   const modulRef = useRef<HTMLDivElement>(null);
+  const mlbbRef = useRef<HTMLDivElement>(null);
   const labRef = useRef<HTMLDivElement>(null);
   const tentangRef = useRef<HTMLDivElement>(null);
 
@@ -233,6 +235,7 @@ export default function HomePage() {
       const sections = [
         { id: 'beranda', ref: berandaRef },
         { id: 'modul', ref: modulRef },
+        { id: 'mlbb', ref: mlbbRef },
         { id: 'lab', ref: labRef },
         { id: 'tentang', ref: tentangRef },
       ];
@@ -294,6 +297,8 @@ export default function HomePage() {
       tag: 'MPL OFFICIAL',
       tagColor: 'text-amber-400 border-amber-500/30 bg-amber-500/10',
       href: '/tournament/mpl-id-s14',
+      extraHref: '/mlbb/draft',
+      extraLabel: '5v5 Draft',
     },
     {
       slug: 'pmwc-2026',
@@ -320,12 +325,14 @@ export default function HomePage() {
   ];
 
   const marqueeTelemetryItems = [
-    { label: 'DETERMINISTIC SIMULATION KERNEL', badge: 'v2.4 ACTIVE', color: 'text-amber-400 border-amber-400/40 bg-amber-400/10' },
+    { label: 'MLBB META COMMAND SUITE', badge: '9 PRO MODULES', color: 'text-amber-400 border-amber-400/40 bg-amber-400/10' },
+    { label: '5v5 TOURNAMENT DRAFT SIMULATOR', badge: 'MPL S14 RULES', color: 'text-emerald-400 border-emerald-400/40 bg-emerald-400/10' },
+    { label: '133 HEROES ARCHIVE', badge: '587 SKILLS & SCALING', color: 'text-cyan-400 border-cyan-400/40 bg-cyan-400/10' },
+    { label: 'PRO BUILDS WORKSHOP', badge: '365+ BUILDS', color: 'text-purple-400 border-purple-400/40 bg-purple-400/10' },
     { label: 'MPL ID TIEBREAKER RESOLVER', badge: 'H2H + MINI-LEAGUE', color: 'text-amber-300 border-amber-300/40 bg-amber-400/10' },
     { label: 'PMWC 10-PTS MATRIX', badge: 'WWCD + PLACEMENT', color: 'text-emerald-400 border-emerald-400/40 bg-emerald-400/10' },
-    { label: 'VCT PACIFIC TACTICAL FPS', badge: 'MAP & ROUND DELTA', color: 'text-cyan-400 border-cyan-400/40 bg-cyan-400/10' },
+    { label: 'VCT PACIFIC FPS', badge: 'MAP & ROUND DELTA', color: 'text-cyan-400 border-cyan-400/40 bg-cyan-400/10' },
     { label: 'CALCULATION SPEED', badge: '0.02ms LATENCY', color: 'text-sky-400 border-sky-400/40 bg-sky-400/10' },
-    { label: 'EXPORT ENGINE', badge: 'EXCEL, PDF, GRAPHIC PNG', color: 'text-slate-300 border-white/20 bg-white/5' },
   ];
 
   return (
@@ -459,8 +466,9 @@ export default function HomePage() {
           {[
             { id: 'beranda', code: '01', label: 'HERO' },
             { id: 'modul', code: '02', label: 'MODUL' },
-            { id: 'lab', code: '03', label: 'LAB' },
-            { id: 'tentang', code: '04', label: 'ABOUT' },
+            { id: 'mlbb', code: '03', label: 'MLBB' },
+            { id: 'lab', code: '04', label: 'LAB' },
+            { id: 'tentang', code: '05', label: 'ABOUT' },
           ].map((item) => {
             const isActive = activeSection === item.id;
             return (
@@ -638,23 +646,45 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                <div className="mt-5 sm:mt-6 pt-3.5 sm:pt-4 border-t border-white/10">
+                <div className="mt-5 sm:mt-6 pt-3.5 sm:pt-4 border-t border-white/10 flex items-center gap-2">
                   <Link
                     href={t.href}
-                    className="inline-flex w-full items-center justify-between rounded-xl bg-amber-400 px-4 py-3 sm:py-3.5 text-xs font-black uppercase text-black transition-all duration-200 hover:bg-amber-300 active:scale-95 shadow-md shadow-amber-400/10"
+                    className="inline-flex flex-1 items-center justify-between rounded-xl bg-amber-400 px-4 py-3 sm:py-3.5 text-xs font-black uppercase text-black transition-all duration-200 hover:bg-amber-300 active:scale-95 shadow-md shadow-amber-400/10"
                   >
                     <span>Buka Simulator</span>
                     <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                     </svg>
                   </Link>
+                  {t.extraHref && (
+                    <Link
+                      href={t.extraHref}
+                      className="inline-flex items-center justify-center rounded-xl border border-amber-400/30 bg-amber-400/10 px-3 py-3 sm:py-3.5 text-xs font-black uppercase text-amber-400 hover:border-amber-400 hover:bg-amber-400/20 transition-all active:scale-95 whitespace-nowrap"
+                      title="Buka Draft Simulator 5v5"
+                    >
+                      <span>⚔️ {t.extraLabel}</span>
+                    </Link>
+                  )}
                 </div>
               </div>
             ))}
           </div>
         </section>
 
-        {/* SEKSI 3: DYNAMIC SCENARIO LAB & INTERACTIVE RULEBOOK (FOCUS ISOLATION) */}
+        {/* SEKSI 3: MLBB META TELEMETRY & COMMAND SUITE (FOCUS ISOLATION) */}
+        <section
+          id="mlbb"
+          ref={mlbbRef}
+          className={`transition-all duration-500 ease-out pt-6 sm:pt-8 border-t border-white/10 scroll-mt-24 sm:scroll-mt-32 ${
+            activeSection === 'mlbb'
+              ? 'opacity-100 scale-100 filter-none'
+              : 'opacity-50 sm:opacity-30 scale-[0.99] filter blur-[0.3px] hover:opacity-90'
+          }`}
+        >
+          <MlbbMetaShowcase />
+        </section>
+
+        {/* SEKSI 4: DYNAMIC SCENARIO LAB & INTERACTIVE RULEBOOK (FOCUS ISOLATION) */}
         <section
           id="lab"
           ref={labRef}

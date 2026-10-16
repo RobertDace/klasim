@@ -224,6 +224,23 @@ export default function CreateTournamentPage() {
                   </button>
                 ))}
               </div>
+              {format === 'MOBA' && (
+                <div className="mt-3 flex items-center justify-between rounded-xl border border-amber-400/30 bg-amber-400/5 p-3 text-xs">
+                  <div className="flex items-center gap-2">
+                    <span className="text-base">⚔️</span>
+                    <span className="text-[11px] text-slate-300">
+                      Butuh simulasi pick/ban untuk turnamen MOBA ini? Gunakan{' '}
+                      <Link href="/mlbb/draft" target="_blank" className="font-bold text-amber-400 underline hover:text-amber-300">
+                        Draft Simulator 5v5
+                      </Link>{' '}
+                      &amp;{' '}
+                      <Link href="/mlbb/tier-list" target="_blank" className="font-bold text-emerald-400 underline hover:text-emerald-300">
+                        Meta Tier List S34
+                      </Link>.
+                    </span>
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="pt-4 border-t border-white/10">
