@@ -66,6 +66,10 @@ export default function Navbar({ activeSection = 'beranda' }: NavbarProps) {
     { href: '/mlbb/draft', label: 'DRAFT SIMULATOR 5v5', desc: 'Simulasi Pick/Ban & Sinergi Tim', icon: '⚔️' },
     { href: '/mlbb/counter-pick', label: 'COUNTER PICK FINDER', desc: 'Rekomendasi Counter 1-5 Hero', icon: '🎯' },
     { href: '/mlbb/items', label: 'DATABASE ITEM', desc: '90 Equipment, Pasif Unik & Komparator', icon: '📦' },
+    { href: '/mlbb/compare', label: 'DUAL HERO COMPARATOR', desc: 'Perbandingan Duel 2 Hero Head-to-Head', icon: '⚖️' },
+    { href: '/mlbb/builder', label: 'CUSTOM BUILD CREATOR', desc: 'Workshop Racik 6 Item & Emblem', icon: '🛠️' },
+    { href: '/mlbb/builds', label: 'TOURNAMENT BUILDS', desc: '365+ Build Resmi MPL & M-Series', icon: '🎖️' },
+    { href: '/mlbb/patch-notes', label: 'PATCH NOTES & META', desc: 'Analisis Buff, Nerf & Pergeseran Meta', icon: '📈' },
   ];
 
   const navItems = [
@@ -157,9 +161,10 @@ export default function Navbar({ activeSection = 'beranda' }: NavbarProps) {
 
                     {/* Floating MLBB Meta Dropdown */}
                     {isMlbbDropdownOpen && (
-                      <div className="absolute left-0 mt-1 w-64 rounded-2xl border border-white/15 bg-slate-950/95 p-2 shadow-2xl backdrop-blur-2xl z-50 animate-in fade-in slide-in-from-top-2 duration-150">
-                        <div className="border-b border-white/10 px-3 py-1.5 text-[9px] text-amber-400 font-mono font-bold tracking-wider">
-                          MLBB META SUITE (MOLEBUILD)
+                      <div className="absolute left-0 mt-1 w-80 max-h-[75vh] overflow-y-auto rounded-2xl border border-white/15 bg-slate-950/95 p-2 shadow-2xl backdrop-blur-2xl z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+                        <div className="border-b border-white/10 px-3 py-1.5 text-[9px] text-amber-400 font-mono font-bold tracking-wider flex items-center justify-between">
+                          <span>MLBB META SUITE</span>
+                          <span className="text-[8px] bg-amber-400/20 text-amber-300 px-1.5 py-0.2 rounded">9 TOOLS</span>
                         </div>
                         <div className="space-y-1 mt-1">
                           {mlbbSubItems.map((sub) => (
@@ -324,7 +329,7 @@ export default function Navbar({ activeSection = 'beranda' }: NavbarProps) {
                         <span>{item.label}</span>
                         {item.id === 'mlbb' && (
                           <span className="rounded bg-amber-400/20 px-1 py-0.2 text-[8px] font-mono text-amber-300 border border-amber-400/30">
-                            5 FITUR
+                            9 TOOLS
                           </span>
                         )}
                       </div>
