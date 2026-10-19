@@ -174,10 +174,11 @@ export default function HomePage() {
   const [activeScenarioIndex, setActiveScenarioIndex] = useState<number>(0);
 
   // Active Section for Navbar Spy & Focus Mode
-  const [activeSection, setActiveSection] = useState<'beranda' | 'modul' | 'mlbb' | 'lab' | 'tentang'>('beranda');
+  const [activeSection, setActiveSection] = useState<'beranda' | 'ekosistem' | 'modul' | 'mlbb' | 'lab' | 'tentang'>('beranda');
 
   // Section Refs
   const berandaRef = useRef<HTMLDivElement>(null);
+  const ekosistemRef = useRef<HTMLDivElement>(null);
   const modulRef = useRef<HTMLDivElement>(null);
   const mlbbRef = useRef<HTMLDivElement>(null);
   const labRef = useRef<HTMLDivElement>(null);
@@ -234,6 +235,7 @@ export default function HomePage() {
       const viewportTrigger = window.innerHeight * 0.45;
       const sections = [
         { id: 'beranda', ref: berandaRef },
+        { id: 'ekosistem', ref: ekosistemRef },
         { id: 'modul', ref: modulRef },
         { id: 'mlbb', ref: mlbbRef },
         { id: 'lab', ref: labRef },
@@ -465,10 +467,11 @@ export default function HomePage() {
         <div className="rounded-2xl border border-white/10 bg-slate-950/80 p-2.5 backdrop-blur-xl shadow-2xl space-y-3">
           {[
             { id: 'beranda', code: '01', label: 'HERO' },
-            { id: 'modul', code: '02', label: 'MODUL' },
-            { id: 'mlbb', code: '03', label: 'MLBB' },
-            { id: 'lab', code: '04', label: 'LAB' },
-            { id: 'tentang', code: '05', label: 'ABOUT' },
+            { id: 'ekosistem', code: '02', label: 'EKOSISTEM' },
+            { id: 'modul', code: '03', label: 'TURNAMEN' },
+            { id: 'mlbb', code: '04', label: 'MLBB' },
+            { id: 'lab', code: '05', label: 'LAB' },
+            { id: 'tentang', code: '06', label: 'ABOUT' },
           ].map((item) => {
             const isActive = activeSection === item.id;
             return (
@@ -548,6 +551,36 @@ export default function HomePage() {
             Simulator klasemen berbasis regulasi resmi turnamen esports dunia. Ubah skor tiap pertandingan, uji skenario head-to-head, dan dapatkan proyeksi bagan kualifikasi secara seketika.
           </p>
 
+          <div className="flex flex-wrap items-center gap-3 pt-1 sm:pt-2">
+            <Link
+              href="/tournament"
+              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-400 px-5 py-3 text-xs font-black uppercase tracking-wider text-black transition-all duration-200 hover:from-amber-400 hover:to-amber-300 hover:shadow-lg hover:shadow-amber-500/25 active:scale-95"
+            >
+              <span>+ SIMULASI TURNAMEN</span>
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </Link>
+
+            <Link
+              href="/mlbb/draft"
+              className="inline-flex items-center gap-2 rounded-xl border border-amber-400/30 bg-slate-900/80 px-4 py-3 text-xs font-bold uppercase tracking-wider text-amber-300 backdrop-blur-md transition-all duration-200 hover:border-amber-400 hover:bg-amber-400/10 hover:text-amber-200 active:scale-95"
+            >
+              <span className="h-2 w-2 rounded-full bg-cyan-400 animate-pulse" />
+              <span>DRAFT ARENA MLBB</span>
+            </Link>
+
+            <button
+              onClick={() => scrollToSection('ekosistem')}
+              className="group inline-flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-xs font-bold uppercase tracking-wider text-slate-300 backdrop-blur-md transition-all duration-200 hover:border-white/20 hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
+            >
+              <span>JELAJAHI GAME</span>
+              <svg className="w-3 h-3 text-slate-500 group-hover:text-slate-300 transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </button>
+          </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 border-y border-white/10 py-3.5 sm:py-4 text-xs">
             <div className="border-b sm:border-b-0 sm:border-r border-white/10 pb-2.5 sm:pb-0 sm:pr-4">
               <span className="block text-[9px] sm:text-[10px] text-slate-500 uppercase">Tiebreaker Logic</span>
@@ -585,6 +618,193 @@ export default function HomePage() {
                 <span className="text-white/20 ml-2">///</span>
               </div>
             ))}
+          </div>
+        </section>
+
+        {/* SEKSI BARU: TRI-EKOSISTEM ESPORTS (FOCUS ISOLATION) */}
+        <section
+          id="ekosistem"
+          ref={ekosistemRef}
+          className={`transition-all duration-500 ease-out space-y-4 sm:space-y-6 pt-6 border-t border-white/10 scroll-mt-24 sm:scroll-mt-32 ${
+            activeSection === 'ekosistem'
+              ? 'opacity-100 scale-100 filter-none'
+              : 'opacity-50 sm:opacity-30 scale-[0.99] filter blur-[0.3px] hover:opacity-90'
+          }`}
+        >
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-1">
+            <div className="flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-amber-400 animate-pulse" />
+              <h2 className="text-xs font-black uppercase tracking-widest text-slate-300">
+                PILIH EKOSISTEM ESPORTS
+              </h2>
+            </div>
+            <span className="text-[9px] sm:text-[10px] text-slate-500 font-mono">
+              3 DEDICATED HUBS // MOBA • BATTLE ROYALE • TACTICAL FPS
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {/* Card 1: Mobile Legends */}
+            <div className="group relative flex flex-col justify-between rounded-2xl border border-amber-500/30 bg-slate-950/80 p-5 sm:p-6 backdrop-blur-xl transition-all duration-300 hover:border-amber-400 hover:shadow-xl hover:shadow-amber-500/10">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-bold text-amber-500/80 font-mono">01 // MOBA</span>
+                  <span className="rounded-md border border-amber-500/40 bg-amber-500/10 px-2 py-0.5 text-[8px] sm:text-[9px] font-extrabold text-amber-400 uppercase">
+                    133 HEROES READY
+                  </span>
+                </div>
+
+                <div>
+                  <h3 className="text-xl sm:text-2xl font-black uppercase tracking-tight text-white group-hover:text-amber-400 transition-colors font-sans">
+                    MOBILE LEGENDS
+                  </h3>
+                  <p className="mt-1 text-xs text-slate-400 leading-relaxed font-sans">
+                    Simulator draft pick-ban resmi Moonton release order, regulasi tiebreaker MPL ID, mini-league circular resolver, dan standings.
+                  </p>
+                </div>
+
+                <div className="space-y-2 rounded-xl border border-white/5 bg-white/[0.02] p-3 text-[10px] sm:text-[11px] text-slate-400">
+                  <div className="flex items-center gap-2">
+                    <span className="text-amber-400">✓</span>
+                    <span>Urutan Rilis Hero Resmi Moonton (#1 Miya - #133 Hirara)</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-amber-400">✓</span>
+                    <span>Standalone Tournament Draft Arena (BO1/BO3/BO5/BO7)</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-amber-400">✓</span>
+                    <span>MPL ID S14 Standings & Head-to-Head Matrix</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-5 mt-4 border-t border-white/10 flex flex-col gap-2">
+                <Link
+                  href="/mlbb"
+                  className="flex items-center justify-between rounded-xl bg-amber-500/10 border border-amber-500/30 px-3.5 py-2.5 text-xs font-bold uppercase tracking-wider text-amber-300 transition-all hover:bg-amber-400 hover:text-black hover:border-amber-400"
+                >
+                  <span>Buka MLBB Hub</span>
+                  <span>→</span>
+                </Link>
+                <Link
+                  href="/mlbb/draft"
+                  className="flex items-center justify-between rounded-xl border border-white/10 bg-slate-900/60 px-3.5 py-2 text-[10px] font-bold uppercase tracking-wider text-slate-300 transition-all hover:border-amber-400/50 hover:text-amber-400"
+                >
+                  <span className="flex items-center gap-1.5">
+                    <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                    <span>In-Game Draft Simulator</span>
+                  </span>
+                  <span className="text-slate-500">EXP</span>
+                </Link>
+              </div>
+            </div>
+
+            {/* Card 2: PUBG Mobile */}
+            <div className="group relative flex flex-col justify-between rounded-2xl border border-emerald-500/30 bg-slate-950/80 p-5 sm:p-6 backdrop-blur-xl transition-all duration-300 hover:border-emerald-400 hover:shadow-xl hover:shadow-emerald-500/10">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-bold text-emerald-500/80 font-mono">02 // BATTLE ROYALE</span>
+                  <span className="rounded-md border border-emerald-500/40 bg-emerald-500/10 px-2 py-0.5 text-[8px] sm:text-[9px] font-extrabold text-emerald-400 uppercase">
+                    10-PTS SYSTEM
+                  </span>
+                </div>
+
+                <div>
+                  <h3 className="text-xl sm:text-2xl font-black uppercase tracking-tight text-white group-hover:text-emerald-400 transition-colors font-sans">
+                    PUBG MOBILE
+                  </h3>
+                  <p className="mt-1 text-xs text-slate-400 leading-relaxed font-sans">
+                    Kalkulator poin turnamen Battle Royale resmi Krafton/PMWC dengan 4-layer tiebreaker engine (WWCD, Placement, Kills, Last Match).
+                  </p>
+                </div>
+
+                <div className="space-y-2 rounded-xl border border-white/5 bg-white/[0.02] p-3 text-[10px] sm:text-[11px] text-slate-400">
+                  <div className="flex items-center gap-2">
+                    <span className="text-emerald-400">✓</span>
+                    <span>10-Points Official Placement Matrix</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-emerald-400">✓</span>
+                    <span>Auto Tiebreaker Engine (WWCD &gt; Placement &gt; Kill)</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-emerald-400">✓</span>
+                    <span>PMWC 2026 16-Team Grand Finals Simulation</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-5 mt-4 border-t border-white/10 flex flex-col gap-2">
+                <Link
+                  href="/pubgm"
+                  className="flex items-center justify-between rounded-xl bg-emerald-500/10 border border-emerald-500/30 px-3.5 py-2.5 text-xs font-bold uppercase tracking-wider text-emerald-300 transition-all hover:bg-emerald-400 hover:text-black hover:border-emerald-400"
+                >
+                  <span>Buka PUBGM Hub</span>
+                  <span>→</span>
+                </Link>
+                <Link
+                  href="/tournament/pmwc-2026"
+                  className="flex items-center justify-between rounded-xl border border-white/10 bg-slate-900/60 px-3.5 py-2 text-[10px] font-bold uppercase tracking-wider text-slate-300 transition-all hover:border-emerald-400/50 hover:text-emerald-400"
+                >
+                  <span>Simulasi Klasemen PMWC</span>
+                  <span className="text-slate-500">LIVE</span>
+                </Link>
+              </div>
+            </div>
+
+            {/* Card 3: Valorant */}
+            <div className="group relative flex flex-col justify-between rounded-2xl border border-rose-500/30 bg-slate-950/80 p-5 sm:p-6 backdrop-blur-xl transition-all duration-300 hover:border-rose-400 hover:shadow-xl hover:shadow-rose-500/10">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-bold text-rose-500/80 font-mono">03 // TACTICAL FPS</span>
+                  <span className="rounded-md border border-rose-500/40 bg-rose-500/10 px-2 py-0.5 text-[8px] sm:text-[9px] font-extrabold text-rose-400 uppercase">
+                    VCT DUAL-GROUP
+                  </span>
+                </div>
+
+                <div>
+                  <h3 className="text-xl sm:text-2xl font-black uppercase tracking-tight text-white group-hover:text-rose-400 transition-colors font-sans">
+                    VALORANT
+                  </h3>
+                  <p className="mt-1 text-xs text-slate-400 leading-relaxed font-sans">
+                    Sistem klasemen format VCT Pacific Group Alpha & Omega dengan resolusi tiebreaker resmi Riot Games (W-L &gt; H2H &gt; Map Diff &gt; Round Diff).
+                  </p>
+                </div>
+
+                <div className="space-y-2 rounded-xl border border-white/5 bg-white/[0.02] p-3 text-[10px] sm:text-[11px] text-slate-400">
+                  <div className="flex items-center gap-2">
+                    <span className="text-rose-400">✓</span>
+                    <span>VCT Pacific Group Alpha & Omega Dual Structure</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-rose-400">✓</span>
+                    <span>Riot 4-Tier Tiebreaker (Match &gt; H2H &gt; Map &gt; Round)</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-rose-400">✓</span>
+                    <span>Interactive Map Pick-Ban Sequence</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-5 mt-4 border-t border-white/10 flex flex-col gap-2">
+                <Link
+                  href="/valorant"
+                  className="flex items-center justify-between rounded-xl bg-rose-500/10 border border-rose-500/30 px-3.5 py-2.5 text-xs font-bold uppercase tracking-wider text-rose-300 transition-all hover:bg-rose-400 hover:text-black hover:border-rose-400"
+                >
+                  <span>Buka Valorant Hub</span>
+                  <span>→</span>
+                </Link>
+                <Link
+                  href="/tournament/vct-pacific-2026"
+                  className="flex items-center justify-between rounded-xl border border-white/10 bg-slate-900/60 px-3.5 py-2 text-[10px] font-bold uppercase tracking-wider text-slate-300 transition-all hover:border-rose-400/50 hover:text-rose-400"
+                >
+                  <span>Simulasi VCT Pacific</span>
+                  <span className="text-slate-500">LIVE</span>
+                </Link>
+              </div>
+            </div>
           </div>
         </section>
 

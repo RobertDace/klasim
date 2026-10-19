@@ -105,7 +105,10 @@ export default function HeroFilters({
         {/* Search Bar with Tactical Icon & Shortcut indicator */}
         <div className="relative flex-1">
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-500 font-mono text-xs">
-            🔍
+            <svg className="w-3.5 h-3.5 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
           </div>
           <input
             ref={searchInputRef}
@@ -118,9 +121,13 @@ export default function HeroFilters({
           {searchQuery ? (
             <button
               onClick={() => onSearchChange('')}
-              className="absolute inset-y-0 right-0 flex items-center pr-3.5 font-mono text-xs text-slate-400 hover:text-white cursor-pointer"
+              className="absolute inset-y-0 right-0 flex items-center gap-1 pr-3.5 font-mono text-xs text-slate-400 hover:text-white cursor-pointer"
             >
-              ✕ Hapus
+              <svg className="w-3 h-3 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+              <span>Hapus</span>
             </button>
           ) : (
             <span className="pointer-events-none absolute inset-y-0 right-0 hidden sm:flex items-center pr-3 font-mono text-[10px] text-slate-600">

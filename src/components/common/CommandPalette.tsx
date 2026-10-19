@@ -138,6 +138,102 @@ const MODULE_ITEMS: PaletteItem[] = [
   },
 ];
 
+const renderModuleIcon = (id: string) => {
+  switch (id) {
+    case 'mod-builder':
+      return (
+        <svg className="w-4 h-4 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+          <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+        </svg>
+      );
+    case 'mod-draft':
+    case 'mod-tournament-create':
+      return (
+        <svg className="w-4 h-4 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+          <polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5" />
+          <line x1="13" y1="19" x2="19" y2="13" />
+          <line x1="16" y1="16" x2="20" y2="20" />
+          <line x1="19" y1="21" x2="21" y2="19" />
+          <polyline points="14.5 6.5 18 3 21 3 21 6 17.5 9.5" />
+          <line x1="5" y1="14" x2="9" y2="18" />
+          <line x1="7" y1="17" x2="4" y2="20" />
+          <line x1="3" y1="19" x2="5" y2="21" />
+        </svg>
+      );
+    case 'mod-tierlist':
+      return (
+        <svg className="w-4 h-4 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+          <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
+          <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
+          <path d="M4 22h16" />
+          <path d="M10 14.66V17c0 .55-.45 1-1 1H7v2h10v-2h-2c-.55 0-1-.45-1-1v-2.34" />
+          <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" />
+        </svg>
+      );
+    case 'mod-counter':
+      return (
+        <svg className="w-4 h-4 text-rose-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+          <circle cx="12" cy="12" r="10" />
+          <line x1="22" y1="12" x2="18" y2="12" />
+          <line x1="6" y1="12" x2="2" y2="12" />
+          <line x1="12" y1="6" x2="12" y2="2" />
+          <line x1="12" y1="22" x2="12" y2="18" />
+        </svg>
+      );
+    case 'mod-compare':
+      return (
+        <svg className="w-4 h-4 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+          <path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z" />
+          <path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z" />
+          <path d="M7 21h10" />
+          <path d="M12 3v18" />
+          <path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2" />
+        </svg>
+      );
+    case 'mod-builds':
+      return (
+        <svg className="w-4 h-4 text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+          <circle cx="12" cy="8" r="7" />
+          <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88" />
+        </svg>
+      );
+    case 'mod-guides':
+      return (
+        <svg className="w-4 h-4 text-teal-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+          <circle cx="12" cy="12" r="10" />
+          <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" />
+        </svg>
+      );
+    case 'mod-patch':
+      return (
+        <svg className="w-4 h-4 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+          <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" />
+          <polyline points="16 7 22 7 22 13" />
+        </svg>
+      );
+    case 'mod-heroes':
+      return (
+        <svg className="w-4 h-4 text-slate-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+        </svg>
+      );
+    case 'mod-items':
+      return (
+        <svg className="w-4 h-4 text-slate-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+          <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+          <line x1="12" y1="22.08" x2="12" y2="12" />
+        </svg>
+      );
+    default:
+      return (
+        <svg className="w-4 h-4 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+        </svg>
+      );
+  }
+};
+
 export default function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -281,7 +377,10 @@ export default function CommandPalette({ isOpen, onClose }: CommandPaletteProps)
       >
         {/* Search Input Bar */}
         <div className="relative flex items-center border-b border-white/10 px-4 py-3 bg-[#0c121e]">
-          <span className="text-amber-400 text-lg mr-3">🔍</span>
+          <svg className="w-4 h-4 text-amber-400 mr-3 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
           <input
             ref={inputRef}
             type="text"
@@ -300,7 +399,7 @@ export default function CommandPalette({ isOpen, onClose }: CommandPaletteProps)
                 setQuery('');
                 inputRef.current?.focus();
               }}
-              className="text-xs font-mono text-slate-500 hover:text-white px-2 py-1 rounded"
+              className="text-xs font-mono text-slate-500 hover:text-white px-2 py-1 rounded cursor-pointer"
             >
               Clear
             </button>
@@ -310,7 +409,7 @@ export default function CommandPalette({ isOpen, onClose }: CommandPaletteProps)
           </kbd>
         </div>
 
-        {/* Filter Badges */}
+        {/* Filter Badges with SVGs */}
         <div className="flex items-center gap-1.5 px-4 py-2 border-b border-white/5 bg-[#060910] overflow-x-auto scrollbar-none font-mono text-[11px]">
           {(['ALL', 'HERO', 'ITEM', 'TALENT', 'MODULE'] as const).map((type) => (
             <button
@@ -319,17 +418,57 @@ export default function CommandPalette({ isOpen, onClose }: CommandPaletteProps)
                 setFilterType(type);
                 setSelectedIndex(0);
               }}
-              className={`px-2.5 py-1 rounded-lg transition-all ${
+              className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg transition-all cursor-pointer ${
                 filterType === type
                   ? 'bg-amber-400 text-black font-bold'
                   : 'text-slate-400 hover:bg-white/5 hover:text-slate-200'
               }`}
             >
-              {type === 'ALL' && '🌐 Semua'}
-              {type === 'HERO' && '🛡️ Hero (133)'}
-              {type === 'ITEM' && '📦 Item (90)'}
-              {type === 'TALENT' && '⚡ Talent (26)'}
-              {type === 'MODULE' && '🧭 Modul (11)'}
+              {type === 'ALL' && (
+                <>
+                  <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="2" y1="12" x2="22" y2="12" />
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                  </svg>
+                  <span>Semua</span>
+                </>
+              )}
+              {type === 'HERO' && (
+                <>
+                  <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                  </svg>
+                  <span>Hero (133)</span>
+                </>
+              )}
+              {type === 'ITEM' && (
+                <>
+                  <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                    <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                    <line x1="12" y1="22.08" x2="12" y2="12" />
+                  </svg>
+                  <span>Item (90)</span>
+                </>
+              )}
+              {type === 'TALENT' && (
+                <>
+                  <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                  </svg>
+                  <span>Talent (26)</span>
+                </>
+              )}
+              {type === 'MODULE' && (
+                <>
+                  <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                    <circle cx="12" cy="12" r="10" />
+                    <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" />
+                  </svg>
+                  <span>Modul (11)</span>
+                </>
+              )}
             </button>
           ))}
           <span className="ml-auto text-[10px] text-slate-500 hidden sm:inline">
@@ -341,7 +480,12 @@ export default function CommandPalette({ isOpen, onClose }: CommandPaletteProps)
         <div className="overflow-y-auto p-2 space-y-1 flex-1 scrollbar-none">
           {results.length === 0 ? (
             <div className="py-12 text-center">
-              <span className="text-3xl block mb-2">🔎</span>
+              <div className="flex justify-center mb-2">
+                <svg className="w-10 h-10 text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
+                  <circle cx="11" cy="11" r="8" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+              </div>
               <p className="text-sm font-sans text-slate-300">
                 Tidak ada entitas yang cocok dengan &quot;<span className="text-amber-400">{query}</span>&quot;
               </p>
@@ -376,7 +520,7 @@ export default function CommandPalette({ isOpen, onClose }: CommandPaletteProps)
                           unoptimized
                         />
                       ) : (
-                        <span className="text-base">{item.icon || '📌'}</span>
+                        renderModuleIcon(item.id)
                       )}
                     </div>
 
@@ -410,15 +554,20 @@ export default function CommandPalette({ isOpen, onClose }: CommandPaletteProps)
                           e.stopPropagation();
                           handleSelect(item.secondaryHref!);
                         }}
-                        className="hidden sm:inline-flex items-center gap-1 px-2 py-1 rounded bg-cyan-500/10 border border-cyan-400/30 text-cyan-300 hover:bg-cyan-400 hover:text-black transition-all"
+                        className="hidden sm:inline-flex items-center gap-1.5 px-2 py-1 rounded bg-cyan-500/10 border border-cyan-400/30 text-cyan-300 hover:bg-cyan-400 hover:text-black transition-all cursor-pointer"
                       >
-                        <span>⚡</span>
+                        <svg className="w-2.5 h-2.5 text-cyan-400" viewBox="0 0 24 24" fill="currentColor">
+                          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                        </svg>
                         <span>{item.secondaryLabel || 'Buka'}</span>
                       </button>
                     )}
                     {isSelected && (
-                      <span className="hidden sm:inline-flex items-center gap-1 text-amber-400 font-bold">
-                        <span>↵</span>
+                      <span className="hidden sm:inline-flex items-center gap-1.5 text-amber-400 font-bold">
+                        <svg className="w-3 h-3 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                          <polyline points="9 10 4 15 9 20" />
+                          <path d="M20 4v7a4 4 0 0 1-4 4H4" />
+                        </svg>
                         <span>PILIH</span>
                       </span>
                     )}
@@ -432,12 +581,40 @@ export default function CommandPalette({ isOpen, onClose }: CommandPaletteProps)
         {/* Footer Shortcut Bar */}
         <div className="border-t border-white/10 bg-[#060910] px-4 py-2.5 flex items-center justify-between text-[10px] font-mono text-slate-500">
           <div className="flex items-center gap-4">
-            <span><kbd className="text-slate-300 bg-white/10 px-1 py-0.5 rounded">↑</kbd> <kbd className="text-slate-300 bg-white/10 px-1 py-0.5 rounded">↓</kbd> Navigasi</span>
-            <span><kbd className="text-slate-300 bg-white/10 px-1 py-0.5 rounded">↵</kbd> Buka</span>
-            <span><kbd className="text-slate-300 bg-white/10 px-1 py-0.5 rounded">ESC</kbd> Tutup</span>
+            <span className="inline-flex items-center gap-1">
+              <kbd className="inline-flex items-center justify-center text-slate-300 bg-white/10 px-1.5 py-0.5 rounded border border-white/10">
+                <svg className="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3}>
+                  <polyline points="18 15 12 9 6 15" />
+                </svg>
+              </kbd>
+              <kbd className="inline-flex items-center justify-center text-slate-300 bg-white/10 px-1.5 py-0.5 rounded border border-white/10">
+                <svg className="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3}>
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </kbd>
+              <span className="ml-1">Navigasi</span>
+            </span>
+
+            <span className="inline-flex items-center gap-1">
+              <kbd className="inline-flex items-center justify-center text-slate-300 bg-white/10 px-1.5 py-0.5 rounded border border-white/10">
+                <svg className="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3}>
+                  <polyline points="9 10 4 15 9 20" />
+                  <path d="M20 4v7a4 4 0 0 1-4 4H4" />
+                </svg>
+              </kbd>
+              <span className="ml-1">Buka</span>
+            </span>
+
+            <span className="inline-flex items-center gap-1">
+              <kbd className="text-slate-300 bg-white/10 px-1.5 py-0.5 rounded border border-white/10">ESC</kbd>
+              <span className="ml-1">Tutup</span>
+            </span>
           </div>
           <div className="flex items-center gap-1.5 text-amber-400/80 font-bold">
-            <span>⚡ KLASIM FAST INDEX</span>
+            <svg className="w-3 h-3 text-amber-400" viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+            </svg>
+            <span>KLASIM FAST INDEX</span>
           </div>
         </div>
       </div>

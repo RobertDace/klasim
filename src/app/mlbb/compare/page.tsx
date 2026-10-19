@@ -732,7 +732,10 @@ export default function ComparePage() {
             {/* Modal Header */}
             <div className="flex items-center justify-between pb-4 border-b border-white/10">
               <div className="flex items-center gap-2 font-mono text-sm font-bold text-amber-400">
-                <span>🔍</span>
+                <svg className="w-4 h-4 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                  <circle cx="11" cy="11" r="8" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
                 <span>PILIH HERO {isPickingHero1 ? 'PERTAMA' : 'KEDUA'}</span>
               </div>
               <button
@@ -741,9 +744,12 @@ export default function ComparePage() {
                   setIsPickingHero2(false);
                   setSearchPickerQuery('');
                 }}
-                className="h-8 w-8 rounded-full border border-white/10 bg-white/5 text-slate-400 hover:text-white flex items-center justify-center font-mono"
+                className="h-8 w-8 rounded-full border border-white/10 bg-white/5 text-slate-400 hover:text-white flex items-center justify-center cursor-pointer"
               >
-                ✕
+                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
               </button>
             </div>
 

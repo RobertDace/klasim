@@ -2,8 +2,7 @@
 
 import { useState, useMemo, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import Navbar from '@/components/ui/Navbar';
-import Footer from '@/components/ui/Footer';
+import { useRouter } from 'next/navigation';
 import { toPng } from 'html-to-image';
 import {
   heroes as allHeroes,
@@ -13,7 +12,8 @@ import {
   type MLBBTierStat,
   type MLBBHeroRelation,
 } from '@/data/mlbb';
-import DraftAiAdvisor from '@/components/mlbb/DraftAiAdvisor';
+import InGameDraftArena from '@/components/mlbb/InGameDraftArena';
+import PostDraftAnalysisModal from '@/components/mlbb/PostDraftAnalysisModal';
 
 interface DraftSlot {
   type: 'ban' | 'pick';
@@ -23,6 +23,8 @@ interface DraftSlot {
 }
 
 export default function DraftSimulatorPage() {
+  const router = useRouter();
+  const [isAnalysisModalOpen, setIsAnalysisModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedRole, setSelectedRole] = useState('all');
   const [draftMode, setDraftMode] = useState<'tournament' | 'free'>('tournament');
@@ -137,7 +139,9 @@ export default function DraftSimulatorPage() {
     setRedPicks(rp);
     setBlueBans(bb);
     setRedBans(rb);
+    setCurrentStepIndex(tournamentSteps.length);
     setIsPresetModalOpen(false);
+    setIsAnalysisModalOpen(true);
   };
 
   const handleCopyShareUrl = () => {
@@ -218,6 +222,14 @@ export default function DraftSimulatorPage() {
   ];
 
   const currentStep = tournamentSteps[currentStepIndex];
+  const isDraftComplete = draftMode === 'tournament' && currentStepIndex >= tournamentSteps.length;
+
+  // Auto-open Post-Draft Analysis Modal upon completion
+  useEffect(() => {
+    if (isDraftComplete) {
+      setIsAnalysisModalOpen(true);
+    }
+  }, [isDraftComplete]);
 
   // Set of all drafted / banned hero IDs
   const usedHeroIds = useMemo(() => {
@@ -249,7 +261,7 @@ export default function DraftSimulatorPage() {
     if (usedHeroIds.has(hero.id)) return; // already picked or banned
 
     if (draftMode === 'tournament') {
-      if (!currentStep) return;
+      if (isDraftComplete || !currentStep) return;
       if (currentStep.team === 'blue') {
         if (currentStep.type === 'ban') {
           const next = [...blueBans];
@@ -272,9 +284,7 @@ export default function DraftSimulatorPage() {
         }
       }
 
-      if (currentStepIndex < tournamentSteps.length - 1) {
-        setCurrentStepIndex(currentStepIndex + 1);
-      }
+      setCurrentStepIndex(prev => prev + 1);
     } else {
       // Free mode
       if (!activeSlot) return;
@@ -333,6 +343,37 @@ export default function DraftSimulatorPage() {
     setRedPicks([null, null, null, null, null]);
     setCurrentStepIndex(0);
     setActiveSlot({ team: 'blue', type: 'ban', index: 0 });
+    setIsAnalysisModalOpen(false);
+  };
+
+  const handleUndoStep = () => {
+    if (draftMode === 'tournament') {
+      if (currentStepIndex <= 0) return;
+      const prevIndex = currentStepIndex - 1;
+      const stepToRevert = tournamentSteps[prevIndex];
+      if (stepToRevert.team === 'blue') {
+        if (stepToRevert.type === 'ban') {
+          const next = [...blueBans];
+          next[stepToRevert.index] = null;
+          setBlueBans(next);
+        } else {
+          const next = [...bluePicks];
+          next[stepToRevert.index] = null;
+          setBluePicks(next);
+        }
+      } else {
+        if (stepToRevert.type === 'ban') {
+          const next = [...redBans];
+          next[stepToRevert.index] = null;
+          setRedBans(next);
+        } else {
+          const next = [...redPicks];
+          next[stepToRevert.index] = null;
+          setRedPicks(next);
+        }
+      }
+      setCurrentStepIndex(prevIndex);
+    }
   };
 
   // Team Synergy & Balance Analysis
@@ -466,545 +507,72 @@ export default function DraftSimulatorPage() {
   const rolesList = ['all', 'Tank', 'Fighter', 'Assassin', 'Mage', 'Marksman', 'Support'];
 
   return (
-    <div className="min-h-screen bg-[#05070c] text-slate-100 flex flex-col font-sans selection:bg-amber-400 selection:text-black">
-      <Navbar activeSection="mlbb" />
+    <div className="min-h-screen bg-[#05070c] text-slate-100 flex flex-col font-sans selection:bg-amber-400 selection:text-black relative">
+      {/* Subtle Floating Exit Button */}
+      <Link
+        href="/mlbb"
+        className="fixed top-3 left-4 z-40 flex items-center gap-1.5 text-xs font-mono font-medium text-slate-400 hover:text-white bg-black/70 hover:bg-black/95 px-3 py-1.5 rounded-full border border-white/10 hover:border-amber-400/50 transition-all backdrop-blur-md shadow-lg"
+        title="Kembali ke Halaman MLBB"
+      >
+        <span>←</span>
+        <span>Kembali ke MLBB</span>
+      </Link>
 
-      <main className="flex-1 pt-24 pb-20 px-3.5 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full space-y-6">
-        {/* Top Header & Mode Toggles */}
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-white/10 pb-4">
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="font-mono text-xs font-bold uppercase tracking-wider text-amber-400">
-                KLASIM DRAFT SIMULATOR // 5V5 ESPORTS SUITE
-              </span>
-            </div>
-            <div className="flex items-center gap-3 mt-1">
-              <h1 className="font-sans text-xl sm:text-2xl lg:text-3xl font-black uppercase text-white truncate max-w-xl">
-                {matchTitle}
-              </h1>
-              <button
-                onClick={() => {
-                  setTempBlueName(blueTeamName);
-                  setTempRedName(redTeamName);
-                  setTempMatchTitle(matchTitle);
-                  setIsEditingTeams(true);
-                }}
-                className="rounded-lg border border-white/15 bg-white/5 px-2.5 py-1 text-xs font-mono text-slate-300 hover:border-amber-400 hover:text-amber-400 transition-colors"
-                title="Edit Nama Tim & Judul Pertandingan"
-              >
-                ✏️ Edit Tim
-              </button>
-            </div>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-2 font-mono text-xs">
-            {/* Quick Presets */}
-            <button
-              onClick={() => setIsPresetModalOpen(true)}
-              className="rounded-xl border border-cyan-400/40 bg-cyan-400/10 px-3 py-2 font-bold text-cyan-300 hover:bg-cyan-400 hover:text-black transition-all flex items-center gap-1.5 cursor-pointer"
-            >
-              <span>⚡</span>
-              <span>Preset Pro Meta</span>
-            </button>
-
-            {/* Export Card PNG */}
-            <button
-              onClick={handleDownloadCard}
-              disabled={isExportingCard}
-              className="rounded-xl border border-amber-400/50 bg-amber-400 px-3.5 py-2 font-black text-black hover:bg-amber-300 transition-all flex items-center gap-1.5 cursor-pointer shadow-lg shadow-amber-400/20 disabled:opacity-50"
-              title="Unduh Kartu Showdown Format HD PNG"
-            >
-              {isExportingCard ? (
-                <span>MEMPROSES...</span>
-              ) : downloadSuccess ? (
-                <span>✓ TERSIMPAN!</span>
-              ) : (
-                <>
-                  <span>📸</span>
-                  <span>KARTU HD</span>
-                </>
-              )}
-            </button>
-
-            {/* Share URL */}
-            <button
-              onClick={handleCopyShareUrl}
-              className="rounded-xl border border-white/10 bg-black/60 px-3 py-2 text-slate-300 hover:border-white/30 hover:text-white transition-all flex items-center gap-1.5 cursor-pointer"
-            >
-              <span>🔗</span>
-              <span>{shareUrlCopied ? 'URL DISALIN!' : 'BAGIKAN'}</span>
-            </button>
-
-            {/* Mode Switcher */}
-            <div className="flex rounded-xl border border-white/10 bg-slate-950/80 p-1 font-mono text-xs">
-              <button
-                onClick={() => setDraftMode('tournament')}
-                className={`rounded-lg px-2.5 py-1 transition-all cursor-pointer ${
-                  draftMode === 'tournament'
-                    ? 'bg-amber-400 text-black font-black'
-                    : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                TURNAMEN
-              </button>
-              <button
-                onClick={() => setDraftMode('free')}
-                className={`rounded-lg px-2.5 py-1 transition-all cursor-pointer ${
-                  draftMode === 'free'
-                    ? 'bg-amber-400 text-black font-black'
-                    : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                BEBAS
-              </button>
-            </div>
-
-            <button
-              onClick={handleResetDraft}
-              className="rounded-xl border border-rose-500/30 bg-rose-500/10 px-3 py-2 font-mono text-xs font-bold text-rose-300 hover:bg-rose-500/20 transition-all cursor-pointer"
-            >
-              ↺ Reset
-            </button>
-          </div>
-        </div>
-
-        {/* Win Probability & Matchup Breakdown Bar */}
-        <div className="rounded-3xl border border-white/10 bg-[#070a14] p-4 sm:p-5 shadow-2xl space-y-3 font-mono">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
-            <div className="flex items-center gap-3">
-              <span className="font-bold uppercase text-blue-400 flex items-center gap-1.5">
-                <span className="h-2 w-2 rounded-full bg-blue-400" />
-                <span>{blueTeamName}: {matchPrediction.blueProb}%</span>
-              </span>
-              <span className="text-slate-600 font-bold">VS</span>
-              <span className="font-bold uppercase text-rose-400 flex items-center gap-1.5">
-                <span className="h-2 w-2 rounded-full bg-rose-400" />
-                <span>{redTeamName}: {matchPrediction.redProb}%</span>
-              </span>
-            </div>
-
-            <span className="text-[11px] text-slate-400 italic">
-              {matchPrediction.advantageReason}
-            </span>
-          </div>
-
-          {/* Visual Probability Dual Bar */}
-          <div className="relative h-3 w-full rounded-full bg-slate-900 overflow-hidden flex shadow-inner border border-white/10">
-            <div
-              style={{ width: `${matchPrediction.blueProb}%` }}
-              className="h-full bg-gradient-to-r from-blue-600 to-cyan-400 transition-all duration-500"
-            />
-            <div
-              style={{ width: `${matchPrediction.redProb}%` }}
-              className="h-full bg-gradient-to-l from-rose-600 to-pink-400 transition-all duration-500"
-            />
-          </div>
-        </div>
-
-        {/* Tournament Phase Prompt Banner */}
-        {draftMode === 'tournament' && (
-          <div className={`flex items-center justify-between rounded-2xl border p-4 font-mono text-xs transition-all ${
-            currentStep?.team === 'blue'
-              ? 'border-blue-500/40 bg-blue-950/30 text-blue-200'
-              : 'border-rose-500/40 bg-rose-950/30 text-rose-200'
-          }`}>
-            <div className="flex items-center gap-3">
-              <span className="h-3 w-3 rounded-full animate-ping bg-amber-400" />
-              <div>
-                <span className="text-[10px] text-slate-400 uppercase tracking-widest block">
-                  GILIRAN SAAT INI (LANGKAH {currentStepIndex + 1} DARI {tournamentSteps.length})
-                </span>
-                <span className="text-base font-black uppercase text-white">
-                  {currentStep?.label}
-                </span>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] text-slate-400 hidden sm:inline">PILIH HERO DARI POOL DI BAWAH</span>
-              <button
-                onClick={() => {
-                  if (currentStepIndex < tournamentSteps.length - 1) {
-                    setCurrentStepIndex(currentStepIndex + 1);
-                  }
-                }}
-                className="rounded-lg bg-white/10 px-2.5 py-1 text-[11px] font-bold text-white hover:bg-white/20 transition-colors"
-              >
-                Lewati →
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* AI Draft Advisor & Tactical Telemetry Engine */}
-        <DraftAiAdvisor
-          currentStep={currentStep || null}
-          activeSlot={activeSlot}
-          draftMode={draftMode}
+      <main className="flex-1 py-4 sm:py-6 px-2 sm:px-4 max-w-[1440px] mx-auto w-full flex flex-col justify-center min-h-screen">
+        <InGameDraftArena
+          blueTeamName={blueTeamName}
+          redTeamName={redTeamName}
+          matchTitle={matchTitle}
           bluePicks={bluePicks}
           redPicks={redPicks}
           blueBans={blueBans}
           redBans={redBans}
+          draftMode={draftMode}
+          currentStepIndex={currentStepIndex}
+          tournamentSteps={tournamentSteps}
+          currentStep={currentStep}
+          isDraftComplete={isDraftComplete}
           usedHeroIds={usedHeroIds}
+          allHeroes={allHeroes}
           onSelectHero={handleSelectHero}
+          onClearSlot={handleClearSlot}
+          onUndo={handleUndoStep}
+          onNextStep={() => {
+            if (currentStepIndex < tournamentSteps.length) {
+              setCurrentStepIndex(currentStepIndex + 1);
+            }
+          }}
+          onReset={handleResetDraft}
+          onOpenPresets={() => setIsPresetModalOpen(true)}
+          onExportCard={handleDownloadCard}
+          isExportingCard={isExportingCard}
+          shareUrlCopied={shareUrlCopied}
+          onCopyShareUrl={handleCopyShareUrl}
+          onOpenAnalysisModal={() => setIsAnalysisModalOpen(true)}
+          onCloseDraft={() => router.push('/mlbb')}
+          matchPrediction={matchPrediction}
         />
-
-        {/* 5v5 Arena Board Layout (Blue vs Red) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
-          {/* BLUE TEAM (6 Cols) */}
-          <div className="lg:col-span-6 rounded-3xl border border-blue-500/30 bg-gradient-to-br from-blue-950/20 via-[#060812] to-black p-4 sm:p-5 space-y-4">
-            <div className="flex items-center justify-between border-b border-blue-500/20 pb-2">
-              <div className="flex items-center gap-2">
-                <span className="h-2.5 w-2.5 rounded-full bg-blue-400" />
-                <span className="font-sans text-base font-black uppercase text-blue-400">{blueTeamName}</span>
-              </div>
-              <span className="font-mono text-[10px] text-slate-400">FIRST PICK ADVANTAGE</span>
-            </div>
-
-            {/* Blue Bans (5 slots) */}
-            <div>
-              <span className="font-mono text-[9px] uppercase tracking-wider text-slate-400 block mb-1.5">
-                BANS ({blueBans.filter(Boolean).length}/5)
-              </span>
-              <div className="grid grid-cols-5 gap-2">
-                {blueBans.map((h, i) => {
-                  const isCurrent = draftMode === 'tournament' && currentStep?.team === 'blue' && currentStep?.type === 'ban' && currentStep?.index === i;
-                  return (
-                    <div
-                      key={i}
-                      onClick={() => {
-                        if (draftMode === 'free') setActiveSlot({ team: 'blue', type: 'ban', index: i });
-                      }}
-                      className={`relative aspect-square rounded-xl border overflow-hidden flex items-center justify-center bg-black/60 cursor-pointer transition-all ${
-                        isCurrent
-                          ? 'border-amber-400 ring-2 ring-amber-400 animate-pulse'
-                          : 'border-white/10 hover:border-blue-400/50'
-                      }`}
-                    >
-                      {h ? (
-                        <>
-                          <img src={h.image} alt={h.name} className="h-full w-full object-cover grayscale" />
-                          <div className="absolute inset-0 bg-rose-950/40 flex items-center justify-center">
-                            <span className="text-rose-400 font-bold text-xs">✕</span>
-                          </div>
-                          <button
-                            onClick={e => {
-                              e.stopPropagation();
-                              handleClearSlot('blue', 'ban', i);
-                            }}
-                            className="absolute top-0.5 right-0.5 bg-black/80 rounded px-1 text-[8px] text-slate-400 hover:text-white"
-                          >
-                            ✕
-                          </button>
-                        </>
-                      ) : (
-                        <span className="font-mono text-[9px] text-slate-600">BAN {i + 1}</span>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Blue Picks (5 slots) */}
-            <div className="space-y-2">
-              <span className="font-mono text-[9px] uppercase tracking-wider text-slate-400 block">
-                PICKS ({bluePicks.filter(Boolean).length}/5)
-              </span>
-              <div className="space-y-2">
-                {bluePicks.map((h, i) => {
-                  const isCurrent = draftMode === 'tournament' && currentStep?.team === 'blue' && currentStep?.type === 'pick' && currentStep?.index === i;
-                  return (
-                    <div
-                      key={i}
-                      onClick={() => {
-                        if (draftMode === 'free') setActiveSlot({ team: 'blue', type: 'pick', index: i });
-                      }}
-                      className={`relative flex items-center justify-between rounded-xl border p-2 bg-black/50 transition-all cursor-pointer ${
-                        isCurrent
-                          ? 'border-blue-400 ring-2 ring-blue-400 bg-blue-950/40'
-                          : 'border-white/10 hover:border-blue-400/40'
-                      }`}
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="relative h-12 w-12 rounded-lg border border-white/10 overflow-hidden bg-slate-900 shrink-0">
-                          {h ? (
-                            <img src={h.image} alt={h.name} className="h-full w-full object-cover" />
-                          ) : (
-                            <div className="h-full w-full flex items-center justify-center font-mono text-[10px] text-slate-600">
-                              P{i + 1}
-                            </div>
-                          )}
-                        </div>
-                        <div>
-                          <span className="font-sans text-sm font-black uppercase text-white block">
-                            {h ? h.name : `Slot Pick #${i + 1}`}
-                          </span>
-                          <span className="font-mono text-[10px] text-slate-400 block">
-                            {h ? `${h.roles.join(', ')} · ${h.lane[0] || 'Flex'}` : 'Menunggu pilihan hero'}
-                          </span>
-                        </div>
-                      </div>
-
-                      {h && (
-                        <button
-                          onClick={e => {
-                            e.stopPropagation();
-                            handleClearSlot('blue', 'pick', i);
-                          }}
-                          className="font-mono text-xs text-slate-500 hover:text-rose-400 p-1"
-                        >
-                          ✕
-                        </button>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Blue Team Composition Metrics */}
-            <div className="rounded-2xl border border-white/10 bg-black/40 p-3 space-y-2 font-mono text-xs">
-              <span className="text-[10px] text-slate-400 font-bold uppercase block">
-                KOMPOSISI BLUE TEAM:
-              </span>
-              <div className="flex flex-wrap gap-1.5 text-[10px]">
-                {Object.entries(blueAnalysis.lanesCovered).map(([lane, ok]) => (
-                  <span
-                    key={lane}
-                    className={`rounded px-2 py-0.5 font-bold uppercase ${
-                      ok ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-slate-800 text-slate-500'
-                    }`}
-                  >
-                    {lane}: {ok ? '✓' : '✗'}
-                  </span>
-                ))}
-              </div>
-              <div className="flex items-center justify-between text-[10px] pt-1 border-t border-white/5">
-                <span>DAMAGE: {blueAnalysis.physicalRatio}% Phy / {blueAnalysis.magicRatio}% Mag</span>
-                <span>DURABILITAS: {blueAnalysis.avgDurability}%</span>
-              </div>
-              {blueAnalysis.warnings.length > 0 && (
-                <div className="text-[10px] text-rose-400 space-y-0.5 pt-1">
-                  {blueAnalysis.warnings.map((w, idx) => (
-                    <div key={idx}>⚠️ {w}</div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* RED TEAM (6 Cols) */}
-          <div className="lg:col-span-6 rounded-3xl border border-rose-500/30 bg-gradient-to-br from-rose-950/20 via-[#060812] to-black p-4 sm:p-5 space-y-4">
-            <div className="flex items-center justify-between border-b border-rose-500/20 pb-2">
-              <div className="flex items-center gap-2">
-                <span className="h-2.5 w-2.5 rounded-full bg-rose-400" />
-                <span className="font-sans text-base font-black uppercase text-rose-400">{redTeamName}</span>
-              </div>
-              <span className="font-mono text-[10px] text-slate-400">LAST PICK COUNTER ADVANTAGE</span>
-            </div>
-
-            {/* Red Bans (5 slots) */}
-            <div>
-              <span className="font-mono text-[9px] uppercase tracking-wider text-slate-400 block mb-1.5">
-                BANS ({redBans.filter(Boolean).length}/5)
-              </span>
-              <div className="grid grid-cols-5 gap-2">
-                {redBans.map((h, i) => {
-                  const isCurrent = draftMode === 'tournament' && currentStep?.team === 'red' && currentStep?.type === 'ban' && currentStep?.index === i;
-                  return (
-                    <div
-                      key={i}
-                      onClick={() => {
-                        if (draftMode === 'free') setActiveSlot({ team: 'red', type: 'ban', index: i });
-                      }}
-                      className={`relative aspect-square rounded-xl border overflow-hidden flex items-center justify-center bg-black/60 cursor-pointer transition-all ${
-                        isCurrent
-                          ? 'border-amber-400 ring-2 ring-amber-400 animate-pulse'
-                          : 'border-white/10 hover:border-rose-400/50'
-                      }`}
-                    >
-                      {h ? (
-                        <>
-                          <img src={h.image} alt={h.name} className="h-full w-full object-cover grayscale" />
-                          <div className="absolute inset-0 bg-rose-950/40 flex items-center justify-center">
-                            <span className="text-rose-400 font-bold text-xs">✕</span>
-                          </div>
-                          <button
-                            onClick={e => {
-                              e.stopPropagation();
-                              handleClearSlot('red', 'ban', i);
-                            }}
-                            className="absolute top-0.5 right-0.5 bg-black/80 rounded px-1 text-[8px] text-slate-400 hover:text-white"
-                          >
-                            ✕
-                          </button>
-                        </>
-                      ) : (
-                        <span className="font-mono text-[9px] text-slate-600">BAN {i + 1}</span>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Red Picks (5 slots) */}
-            <div className="space-y-2">
-              <span className="font-mono text-[9px] uppercase tracking-wider text-slate-400 block">
-                PICKS ({redPicks.filter(Boolean).length}/5)
-              </span>
-              <div className="space-y-2">
-                {redPicks.map((h, i) => {
-                  const isCurrent = draftMode === 'tournament' && currentStep?.team === 'red' && currentStep?.type === 'pick' && currentStep?.index === i;
-                  return (
-                    <div
-                      key={i}
-                      onClick={() => {
-                        if (draftMode === 'free') setActiveSlot({ team: 'red', type: 'pick', index: i });
-                      }}
-                      className={`relative flex items-center justify-between rounded-xl border p-2 bg-black/50 transition-all cursor-pointer ${
-                        isCurrent
-                          ? 'border-rose-400 ring-2 ring-rose-400 bg-rose-950/40'
-                          : 'border-white/10 hover:border-rose-400/40'
-                      }`}
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="relative h-12 w-12 rounded-lg border border-white/10 overflow-hidden bg-slate-900 shrink-0">
-                          {h ? (
-                            <img src={h.image} alt={h.name} className="h-full w-full object-cover" />
-                          ) : (
-                            <div className="h-full w-full flex items-center justify-center font-mono text-[10px] text-slate-600">
-                              P{i + 1}
-                            </div>
-                          )}
-                        </div>
-                        <div>
-                          <span className="font-sans text-sm font-black uppercase text-white block">
-                            {h ? h.name : `Slot Pick #${i + 1}`}
-                          </span>
-                          <span className="font-mono text-[10px] text-slate-400 block">
-                            {h ? `${h.roles.join(', ')} · ${h.lane[0] || 'Flex'}` : 'Menunggu pilihan hero'}
-                          </span>
-                        </div>
-                      </div>
-
-                      {h && (
-                        <button
-                          onClick={e => {
-                            e.stopPropagation();
-                            handleClearSlot('red', 'pick', i);
-                          }}
-                          className="font-mono text-xs text-slate-500 hover:text-rose-400 p-1"
-                        >
-                          ✕
-                        </button>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Red Team Composition Metrics */}
-            <div className="rounded-2xl border border-white/10 bg-black/40 p-3 space-y-2 font-mono text-xs">
-              <span className="text-[10px] text-slate-400 font-bold uppercase block">
-                KOMPOSISI RED TEAM:
-              </span>
-              <div className="flex flex-wrap gap-1.5 text-[10px]">
-                {Object.entries(redAnalysis.lanesCovered).map(([lane, ok]) => (
-                  <span
-                    key={lane}
-                    className={`rounded px-2 py-0.5 font-bold uppercase ${
-                      ok ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-slate-800 text-slate-500'
-                    }`}
-                  >
-                    {lane}: {ok ? '✓' : '✗'}
-                  </span>
-                ))}
-              </div>
-              <div className="flex items-center justify-between text-[10px] pt-1 border-t border-white/5">
-                <span>DAMAGE: {redAnalysis.physicalRatio}% Phy / {redAnalysis.magicRatio}% Mag</span>
-                <span>DURABILITAS: {redAnalysis.avgDurability}%</span>
-              </div>
-              {redAnalysis.warnings.length > 0 && (
-                <div className="text-[10px] text-rose-400 space-y-0.5 pt-1">
-                  {redAnalysis.warnings.map((w, idx) => (
-                    <div key={idx}>⚠️ {w}</div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Hero Pool Selection Grid */}
-        <div className="rounded-3xl border border-white/10 bg-[#070a14] p-5 sm:p-6 space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
-            <div>
-              <span className="font-mono text-xs font-bold uppercase tracking-wider text-amber-400">
-                KOLAM HERO AKTIF ({filteredHeroPool.length} TERSEDIA)
-              </span>
-              <span className="text-slate-500 font-mono text-[10px] block">
-                KLIK HERO UNTUK MENEMPATKAN KE DALAM SLOT DRAFT
-              </span>
-            </div>
-
-            {/* Search Input */}
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-              placeholder="Cari hero draft..."
-              className="rounded-xl border border-white/10 bg-black/60 px-3 py-1.5 font-sans text-xs text-white placeholder-slate-500 outline-none focus:border-amber-400 w-full sm:w-64"
-            />
-          </div>
-
-          {/* Role Filter Pills */}
-          <div className="flex flex-wrap gap-1.5">
-            {rolesList.map(role => (
-              <button
-                key={role}
-                onClick={() => setSelectedRole(role)}
-                className={`rounded-lg px-2.5 py-1 font-mono text-[11px] font-bold uppercase transition-all cursor-pointer ${
-                  selectedRole === role
-                    ? 'bg-amber-400 text-black'
-                    : 'border border-white/10 bg-white/5 text-slate-300 hover:text-white'
-                }`}
-              >
-                {role === 'all' ? 'SEMUA ROLE' : role}
-              </button>
-            ))}
-          </div>
-
-          {/* Hero Grid */}
-          <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-2 max-h-[420px] overflow-y-auto p-1">
-            {filteredHeroPool.map(hero => {
-              const isUsed = usedHeroIds.has(hero.id);
-              return (
-                <button
-                  key={hero.id}
-                  disabled={isUsed}
-                  onClick={() => handleSelectHero(hero)}
-                  className={`group relative aspect-[3/4] rounded-xl overflow-hidden border p-1 text-center transition-all ${
-                    isUsed
-                      ? 'border-transparent opacity-20 grayscale pointer-events-none'
-                      : 'border-white/10 bg-black/40 hover:border-amber-400 hover:scale-105 cursor-pointer shadow'
-                  }`}
-                >
-                  <img src={hero.image} alt={hero.name} className="h-full w-full object-cover rounded-lg" />
-                  <div className="absolute inset-x-0 bottom-0 bg-black/80 px-1 py-0.5">
-                    <span className="font-sans text-[10px] font-bold text-white block truncate">
-                      {hero.name}
-                    </span>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-        </div>
       </main>
+
+      {/* Post-Draft Analysis Modal (Molebuild exact popup) */}
+      <PostDraftAnalysisModal
+        isOpen={isAnalysisModalOpen}
+        onClose={() => setIsAnalysisModalOpen(false)}
+        blueTeamName={blueTeamName}
+        redTeamName={redTeamName}
+        bluePicks={bluePicks}
+        redPicks={redPicks}
+        blueBans={blueBans}
+        redBans={redBans}
+        blueAnalysis={blueAnalysis}
+        redAnalysis={redAnalysis}
+        matchPrediction={matchPrediction}
+        onReset={handleResetDraft}
+        onExportCard={handleDownloadCard}
+        isExportingCard={isExportingCard}
+        onCopyShareUrl={handleCopyShareUrl}
+        shareUrlCopied={shareUrlCopied}
+      />
 
       {/* Hidden HD Export Card Ref (Captured via html-to-image) */}
       <div className="fixed -left-[9999px] top-0 pointer-events-none">
@@ -1252,8 +820,6 @@ export default function DraftSimulatorPage() {
           </div>
         </div>
       )}
-
-      <Footer />
     </div>
   );
 }

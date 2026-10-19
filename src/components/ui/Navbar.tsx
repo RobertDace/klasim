@@ -16,7 +16,6 @@ export default function Navbar({ activeSection = 'beranda' }: NavbarProps) {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-  const [isMlbbDropdownOpen, setIsMlbbDropdownOpen] = useState(false);
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
 
   // Global open-command-palette event listener
@@ -58,7 +57,6 @@ export default function Navbar({ activeSection = 'beranda' }: NavbarProps) {
 
   const handleNavClick = (item: { id: string; label: string; code: string; href: string }) => {
     setIsMobileMenuOpen(false);
-    setIsMlbbDropdownOpen(false);
     if (item.href.startsWith('/#')) {
       const targetId = item.href.replace('/#', '');
       const target = document.getElementById(targetId);
@@ -69,25 +67,12 @@ export default function Navbar({ activeSection = 'beranda' }: NavbarProps) {
     }
   };
 
-  const mlbbSubItems = [
-    { href: '/mlbb/heroes', label: 'HERO HUB & BUILDS', desc: '133 Hero, Skill, Scaling & Builds', icon: '🛡️' },
-    { href: '/mlbb/tier-list', label: 'META TIER LIST', desc: 'Ranking S+ sampai C per Lane', icon: '🏆' },
-    { href: '/mlbb/draft', label: 'DRAFT SIMULATOR 5v5', desc: 'Simulasi Pick/Ban & Sinergi Tim', icon: '⚔️' },
-    { href: '/mlbb/counter-pick', label: 'COUNTER PICK FINDER', desc: 'Rekomendasi Counter 1-5 Hero', icon: '🎯' },
-    { href: '/mlbb/items', label: 'DATABASE ITEM', desc: '90 Equipment, Pasif Unik & Komparator', icon: '📦' },
-    { href: '/mlbb/compare', label: 'DUAL HERO COMPARATOR', desc: 'Perbandingan Duel 2 Hero Head-to-Head', icon: '⚖️' },
-    { href: '/mlbb/builder', label: 'CUSTOM BUILD CREATOR', desc: 'Workshop Racik 6 Item & Emblem', icon: '🛠️' },
-    { href: '/mlbb/builds', label: 'TOURNAMENT BUILDS', desc: '365+ Build Resmi MPL & M-Series', icon: '🎖️' },
-    { href: '/mlbb/guides', label: 'STRATEGY & MACRO HUB', desc: '5 Role Masterclasses, Map Timers & Waves', icon: '🧭' },
-    { href: '/mlbb/patch-notes', label: 'PATCH NOTES & META', desc: 'Analisis Buff, Nerf & Pergeseran Meta', icon: '📈' },
-  ];
-
   const navItems = [
     { id: 'beranda', label: 'BERANDA', code: '01', href: '/' },
-    { id: 'mlbb', label: 'MLBB META', code: '02', href: '/mlbb/heroes', isHighlight: true },
-    { id: 'modul', label: 'MODUL TURNAMEN', code: '03', href: '/#modul' },
-    { id: 'lab', label: 'SCENARIO LAB', code: '04', href: '/#lab' },
-    { id: 'tentang', label: 'TENTANG', code: '05', href: '/#tentang' },
+    { id: 'mlbb', label: 'MLBB', code: '02', href: '/mlbb', isHighlight: true },
+    { id: 'pubgm', label: 'PUBG MOBILE', code: '03', href: '/pubgm' },
+    { id: 'valorant', label: 'VALORANT', code: '04', href: '/valorant' },
+    { id: 'turnamen', label: 'TURNAMEN', code: '05', href: '/tournament' },
   ];
 
   return (
@@ -140,71 +125,10 @@ export default function Navbar({ activeSection = 'beranda' }: NavbarProps) {
             </div>
           </Link>
 
-          {/* Desktop Nav Items */}
+          {/* Desktop Nav Items (No Dropdown - Direct Navigation to Pages) */}
           <nav className="hidden md:flex items-center gap-1 border border-white/10 bg-slate-950/80 p-1 rounded-xl">
             {navItems.map((item) => {
               const isActive = activeSection === item.id;
-
-              if (item.id === 'mlbb') {
-                return (
-                  <div
-                    key={item.id}
-                    className="relative"
-                    onMouseEnter={() => setIsMlbbDropdownOpen(true)}
-                    onMouseLeave={() => setIsMlbbDropdownOpen(false)}
-                  >
-                    <Link
-                      href={item.href}
-                      onClick={() => handleNavClick(item)}
-                      className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[11px] font-bold uppercase transition-all duration-200 cursor-pointer ${
-                        isActive || isMlbbDropdownOpen
-                          ? 'bg-amber-400 text-black shadow-sm font-black'
-                          : 'text-slate-400 hover:bg-white/5 hover:text-white'
-                      }`}
-                    >
-                      <span className={`text-[9px] ${isActive || isMlbbDropdownOpen ? 'text-black/70' : 'text-slate-600'}`}>
-                        {item.code}
-                      </span>
-                      <span>{item.label}</span>
-                      <span className="text-[8px] opacity-70">▼</span>
-                    </Link>
-
-                    {/* Floating MLBB Meta Dropdown */}
-                    {isMlbbDropdownOpen && (
-                      <div className="absolute left-0 mt-1 w-80 max-h-[75vh] overflow-y-auto rounded-2xl border border-white/15 bg-slate-950/95 p-2 shadow-2xl backdrop-blur-2xl z-50 animate-in fade-in slide-in-from-top-2 duration-150">
-                        <div className="border-b border-white/10 px-3 py-1.5 text-[9px] text-amber-400 font-mono font-bold tracking-wider flex items-center justify-between">
-                          <span>MLBB META SUITE</span>
-                          <span className="text-[8px] bg-amber-400/20 text-amber-300 px-1.5 py-0.2 rounded">10 TOOLS</span>
-                        </div>
-                        <div className="space-y-1 mt-1">
-                          {mlbbSubItems.map((sub) => (
-                            <Link
-                              key={sub.href}
-                              href={sub.href}
-                              onClick={() => {
-                                setIsMlbbDropdownOpen(false);
-                                setIsMobileMenuOpen(false);
-                              }}
-                              className="group flex items-start gap-2.5 rounded-xl px-2.5 py-2 text-left transition-all hover:bg-amber-400/10 cursor-pointer"
-                            >
-                              <span className="text-base shrink-0 mt-0.5">{sub.icon}</span>
-                              <div className="min-w-0">
-                                <div className="text-[11px] font-bold text-white group-hover:text-amber-400 transition-colors font-sans">
-                                  {sub.label}
-                                </div>
-                                <div className="text-[9px] text-slate-400 truncate font-sans">
-                                  {sub.desc}
-                                </div>
-                              </div>
-                            </Link>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                );
-              }
-
               return (
                 <Link
                   key={item.id}
@@ -233,20 +157,19 @@ export default function Navbar({ activeSection = 'beranda' }: NavbarProps) {
               className="flex items-center gap-2 rounded-lg border border-white/15 bg-white/5 px-2.5 py-1.5 text-[10px] sm:text-[11px] text-slate-300 hover:border-amber-400/50 hover:bg-amber-400/10 hover:text-white transition-all active:scale-95 cursor-pointer font-mono"
               title="Pencarian Cepat (Ctrl+K)"
             >
-              <span className="text-amber-400">🔍</span>
+              <svg className="w-3.5 h-3.5 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
               <span className="hidden lg:inline text-slate-400">Cari hero, item...</span>
-              <kbd className="hidden sm:inline-block rounded bg-white/10 px-1.5 py-0.5 text-[9px] text-slate-300 border border-white/10">
-                ⌘K
-              </kbd>
+              <span className="hidden sm:inline-flex items-center gap-1 rounded bg-white/10 px-1.5 py-0.5 text-[9px] text-slate-300 border border-white/10 font-mono">
+                <svg className="w-3 h-3 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="2" y="4" width="20" height="16" rx="2" />
+                  <path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M6 12h.01M10 12h.01M14 12h.01M18 12h.01M8 16h8" strokeWidth={2.5} />
+                </svg>
+                <span>K</span>
+              </span>
             </button>
-
-            <Link
-              href="/tournament/create"
-              className="inline-flex items-center gap-1.5 rounded-lg border border-amber-400/40 bg-amber-400/10 px-2.5 py-1.5 sm:px-3 sm:py-1.5 text-[10px] sm:text-[11px] font-black uppercase text-amber-400 transition-all duration-200 hover:bg-amber-400 hover:text-black active:scale-95"
-            >
-              <span>+ BUAT</span>
-              <span className="hidden sm:inline">TURNAMEN</span>
-            </Link>
 
             {/* Auth Button Desktop */}
             {!authLoading && (
@@ -259,7 +182,9 @@ export default function Navbar({ activeSection = 'beranda' }: NavbarProps) {
                     >
                       <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
                       <span className="max-w-[100px] truncate uppercase">{user.name}</span>
-                      <span className="text-[9px] text-slate-500">▼</span>
+                      <svg className="w-2.5 h-2.5 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                        <polyline points="6 9 12 15 18 9" />
+                      </svg>
                     </button>
 
                     {/* User Dropdown */}
@@ -275,7 +200,13 @@ export default function Navbar({ activeSection = 'beranda' }: NavbarProps) {
                           onClick={() => setIsUserMenuOpen(false)}
                           className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-[11px] font-bold text-slate-300 hover:bg-amber-400/10 hover:text-amber-400 transition-all"
                         >
-                          <span>🏆</span>
+                          <svg className="w-3.5 h-3.5 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
+                            <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
+                            <path d="M4 22h16" />
+                            <path d="M10 14.66V17c0 .55-.45 1-1 1H7v2h10v-2h-2c-.55 0-1-.45-1-1v-2.34" />
+                            <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" />
+                          </svg>
                           <span>Turnamen Saya</span>
                         </Link>
 
@@ -286,7 +217,11 @@ export default function Navbar({ activeSection = 'beranda' }: NavbarProps) {
                           }}
                           className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-[11px] font-bold text-rose-400 hover:bg-rose-500/10 transition-all cursor-pointer"
                         >
-                          <span>⎋</span>
+                          <svg className="w-3.5 h-3.5 text-rose-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                            <polyline points="16 17 21 12 16 7" />
+                            <line x1="21" y1="12" x2="9" y2="12" />
+                          </svg>
                           <span>Keluar (Logout)</span>
                         </button>
                       </div>
@@ -309,7 +244,18 @@ export default function Navbar({ activeSection = 'beranda' }: NavbarProps) {
               className="flex md:hidden h-8 items-center gap-1.5 rounded-lg border border-white/15 bg-white/5 px-2.5 text-[10px] font-bold uppercase text-slate-300 active:scale-95"
               aria-label="Toggle Mobile Menu"
             >
-              <span className="text-amber-400">{isMobileMenuOpen ? '✕' : '☰'}</span>
+              {isMobileMenuOpen ? (
+                <svg className="w-3.5 h-3.5 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              ) : (
+                <svg className="w-3.5 h-3.5 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                  <line x1="3" y1="12" x2="21" y2="12" />
+                  <line x1="3" y1="6" x2="21" y2="6" />
+                  <line x1="3" y1="18" x2="21" y2="18" />
+                </svg>
+              )}
               <span>MENU</span>
             </button>
           </div>
@@ -343,12 +289,19 @@ export default function Navbar({ activeSection = 'beranda' }: NavbarProps) {
                 className="flex w-full items-center justify-between rounded-xl border border-white/15 bg-white/5 p-3 text-xs font-mono text-slate-200 hover:border-amber-400/40 transition-all active:scale-98"
               >
                 <span className="flex items-center gap-2.5">
-                  <span className="text-amber-400 text-sm">🔍</span>
+                  <svg className="w-4 h-4 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                  </svg>
                   <span className="font-sans text-slate-300">Cari hero, item, modul...</span>
                 </span>
-                <kbd className="rounded bg-white/10 px-2 py-0.5 text-[10px] text-slate-400 border border-white/10">
-                  ⌘K
-                </kbd>
+                <span className="inline-flex items-center gap-1 rounded bg-white/10 px-2 py-0.5 text-[10px] text-slate-400 border border-white/10 font-mono">
+                  <svg className="w-3.5 h-3.5 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="2" y="4" width="20" height="16" rx="2" />
+                    <path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M6 12h.01M10 12h.01M14 12h.01M18 12h.01M8 16h8" strokeWidth={2.5} />
+                  </svg>
+                  <span>K</span>
+                </span>
               </button>
             </div>
 
@@ -369,34 +322,9 @@ export default function Navbar({ activeSection = 'beranda' }: NavbarProps) {
                       <div className="flex items-center gap-2.5">
                         <span className="text-[10px] text-slate-500 font-normal">{item.code}</span>
                         <span>{item.label}</span>
-                        {item.id === 'mlbb' && (
-                          <span className="rounded bg-amber-400/20 px-1 py-0.2 text-[8px] font-mono text-amber-300 border border-amber-400/30">
-                            10 TOOLS
-                          </span>
-                        )}
                       </div>
                       {isActive && <span className="text-amber-400 text-xs">●</span>}
                     </Link>
-
-                    {/* Expandable sub-items for MLBB on Mobile */}
-                    {item.id === 'mlbb' && (
-                      <div className="grid grid-cols-1 gap-1.5 pl-3 border-l-2 border-amber-400/40 ml-3 py-1">
-                        {mlbbSubItems.map((sub) => (
-                          <Link
-                            key={sub.href}
-                            href={sub.href}
-                            onClick={() => setIsMobileMenuOpen(false)}
-                            className="flex items-center justify-between rounded-lg bg-black/40 border border-white/5 px-3 py-2 text-slate-300 hover:text-amber-400 hover:border-amber-400/30 transition-all text-[11px] font-mono"
-                          >
-                            <span className="flex items-center gap-2">
-                              <span>{sub.icon}</span>
-                              <span className="font-bold">{sub.label}</span>
-                            </span>
-                            <span className="text-[9px] text-slate-500">→</span>
-                          </Link>
-                        ))}
-                      </div>
-                    )}
                   </div>
                 );
               })}
@@ -413,18 +341,30 @@ export default function Navbar({ activeSection = 'beranda' }: NavbarProps) {
                   <Link
                     href="/my-tournaments"
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="flex w-full items-center justify-center rounded-lg border border-amber-400/40 bg-amber-400/10 py-2.5 text-xs font-bold text-amber-400 uppercase"
+                    className="flex w-full items-center justify-center gap-2 rounded-lg border border-amber-400/40 bg-amber-400/10 py-2.5 text-xs font-bold text-amber-400 uppercase"
                   >
-                    🏆 Turnamen Saya
+                    <svg className="w-3.5 h-3.5 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
+                      <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
+                      <path d="M4 22h16" />
+                      <path d="M10 14.66V17c0 .55-.45 1-1 1H7v2h10v-2h-2c-.55 0-1-.45-1-1v-2.34" />
+                      <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" />
+                    </svg>
+                    <span>Turnamen Saya</span>
                   </Link>
                   <button
                     onClick={() => {
                       setIsMobileMenuOpen(false);
                       logout();
                     }}
-                    className="w-full text-center text-[10px] text-rose-400 py-1"
+                    className="flex w-full items-center justify-center gap-1.5 text-center text-[10px] text-rose-400 py-1"
                   >
-                    Keluar (Logout)
+                    <svg className="w-3 h-3 text-rose-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                      <polyline points="16 17 21 12 16 7" />
+                      <line x1="21" y1="12" x2="9" y2="12" />
+                    </svg>
+                    <span>Keluar (Logout)</span>
                   </button>
                 </div>
               ) : (
