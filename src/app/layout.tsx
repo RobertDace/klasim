@@ -15,8 +15,49 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "KLASIM - Standings Telemetry & Deterministic Scenario Modeler",
-  description: "Simulator klasemen esports deterministik untuk MPL ID, PMWC, dan VCT Pacific.",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://klasim.vercel.app"),
+  title: {
+    default: "KLASIM - Standings Telemetry & Deterministic Scenario Modeler",
+    template: "%s | KLASIM",
+  },
+  description:
+    "Simulator klasemen esports deterministik & suite analitik meta Mobile Legends terlengkap (133 hero, build, counter pick, tier list, kalkulator duel).",
+  keywords: [
+    "Klasim",
+    "MLBB Meta",
+    "Mobile Legends Build",
+    "Counter Pick MLBB",
+    "Tier List MLBB",
+    "Draft Simulator",
+    "MPL ID",
+    "PMWC",
+    "VCT Pacific",
+  ],
+  authors: [{ name: "Klasim Team" }],
+  creator: "Klasim",
+  publisher: "Klasim",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  openGraph: {
+    type: "website",
+    locale: "id_ID",
+    url: "https://klasim.vercel.app",
+    title: "KLASIM - Esports Telemetry & MLBB Meta Suite",
+    description: "Simulator klasemen esports deterministik & suite analitik meta Mobile Legends terlengkap.",
+    siteName: "KLASIM",
+  },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "",
+  },
 };
 
 export default function RootLayout({
