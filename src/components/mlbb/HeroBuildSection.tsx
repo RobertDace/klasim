@@ -2,7 +2,8 @@
 'use client';
 
 import { useState } from 'react';
-import type { MLBBHero, MLBBEnrichedBuild, MLBBItem } from '@/data/mlbb';
+import Link from 'next/link';
+import type { MLBBHero, MLBBEnrichedBuild, MLBBItem, MLBBEmblemTalent } from '@/data/mlbb';
 
 interface HeroBuildSectionProps {
   hero: MLBBHero;
@@ -253,6 +254,63 @@ export default function HeroBuildSection({ hero, builds }: HeroBuildSectionProps
                 Emblem: Custom Class
               </div>
             )}
+            {/* 3-Tier Emblem Talents */}
+            {currentBuild.talents && (currentBuild.talents.tier1 || currentBuild.talents.tier2 || currentBuild.talents.tier3) && (
+              <div className="rounded-2xl border border-white/10 bg-black/60 p-3.5 space-y-2.5">
+                <div className="flex items-center justify-between border-b border-white/10 pb-1.5">
+                  <span className="font-mono text-[10px] font-bold uppercase text-amber-400">
+                    3-TIER EMBLEM TALENT
+                  </span>
+                  <span className="font-mono text-[9px] text-slate-500">MOLEBUILD PARITY</span>
+                </div>
+                <div className="grid grid-cols-3 gap-2">
+                  {/* Tier 1 */}
+                  <div className="flex flex-col items-center rounded-xl bg-white/5 p-2 text-center border border-white/5 group hover:border-amber-400/40 transition-colors">
+                    <span className="font-mono text-[8px] font-bold text-amber-400/80 mb-1">T1 STAT</span>
+                    <div className="h-9 w-9 rounded-lg bg-slate-900 border border-white/15 overflow-hidden p-1 flex items-center justify-center">
+                      {currentBuild.talents.tier1?.image ? (
+                        <img src={currentBuild.talents.tier1.image} alt={currentBuild.talents.tier1.name} className="h-full w-full object-contain" />
+                      ) : (
+                        <span className="text-[10px] text-slate-500">T1</span>
+                      )}
+                    </div>
+                    <span className="font-sans text-[11px] font-bold text-white mt-1.5 truncate w-full">
+                      {currentBuild.talents.tier1?.name || '-'}
+                    </span>
+                  </div>
+
+                  {/* Tier 2 */}
+                  <div className="flex flex-col items-center rounded-xl bg-white/5 p-2 text-center border border-white/5 group hover:border-amber-400/40 transition-colors">
+                    <span className="font-mono text-[8px] font-bold text-amber-400/80 mb-1">T2 UTILITY</span>
+                    <div className="h-9 w-9 rounded-lg bg-slate-900 border border-white/15 overflow-hidden p-1 flex items-center justify-center">
+                      {currentBuild.talents.tier2?.image ? (
+                        <img src={currentBuild.talents.tier2.image} alt={currentBuild.talents.tier2.name} className="h-full w-full object-contain" />
+                      ) : (
+                        <span className="text-[10px] text-slate-500">T2</span>
+                      )}
+                    </div>
+                    <span className="font-sans text-[11px] font-bold text-white mt-1.5 truncate w-full">
+                      {currentBuild.talents.tier2?.name || '-'}
+                    </span>
+                  </div>
+
+                  {/* Tier 3 */}
+                  <div className="flex flex-col items-center rounded-xl bg-white/5 p-2 text-center border border-white/5 group hover:border-amber-400/40 transition-colors">
+                    <span className="font-mono text-[8px] font-bold text-amber-400/80 mb-1">T3 KEYSTONE</span>
+                    <div className="h-9 w-9 rounded-lg bg-slate-900 border border-white/15 overflow-hidden p-1 flex items-center justify-center">
+                      {currentBuild.talents.tier3?.image ? (
+                        <img src={currentBuild.talents.tier3.image} alt={currentBuild.talents.tier3.name} className="h-full w-full object-contain" />
+                      ) : (
+                        <span className="text-[10px] text-slate-500">T3</span>
+                      )}
+                    </div>
+                    <span className="font-sans text-[11px] font-bold text-white mt-1.5 truncate w-full">
+                      {currentBuild.talents.tier3?.name || '-'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Accumulated Build Stats Card */}
@@ -281,6 +339,15 @@ export default function HeroBuildSection({ hero, builds }: HeroBuildSectionProps
               )}
             </div>
           </div>
+
+          {/* CTA Link to Workshop Builder */}
+          <Link
+            href={`/mlbb/builder?hero=${hero.slug}&items=${currentBuild.items.map(i => i.slug).join(',')}&emblem=${currentBuild.emblem?.slug || ''}&t1=${currentBuild.talents?.tier1?.slug || ''}&t2=${currentBuild.talents?.tier2?.slug || ''}&t3=${currentBuild.talents?.tier3?.slug || ''}`}
+            className="flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-400 bg-[length:200%_auto] hover:bg-right p-3 font-mono text-xs font-black uppercase text-black shadow-lg shadow-amber-500/20 transition-all duration-300 hover:scale-[1.02] active:scale-95 text-center"
+          >
+            <span>⚡ Uji & Kustomisasi di Workshop Builder</span>
+            <span>➔</span>
+          </Link>
         </div>
       </div>
     </div>

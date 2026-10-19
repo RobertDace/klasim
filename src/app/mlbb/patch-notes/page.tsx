@@ -9,6 +9,7 @@ import { heroes as allHeroes, items as allItems } from '@/data/mlbb';
 
 interface PatchChange {
   id: string;
+  patchId?: string;
   targetType: 'hero' | 'item' | 'system';
   name: string;
   slug: string;
@@ -20,9 +21,81 @@ interface PatchChange {
   image?: string;
 }
 
+export interface MLBBReleasePatch {
+  id: string;
+  version: string;
+  name: string;
+  description: string;
+  releaseDate: string;
+  isActive: boolean;
+  metaFocus: string;
+}
+
+export const OFFICIAL_PATCHES: MLBBReleasePatch[] = [
+  {
+    id: '8bda5b76-0cd7-4adb-a02d-019026492527',
+    version: '2.2.1',
+    name: 'Season 42 Global Meta',
+    description: 'Penyesuaian besar skala global menyambut Season 42, optimalisasi Assassin Jungle dan Mage Burst.',
+    releaseDate: '17 September 2026',
+    isActive: true,
+    metaFocus: 'Assassin Tempo & Adaptive Penetration Scaling',
+  },
+  {
+    id: '8e1ca04e-e0e3-4f3e-b520-a76c36a5bee7',
+    version: '2.1.8',
+    name: 'Patch Post-MPL S17',
+    description: 'Penyesuaian pasca grand final MPL Season 17 untuk menyeimbangkan hero-hero prioritas ban.',
+    releaseDate: '18 Juni 2026',
+    isActive: false,
+    metaFocus: 'High-Priority Roamer & Marksman Range Tuning',
+  },
+  {
+    id: 'c6153242-aa0e-47fc-9d09-edfb495a997d',
+    version: '2.1.74',
+    name: 'Mid-Season Balance 22 April',
+    description: 'Stabilisasi durabilitas Tank Roam dan penyesuaian True Damage Sky Piercer.',
+    releaseDate: '22 April 2026',
+    isActive: false,
+    metaFocus: 'Tank Defense Scaling & Execution Item Balance',
+  },
+  {
+    id: 'be77a09b-50cc-45fb-b5fa-623daa196557',
+    version: '2.1.61',
+    name: 'Season 40 Kickoff',
+    description: 'Awal Season 40 dengan perubahan sistem emblem dan monster jungle creep.',
+    releaseDate: '11 Maret 2026',
+    isActive: false,
+    metaFocus: 'Jungle Clears & 3-Tier Emblem Talent Synergy',
+  },
+  {
+    id: '50548097-d34a-4265-8e93-f27176454d15',
+    version: '2.1.42',
+    name: 'Post-M7 World Championship',
+    description: 'Penyeimbangan statistik hero meta yang mendominasi turnamen dunia M7.',
+    releaseDate: '29 Januari 2026',
+    isActive: false,
+    metaFocus: 'M-Series Meta Dominators & Global Utility Tuning',
+  },
+  {
+    id: 'a3c48a7d-f457-469a-8207-c1953b6be3a9',
+    version: '2.1.41',
+    name: '1st S39 Season Patch',
+    description: 'Peluncuran Season 39 dengan perombakan jalur exp lane dan gold lane.',
+    releaseDate: '18 Desember 2025',
+    isActive: false,
+    metaFocus: 'Laning Phase Gold Distribution & Minion Scaling',
+  },
+];
+
 export default function PatchNotesPage() {
+  const [selectedPatchId, setSelectedPatchId] = useState<string>(OFFICIAL_PATCHES[0].id);
   const [selectedFilter, setSelectedFilter] = useState<'all' | 'buff' | 'nerf' | 'adjusted' | 'item'>('all');
   const [selectedRole, setSelectedRole] = useState<string>('ALL');
+
+  const activePatch = useMemo(() => {
+    return OFFICIAL_PATCHES.find(p => p.id === selectedPatchId) || OFFICIAL_PATCHES[0];
+  }, [selectedPatchId]);
 
   // Season 34 / latest meta patch notes curated dataset
   const patchChanges: PatchChange[] = [
@@ -205,8 +278,8 @@ export default function PatchNotesPage() {
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
               <div>
                 <div className="inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/10 px-3 py-1 font-mono text-[10px] sm:text-xs text-amber-400 mb-3">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  <span>SEASON 34 OFFICIAL BALANCE PATCH & META SHIFTS</span>
+                  <span className={`h-1.5 w-1.5 rounded-full ${activePatch.isActive ? 'bg-emerald-400 animate-pulse' : 'bg-slate-400'}`} />
+                  <span>{activePatch.isActive ? 'OFFICIAL LIVE COMPETITIVE PATCH' : 'HISTORICAL PATCH ARCHIVE'} • V{activePatch.version}</span>
                 </div>
                 <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white font-sans uppercase">
                   PATCH NOTES & <span className="text-amber-400">META ANALYSIS</span>
@@ -232,11 +305,74 @@ export default function PatchNotesPage() {
                   <span>⚔️</span>
                   <span>Draft Simulator</span>
                 </Link>
+                <Link
+                  href="/mlbb/builder"
+                  className="rounded-lg border border-cyan-400/40 bg-cyan-500/10 px-3 py-2 text-cyan-400 hover:bg-cyan-400 hover:text-black transition-all flex items-center gap-1.5 font-bold"
+                >
+                  <span>⚡</span>
+                  <span>Workshop Builder</span>
+                </Link>
+              </div>
+            </div>
+
+            {/* Official Patch Switcher Tabs */}
+            <div className="mt-8 pt-6 border-t border-white/10">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2 text-xs font-mono text-slate-400">
+                  <span className="text-amber-400">📂</span>
+                  <span className="uppercase tracking-wider font-semibold text-slate-300">Pilih Versi Patch Resmi:</span>
+                </div>
+                <span className="text-[11px] font-mono text-slate-400">
+                  Total {OFFICIAL_PATCHES.length} Versi Tersinkron
+                </span>
+              </div>
+              <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+                {OFFICIAL_PATCHES.map((patch) => {
+                  const isSelected = patch.id === selectedPatchId;
+                  return (
+                    <button
+                      key={patch.id}
+                      onClick={() => setSelectedPatchId(patch.id)}
+                      className={`shrink-0 flex items-center gap-2.5 px-3.5 py-2 rounded-xl text-xs font-mono transition-all border ${
+                        isSelected
+                          ? 'border-amber-400 bg-amber-400/15 text-white shadow-lg shadow-amber-400/10 font-bold'
+                          : 'border-white/10 bg-[#080d16] text-slate-400 hover:border-white/25 hover:text-slate-200'
+                      }`}
+                    >
+                      <span className={`h-2 w-2 rounded-full ${patch.isActive ? 'bg-emerald-400 animate-pulse' : isSelected ? 'bg-amber-400' : 'bg-slate-600'}`} />
+                      <span>v{patch.version}</span>
+                      <span className="text-[10px] opacity-75 max-w-[130px] truncate">{patch.name}</span>
+                      {patch.isActive && (
+                        <span className="px-1.5 py-0.5 rounded text-[9px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 font-bold">
+                          LIVE
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Active Patch Details Card */}
+              <div className="mt-4 rounded-2xl border border-amber-400/20 bg-gradient-to-r from-amber-500/5 via-cyan-500/5 to-transparent p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2 font-mono text-xs">
+                    <span className="font-bold text-amber-400">v{activePatch.version} - {activePatch.name}</span>
+                    <span className="text-slate-500">•</span>
+                    <span className="text-slate-400">Rilis: {activePatch.releaseDate}</span>
+                  </div>
+                  <p className="text-xs sm:text-sm text-slate-300 font-sans max-w-3xl">
+                    {activePatch.description}
+                  </p>
+                </div>
+                <div className="shrink-0 rounded-xl border border-white/10 bg-black/40 px-3.5 py-2 text-right">
+                  <div className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">Meta Focus</div>
+                  <div className="text-xs font-mono font-bold text-cyan-400">{activePatch.metaFocus}</div>
+                </div>
               </div>
             </div>
 
             {/* Meta Summary Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8 font-mono">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6 font-mono">
               <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/5 p-4 space-y-1">
                 <div className="flex items-center justify-between text-xs text-slate-400">
                   <span>EXP & JUNGLE META</span>

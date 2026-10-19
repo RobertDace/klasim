@@ -35,6 +35,23 @@ export default function BuildWorkshopPage() {
     allItems.find(i => i.slug === 'immortality') || null,
   ]);
 
+  // Situational / Spare Equipment (Slots #7 & #8) - MoleBuild Parity
+  const [spareItems, setSpareItems] = useState<Array<MLBBItem | null>>([
+    allItems.find(i => i.slug === 'winter-crown') || null,
+    allItems.find(i => i.slug === 'rose-gold-meteor') || null,
+  ]);
+  const [activeSpareIndex, setActiveSpareIndex] = useState<number | null>(null);
+
+  // Roam Blessing & Jungle Blessing (MoleBuild Parity)
+  const [roamBlessing, setRoamBlessing] = useState<'none' | 'Conceal' | 'Encourage' | 'Favor' | 'Dire Hit'>('none');
+  const [jungleBlessing, setJungleBlessing] = useState<'none' | 'Ice' | 'Flame' | 'Bloody'>('none');
+
+  // Combat Dummy & Effective HP Simulator States
+  const [dummyPreset, setDummyPreset] = useState<'squishy' | 'fighter' | 'tank' | 'custom'>('squishy');
+  const [dummyHp, setDummyHp] = useState<number>(3400);
+  const [dummyPhyDef, setDummyPhyDef] = useState<number>(55);
+  const [dummyMagDef, setDummyMagDef] = useState<number>(35);
+
   // Selected Spell & Emblem
   const [selectedSpellId, setSelectedSpellId] = useState<string>(allSpells[0]?.id || '');
   const [selectedEmblemId, setSelectedEmblemId] = useState<string>(allEmblems[0]?.id || '');
@@ -100,6 +117,9 @@ export default function BuildWorkshopPage() {
     title: string;
     heroSlug: string;
     itemSlugs: string[];
+    spareSlugs?: string[];
+    roamBlessing?: string;
+    jungleBlessing?: string;
     spellId: string;
     emblemId: string;
     talent1Id?: string;
@@ -123,6 +143,9 @@ export default function BuildWorkshopPage() {
       const params = new URLSearchParams(window.location.search);
       const heroParam = params.get('hero');
       const itemsParam = params.get('items');
+      const spareParam = params.get('spare');
+      const roamParam = params.get('roam');
+      const jungleParam = params.get('jungle');
       const spellParam = params.get('spell');
       const emblemParam = params.get('emblem');
       const titleParam = params.get('title');
@@ -155,11 +178,23 @@ export default function BuildWorkshopPage() {
         const foundT3 = allTalents.find(t => t.id === t3Param || t.slug === t3Param);
         if (foundT3) setSelectedTalent3Id(foundT3.id);
       }
+      if (roamParam && ['none', 'Conceal', 'Encourage', 'Favor', 'Dire Hit'].includes(roamParam)) {
+        setRoamBlessing(roamParam as any);
+      }
+      if (jungleParam && ['none', 'Ice', 'Flame', 'Bloody'].includes(jungleParam)) {
+        setJungleBlessing(jungleParam as any);
+      }
       if (itemsParam) {
         const slugs = itemsParam.split(',');
         const hydrated = slugs.slice(0, 6).map(slug => allItems.find(i => i.slug === slug.trim() || i.id === slug.trim()) || null);
         while (hydrated.length < 6) hydrated.push(null);
         setEquippedItems(hydrated);
+      }
+      if (spareParam) {
+        const slugs = spareParam.split(',');
+        const hydratedSpares = slugs.slice(0, 2).map(slug => allItems.find(i => i.slug === slug.trim() || i.id === slug.trim()) || null);
+        while (hydratedSpares.length < 2) hydratedSpares.push(null);
+        setSpareItems(hydratedSpares);
       }
     }
   }, [defaultT1, defaultT2, defaultT3]);
@@ -170,6 +205,9 @@ export default function BuildWorkshopPage() {
       title: buildTitle || `${hero.name} Custom Build`,
       heroSlug: hero.slug,
       itemSlugs: equippedItems.map(i => i?.slug || ''),
+      spareSlugs: spareItems.map(i => i?.slug || ''),
+      roamBlessing,
+      jungleBlessing,
       spellId: spell?.id || '',
       emblemId: emblem?.id || '',
       talent1Id: talent1?.id || '',
@@ -195,9 +233,16 @@ export default function BuildWorkshopPage() {
     if (b.talent1Id) setSelectedTalent1Id(b.talent1Id);
     if (b.talent2Id) setSelectedTalent2Id(b.talent2Id);
     if (b.talent3Id) setSelectedTalent3Id(b.talent3Id);
+    if (b.roamBlessing) setRoamBlessing(b.roamBlessing as any);
+    if (b.jungleBlessing) setJungleBlessing(b.jungleBlessing as any);
 
     const itemsFromSlugs = b.itemSlugs.map(slug => allItems.find(i => i.slug === slug) || null);
     setEquippedItems(itemsFromSlugs);
+
+    if (b.spareSlugs && b.spareSlugs.length > 0) {
+      const sparesFromSlugs = b.spareSlugs.map(slug => allItems.find(i => i.slug === slug) || null);
+      setSpareItems(sparesFromSlugs);
+    }
   };
 
   const deleteSavedBuild = (id: string) => {
@@ -210,13 +255,20 @@ export default function BuildWorkshopPage() {
     }
   };
 
-  // Item slot assignment
+  // Item slot assignment (Core + Spare)
   const handleAssignItem = (item: MLBBItem) => {
     if (activeSlotIndex !== null) {
       const next = [...equippedItems];
       next[activeSlotIndex] = item;
       setEquippedItems(next);
       setActiveSlotIndex(null);
+      setIsItemModalOpen(false);
+      setItemSearchQuery('');
+    } else if (activeSpareIndex !== null) {
+      const next = [...spareItems];
+      next[activeSpareIndex] = item;
+      setSpareItems(next);
+      setActiveSpareIndex(null);
       setIsItemModalOpen(false);
       setItemSearchQuery('');
     }
@@ -227,6 +279,20 @@ export default function BuildWorkshopPage() {
     next[index] = null;
     setEquippedItems(next);
   };
+
+  const handleRemoveSpareItem = (index: number) => {
+    const next = [...spareItems];
+    next[index] = null;
+    setSpareItems(next);
+  };
+
+  const hasBoots = useMemo(() => {
+    return equippedItems.some(i => i && (i.type === 'Movement' || i.name.toLowerCase().includes('boots')));
+  }, [equippedItems]);
+
+  const hasRetribution = useMemo(() => {
+    return spell?.name.toLowerCase().includes('retribution');
+  }, [spell]);
 
   // Base Combat stats + Equipment stats calculation
   const calculatedStats = useMemo(() => {
@@ -361,10 +427,51 @@ export default function BuildWorkshopPage() {
     return list;
   }, [equippedItems, talent2, talent3]);
 
+  // Combat Simulator & Effective HP (EHP) Metrics
+  const combatMetrics = useMemo(() => {
+    // Target net defense after penetration
+    const netPhyDef = Math.max(0, dummyPhyDef - calculatedStats.finalPenetration);
+    const netMagDef = Math.max(0, dummyMagDef - calculatedStats.finalPenetration);
+
+    const targetPhyReduct = (netPhyDef / (120 + netPhyDef)) * 100;
+    const targetMagReduct = (netMagDef / (120 + netMagDef)) * 100;
+
+    const baseBasicAtk = Math.max(1, Math.round(calculatedStats.finalPhyAtk * (1 - targetPhyReduct / 100)));
+    const critBasicAtk = Math.max(1, Math.round(calculatedStats.finalPhyAtk * 2.0 * (1 - targetPhyReduct / 100)));
+    const estimatedDps = Math.round(
+      (baseBasicAtk * (1 - calculatedStats.finalCrit / 100) + critBasicAtk * (calculatedStats.finalCrit / 100)) *
+        parseFloat(calculatedStats.finalAtkSpeed)
+    );
+
+    const hitsToKill = Math.ceil(dummyHp / baseBasicAtk);
+
+    // Hero EHP calculations
+    const heroPhysEhp = Math.round(calculatedStats.finalHp * (1 + calculatedStats.finalPhyDef / 120));
+    const heroMagEhp = Math.round(calculatedStats.finalHp * (1 + calculatedStats.finalMagDef / 120));
+    const heroPhysReduct = ((calculatedStats.finalPhyDef / (120 + calculatedStats.finalPhyDef)) * 100).toFixed(1);
+    const heroMagReduct = ((calculatedStats.finalMagDef / (120 + calculatedStats.finalMagDef)) * 100).toFixed(1);
+
+    return {
+      netPhyDef,
+      netMagDef,
+      targetPhyReduct: targetPhyReduct.toFixed(1),
+      targetMagReduct: targetMagReduct.toFixed(1),
+      baseBasicAtk,
+      critBasicAtk,
+      estimatedDps,
+      hitsToKill,
+      heroPhysEhp,
+      heroMagEhp,
+      heroPhysReduct,
+      heroMagReduct,
+    };
+  }, [dummyHp, dummyPhyDef, dummyMagDef, calculatedStats]);
+
   const copyBuildSummary = () => {
     const itemList = equippedItems.filter(Boolean).map(i => i!.name).join(', ');
+    const spareList = spareItems.filter(Boolean).map(i => i!.name).join(', ');
     const talentSummary = `${talent1?.name || '-'} / ${talent2?.name || '-'} / ${talent3?.name || '-'}`;
-    const text = `🎮 KLASIM MLBB PRO BUILD\nHero: ${hero.name}\nBuild: ${buildTitle}\nItems: ${itemList}\nSpell: ${spell.name}\nEmblem: ${emblem.name} (Talents: ${talentSummary})\nTotal Cost: ${calculatedStats.totalCost.toLocaleString()} Gold\nCombat Stats (Lv.${level}): HP ${calculatedStats.finalHp.toLocaleString()} | ATK ${calculatedStats.finalPhyAtk} | DEF ${calculatedStats.finalPhyDef}/${calculatedStats.finalMagDef} | CDR ${calculatedStats.finalCdr}%\nRacik di Klasim: https://klasim.com/mlbb/builder`;
+    const text = `🎮 KLASIM MLBB PRO BUILD\nHero: ${hero.name}\nBuild: ${buildTitle}\nItems: ${itemList}${spareList ? `\nSpare Items: ${spareList}` : ''}${roamBlessing !== 'none' ? `\nRoam: ${roamBlessing}` : ''}${jungleBlessing !== 'none' ? `\nRetri: ${jungleBlessing}` : ''}\nSpell: ${spell.name}\nEmblem: ${emblem.name} (Talents: ${talentSummary})\nTotal Cost: ${calculatedStats.totalCost.toLocaleString()} Gold\nCombat Stats (Lv.${level}): HP ${calculatedStats.finalHp.toLocaleString()} (EHP ${combatMetrics.heroPhysEhp.toLocaleString()}) | ATK ${calculatedStats.finalPhyAtk} | DEF ${calculatedStats.finalPhyDef}/${calculatedStats.finalMagDef} | CDR ${calculatedStats.finalCdr}%\nRacik di Klasim: https://klasim.com/mlbb/builder`;
     navigator.clipboard.writeText(text);
     setCopiedSuccess(true);
     setTimeout(() => setCopiedSuccess(false), 2500);
@@ -398,7 +505,11 @@ export default function BuildWorkshopPage() {
   const handleCopyShareUrl = () => {
     if (typeof window === 'undefined') return;
     const itemSlugs = equippedItems.map(i => i?.slug || '').filter(Boolean).join(',');
-    const url = `${window.location.origin}/mlbb/builder?hero=${encodeURIComponent(hero.slug)}&items=${encodeURIComponent(itemSlugs)}&spell=${encodeURIComponent(spell?.id || '')}&emblem=${encodeURIComponent(emblem?.id || '')}&t1=${encodeURIComponent(talent1?.id || '')}&t2=${encodeURIComponent(talent2?.id || '')}&t3=${encodeURIComponent(talent3?.id || '')}&title=${encodeURIComponent(buildTitle)}`;
+    const spareSlugs = spareItems.map(i => i?.slug || '').filter(Boolean).join(',');
+    let url = `${window.location.origin}/mlbb/builder?hero=${encodeURIComponent(hero.slug)}&items=${encodeURIComponent(itemSlugs)}&spell=${encodeURIComponent(spell?.id || '')}&emblem=${encodeURIComponent(emblem?.id || '')}&t1=${encodeURIComponent(talent1?.id || '')}&t2=${encodeURIComponent(talent2?.id || '')}&t3=${encodeURIComponent(talent3?.id || '')}&title=${encodeURIComponent(buildTitle)}`;
+    if (spareSlugs) url += `&spare=${encodeURIComponent(spareSlugs)}`;
+    if (roamBlessing !== 'none') url += `&roam=${encodeURIComponent(roamBlessing)}`;
+    if (jungleBlessing !== 'none') url += `&jungle=${encodeURIComponent(jungleBlessing)}`;
     navigator.clipboard.writeText(url);
     setShareUrlCopied(true);
     setTimeout(() => setShareUrlCopied(false), 2500);
@@ -597,6 +708,126 @@ export default function BuildWorkshopPage() {
                     </div>
                   ))}
                 </div>
+
+                {/* Spare / Situational Equipment (Slots #7 & #8) - MoleBuild Parity */}
+                <div className="pt-4 border-t border-white/10 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-cyan-400">
+                        Opsi Item Situasional / Cadangan (Slots #7 & #8)
+                      </span>
+                      <span className="rounded bg-cyan-400/20 text-cyan-300 text-[8px] font-mono px-1.5 py-0.5 font-bold uppercase">
+                        Spare Swap
+                      </span>
+                    </div>
+                    <span className="text-[10px] text-slate-500 font-mono">Untuk rotasi Immortality / Winter Crown</span>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {spareItems.map((item, idx) => (
+                      <div
+                        key={idx}
+                        className="group relative flex items-center justify-between rounded-2xl border border-cyan-500/20 bg-black/40 p-3 hover:border-cyan-400/60 transition-all cursor-pointer"
+                        onClick={() => {
+                          setActiveSlotIndex(null);
+                          setActiveSpareIndex(idx);
+                          setIsItemModalOpen(true);
+                        }}
+                      >
+                        <div className="flex items-center gap-3 min-w-0">
+                          <span className="text-[10px] font-mono font-bold text-cyan-400/80">#{idx + 7}</span>
+                          {item ? (
+                            <>
+                              <div className="relative h-11 w-11 rounded-xl overflow-hidden border border-cyan-400/40 bg-slate-900 p-0.5 shrink-0">
+                                <img src={item.image} alt={item.name} className="h-full w-full object-contain" />
+                              </div>
+                              <div className="min-w-0">
+                                <span className="font-sans text-xs font-bold text-white block truncate">{item.name}</span>
+                                <span className="font-mono text-[10px] text-amber-400 block">{item.price}g · {item.type}</span>
+                              </div>
+                            </>
+                          ) : (
+                            <div className="flex items-center gap-2.5 text-slate-500 font-mono text-xs">
+                              <div className="h-10 w-10 rounded-xl border border-dashed border-cyan-400/30 flex items-center justify-center text-cyan-400 font-bold">
+                                +
+                              </div>
+                              <span>Pilih Item Cadangan #{idx + 7}</span>
+                            </div>
+                          )}
+                        </div>
+
+                        {item && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleRemoveSpareItem(idx);
+                            }}
+                            className="text-slate-500 hover:text-rose-400 text-xs px-2 py-1"
+                          >
+                            ✕
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Roam & Retribution Blessing Controllers */}
+                {(hasBoots || hasRetribution) && (
+                  <div className="pt-4 border-t border-white/10 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {hasBoots && (
+                      <div className="rounded-2xl border border-amber-400/20 bg-amber-400/[0.03] p-3 space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[10px] font-mono font-bold text-amber-400 uppercase">
+                            🥾 Roam Blessing (Sepatu)
+                          </span>
+                          <span className="text-[9px] font-mono text-slate-300 font-bold">{roamBlessing}</span>
+                        </div>
+                        <div className="flex flex-wrap gap-1.5">
+                          {(['none', 'Conceal', 'Encourage', 'Favor', 'Dire Hit'] as const).map(b => (
+                            <button
+                              key={b}
+                              onClick={() => setRoamBlessing(b)}
+                              className={`rounded-lg px-2.5 py-1 text-[10px] font-mono font-bold cursor-pointer transition-all ${
+                                roamBlessing === b
+                                  ? 'bg-amber-400 text-black shadow-md shadow-amber-400/20'
+                                  : 'bg-white/5 text-slate-400 hover:text-white hover:bg-white/10 border border-white/5'
+                              }`}
+                            >
+                              {b === 'none' ? 'Polos' : b}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {hasRetribution && (
+                      <div className="rounded-2xl border border-rose-400/20 bg-rose-400/[0.03] p-3 space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[10px] font-mono font-bold text-rose-400 uppercase">
+                            ⚔️ Jungle Retribution Type
+                          </span>
+                          <span className="text-[9px] font-mono text-slate-300 font-bold">{jungleBlessing}</span>
+                        </div>
+                        <div className="flex flex-wrap gap-1.5">
+                          {(['none', 'Ice', 'Flame', 'Bloody'] as const).map(b => (
+                            <button
+                              key={b}
+                              onClick={() => setJungleBlessing(b)}
+                              className={`rounded-lg px-2.5 py-1 text-[10px] font-mono font-bold cursor-pointer transition-all ${
+                                jungleBlessing === b
+                                  ? 'bg-rose-500 text-white shadow-md shadow-rose-500/20'
+                                  : 'bg-white/5 text-slate-400 hover:text-white hover:bg-white/10 border border-white/5'
+                              }`}
+                            >
+                              {b === 'none' ? 'Standard' : `${b} Retri`}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
 
               {/* Spell & Emblem Slots */}
@@ -857,6 +1088,128 @@ export default function BuildWorkshopPage() {
                 </div>
               </div>
 
+              {/* Combat Damage & Effective HP (EHP) Simulator Widget */}
+              <div className="rounded-3xl border border-cyan-400/30 bg-gradient-to-b from-[#0a1424] to-[#080d16] p-5 sm:p-6 shadow-2xl space-y-4">
+                <div className="flex items-center justify-between border-b border-white/10 pb-3">
+                  <div className="flex items-center gap-2">
+                    <span className="text-cyan-400">🎯</span>
+                    <span className="text-xs font-mono font-bold uppercase text-cyan-400 tracking-wider">
+                      SIMULATOR COMBAT & EHP
+                    </span>
+                  </div>
+                  <span className="rounded bg-cyan-400/20 px-2 py-0.5 text-[9px] font-mono font-bold text-cyan-300">
+                    THEORYCRAFT
+                  </span>
+                </div>
+
+                {/* Hero EHP Telemetry */}
+                <div className="space-y-2">
+                  <span className="text-[10px] font-mono text-slate-400 uppercase font-bold block">
+                    Ketahanan Efektif Hero Kamu (EHP):
+                  </span>
+                  <div className="grid grid-cols-2 gap-2 text-xs font-mono">
+                    <div className="rounded-xl border border-white/5 bg-black/40 p-2.5">
+                      <span className="text-[9px] text-slate-400 uppercase block">Physical EHP</span>
+                      <span className="text-sm font-black text-emerald-400">{combatMetrics.heroPhysEhp.toLocaleString()}</span>
+                      <span className="text-[9px] text-slate-500 block">Reduksi: {combatMetrics.heroPhysReduct}%</span>
+                    </div>
+                    <div className="rounded-xl border border-white/5 bg-black/40 p-2.5">
+                      <span className="text-[9px] text-slate-400 uppercase block">Magic EHP</span>
+                      <span className="text-sm font-black text-cyan-400">{combatMetrics.heroMagEhp.toLocaleString()}</span>
+                      <span className="text-[9px] text-slate-500 block">Reduksi: {combatMetrics.heroMagReduct}%</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Target Dummy Setup */}
+                <div className="pt-2 border-t border-white/10 space-y-2.5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-mono text-slate-400 uppercase font-bold">
+                      Target Dummy Uji Coba:
+                    </span>
+                    <span className="text-[9px] font-mono text-amber-400 font-bold uppercase">{dummyPreset}</span>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-1.5">
+                    <button
+                      onClick={() => {
+                        setDummyPreset('squishy');
+                        setDummyHp(3400);
+                        setDummyPhyDef(55);
+                        setDummyMagDef(35);
+                      }}
+                      className={`rounded-lg py-1 px-1.5 text-[9px] font-mono font-bold cursor-pointer transition-all ${
+                        dummyPreset === 'squishy'
+                          ? 'bg-rose-500 text-white shadow-md shadow-rose-500/20'
+                          : 'bg-white/5 text-slate-400 hover:text-white border border-white/5'
+                      }`}
+                    >
+                      Squishy MM/Mage
+                    </button>
+                    <button
+                      onClick={() => {
+                        setDummyPreset('fighter');
+                        setDummyHp(5600);
+                        setDummyPhyDef(110);
+                        setDummyMagDef(75);
+                      }}
+                      className={`rounded-lg py-1 px-1.5 text-[9px] font-mono font-bold cursor-pointer transition-all ${
+                        dummyPreset === 'fighter'
+                          ? 'bg-amber-400 text-black shadow-md shadow-amber-400/20'
+                          : 'bg-white/5 text-slate-400 hover:text-white border border-white/5'
+                      }`}
+                    >
+                      Fighter Bruiser
+                    </button>
+                    <button
+                      onClick={() => {
+                        setDummyPreset('tank');
+                        setDummyHp(8800);
+                        setDummyPhyDef(240);
+                        setDummyMagDef(180);
+                      }}
+                      className={`rounded-lg py-1 px-1.5 text-[9px] font-mono font-bold cursor-pointer transition-all ${
+                        dummyPreset === 'tank'
+                          ? 'bg-emerald-500 text-black shadow-md shadow-emerald-500/20'
+                          : 'bg-white/5 text-slate-400 hover:text-white border border-white/5'
+                      }`}
+                    >
+                      Tank Roamer
+                    </button>
+                  </div>
+
+                  {/* Damage Output Readout */}
+                  <div className="rounded-2xl border border-white/10 bg-black/60 p-3 space-y-2 text-xs font-mono mt-2">
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="text-slate-400">Target HP / Defense:</span>
+                      <span className="text-white font-bold">{dummyHp.toLocaleString()} HP · {dummyPhyDef} DEF</span>
+                    </div>
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="text-slate-400">Net DEF (setelah PEN):</span>
+                      <span className="text-cyan-400 font-bold">{combatMetrics.netPhyDef} DEF ({combatMetrics.targetPhyReduct}% DR)</span>
+                    </div>
+                    <div className="flex items-center justify-between border-t border-white/10 pt-1.5 text-[11px]">
+                      <span className="text-slate-400">Hit Basic Attack Bersih:</span>
+                      <span className="text-rose-400 font-bold">{combatMetrics.baseBasicAtk} dmg</span>
+                    </div>
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="text-slate-400">Hit Critical Strike:</span>
+                      <span className="text-amber-400 font-bold">{combatMetrics.critBasicAtk} dmg</span>
+                    </div>
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="text-slate-400">Estimasi DPS Rata-rata:</span>
+                      <span className="text-emerald-400 font-bold">~{combatMetrics.estimatedDps} /detik</span>
+                    </div>
+                    <div className="flex items-center justify-between border-t border-white/10 pt-1.5">
+                      <span className="text-slate-300 font-bold text-[11px]">Estimasi Hit to Kill:</span>
+                      <span className="rounded bg-rose-500/20 text-rose-300 border border-rose-500/30 px-2 py-0.5 font-black text-sm">
+                        ~{combatMetrics.hitsToKill} Hit
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               {/* Saved Builds Shelf */}
               <div className="rounded-3xl border border-white/10 bg-[#080d16] p-5 shadow-2xl space-y-4">
                 <div className="text-xs font-mono font-bold uppercase text-slate-400 tracking-wider border-b border-white/10 pb-3 flex items-center justify-between">
@@ -1010,10 +1363,10 @@ export default function BuildWorkshopPage() {
                     </h4>
                   </div>
 
-                  {/* 6 Equipment Item Rack */}
+                  {/* 6 Equipment Item Rack + Spare Items */}
                   <div className="rounded-2xl border border-white/10 bg-black/60 p-3 space-y-2">
                     <div className="flex items-center justify-between text-[10px]">
-                      <span className="font-bold text-slate-400 uppercase tracking-wider">6 EQUIPMENT ITEMS:</span>
+                      <span className="font-bold text-slate-400 uppercase tracking-wider">6 CORE EQUIPMENT:</span>
                       <span className="font-bold text-amber-400">💰 {calculatedStats.totalCost.toLocaleString()} Gold</span>
                     </div>
                     <div className="grid grid-cols-6 gap-2">
@@ -1035,6 +1388,25 @@ export default function BuildWorkshopPage() {
                         </div>
                       ))}
                     </div>
+
+                    {/* Spare Items Row in Card */}
+                    {spareItems.some(Boolean) && (
+                      <div className="pt-2 border-t border-white/10 flex items-center gap-2">
+                        <span className="text-[8px] font-bold text-cyan-400 uppercase tracking-wider shrink-0">
+                          SITUATIONAL SPARE:
+                        </span>
+                        <div className="flex items-center gap-2">
+                          {spareItems.map((item, idx) => (
+                            item ? (
+                              <div key={idx} className="flex items-center gap-1.5 rounded-lg border border-cyan-400/30 bg-cyan-950/30 px-2 py-0.5">
+                                <img src={item.image} alt={item.name} className="h-4 w-4 rounded object-contain" />
+                                <span className="text-[9px] text-cyan-200 font-bold truncate max-w-[100px]">{item.name}</span>
+                              </div>
+                            ) : null
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   {/* Spell & Emblem Bar */}
@@ -1044,7 +1416,14 @@ export default function BuildWorkshopPage() {
                         {spell && <img src={spell.image} alt={spell.name} className="h-full w-full object-contain rounded-full" />}
                       </div>
                       <div className="truncate">
-                        <span className="text-[8px] text-cyan-400 uppercase tracking-widest block font-bold">BATTLE SPELL</span>
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-[8px] text-cyan-400 uppercase tracking-widest block font-bold">BATTLE SPELL</span>
+                          {jungleBlessing !== 'none' && (
+                            <span className="rounded bg-rose-500/30 text-rose-300 text-[7px] px-1 font-bold">
+                              {jungleBlessing} Retri
+                            </span>
+                          )}
+                        </div>
                         <span className="text-xs font-black text-white truncate block">{spell?.name || 'Flicker'}</span>
                       </div>
                     </div>
@@ -1054,7 +1433,14 @@ export default function BuildWorkshopPage() {
                         {emblem && <img src={emblem.image} alt={emblem.name} className="h-full w-full object-contain p-0.5" />}
                       </div>
                       <div className="truncate">
-                        <span className="text-[8px] text-purple-400 uppercase tracking-widest block font-bold">CUSTOM EMBLEM</span>
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-[8px] text-purple-400 uppercase tracking-widest block font-bold">CUSTOM EMBLEM</span>
+                          {roamBlessing !== 'none' && (
+                            <span className="rounded bg-amber-400/30 text-amber-200 text-[7px] px-1 font-bold">
+                              Roam: {roamBlessing}
+                            </span>
+                          )}
+                        </div>
                         <span className="text-xs font-black text-white truncate block">{emblem?.name || 'Assassin'}</span>
                       </div>
                     </div>
@@ -1092,7 +1478,7 @@ export default function BuildWorkshopPage() {
                   </div>
 
                   {/* Calculated Stats Matrix Bar */}
-                  <div className="grid grid-cols-4 gap-2 text-center text-[10px]">
+                  <div className="grid grid-cols-5 gap-2 text-center text-[10px]">
                     <div className="rounded-xl border border-white/5 bg-white/[0.02] p-2">
                       <span className="block text-[8px] text-slate-500 uppercase">Max Health</span>
                       <span className="text-xs font-bold text-emerald-400">{calculatedStats.finalHp.toLocaleString()} HP</span>
@@ -1108,6 +1494,10 @@ export default function BuildWorkshopPage() {
                     <div className="rounded-xl border border-white/5 bg-white/[0.02] p-2">
                       <span className="block text-[8px] text-slate-500 uppercase">CDR / ATK SPD</span>
                       <span className="text-xs font-bold text-amber-400">{calculatedStats.finalCdr}% / {calculatedStats.finalAtkSpeed}</span>
+                    </div>
+                    <div className="rounded-xl border border-cyan-400/20 bg-cyan-950/20 p-2">
+                      <span className="block text-[8px] text-cyan-400 uppercase font-bold">Physical EHP</span>
+                      <span className="text-xs font-bold text-cyan-300">{combatMetrics.heroPhysEhp.toLocaleString()}</span>
                     </div>
                   </div>
                 </div>
@@ -1200,7 +1590,7 @@ export default function BuildWorkshopPage() {
       )}
 
       {/* Equipment Item Picker Modal */}
-      {isItemModalOpen && activeSlotIndex !== null && (
+      {isItemModalOpen && (activeSlotIndex !== null || activeSpareIndex !== null) && (
         <div
           role="dialog"
           aria-modal="true"
@@ -1209,15 +1599,16 @@ export default function BuildWorkshopPage() {
           <div className="relative w-full max-w-4xl max-h-[85vh] overflow-hidden flex flex-col rounded-3xl border border-white/15 bg-[#080d16] p-6 shadow-2xl">
             <div className="flex items-center justify-between pb-4 border-b border-white/10">
               <div className="font-mono text-sm font-bold text-amber-400">
-                PILIH EQUIPMENT UNTUK SLOT #{activeSlotIndex + 1}
+                PILIH EQUIPMENT UNTUK {activeSpareIndex !== null ? `SLOT CADANGAN #${activeSpareIndex + 7}` : `SLOT #${(activeSlotIndex ?? 0) + 1}`}
               </div>
               <button
                 onClick={() => {
                   setIsItemModalOpen(false);
                   setActiveSlotIndex(null);
+                  setActiveSpareIndex(null);
                   setItemSearchQuery('');
                 }}
-                className="h-8 w-8 rounded-full border border-white/10 bg-white/5 text-slate-400 hover:text-white flex items-center justify-center font-mono"
+                className="h-8 w-8 rounded-full border border-white/10 bg-white/5 text-slate-400 hover:text-white flex items-center justify-center font-mono cursor-pointer"
               >
                 ✕
               </button>

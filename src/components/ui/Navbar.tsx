@@ -4,6 +4,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
+import CommandPalette from '@/components/common/CommandPalette';
 
 interface NavbarProps {
   activeSection?: string;
@@ -16,6 +17,14 @@ export default function Navbar({ activeSection = 'beranda' }: NavbarProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isMlbbDropdownOpen, setIsMlbbDropdownOpen] = useState(false);
+  const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
+
+  // Global open-command-palette event listener
+  useEffect(() => {
+    const handleOpen = () => setIsCommandPaletteOpen(true);
+    window.addEventListener('open-command-palette', handleOpen);
+    return () => window.removeEventListener('open-command-palette', handleOpen);
+  }, []);
 
   // 1. Live WIB Clock
   useEffect(() => {
@@ -165,7 +174,7 @@ export default function Navbar({ activeSection = 'beranda' }: NavbarProps) {
                       <div className="absolute left-0 mt-1 w-80 max-h-[75vh] overflow-y-auto rounded-2xl border border-white/15 bg-slate-950/95 p-2 shadow-2xl backdrop-blur-2xl z-50 animate-in fade-in slide-in-from-top-2 duration-150">
                         <div className="border-b border-white/10 px-3 py-1.5 text-[9px] text-amber-400 font-mono font-bold tracking-wider flex items-center justify-between">
                           <span>MLBB META SUITE</span>
-                          <span className="text-[8px] bg-amber-400/20 text-amber-300 px-1.5 py-0.2 rounded">9 TOOLS</span>
+                          <span className="text-[8px] bg-amber-400/20 text-amber-300 px-1.5 py-0.2 rounded">10 TOOLS</span>
                         </div>
                         <div className="space-y-1 mt-1">
                           {mlbbSubItems.map((sub) => (
@@ -218,6 +227,19 @@ export default function Navbar({ activeSection = 'beranda' }: NavbarProps) {
 
           {/* Action & Auth Controls */}
           <div className="flex items-center gap-2">
+            {/* Quick Search Command Palette Trigger */}
+            <button
+              onClick={() => setIsCommandPaletteOpen(true)}
+              className="flex items-center gap-2 rounded-lg border border-white/15 bg-white/5 px-2.5 py-1.5 text-[10px] sm:text-[11px] text-slate-300 hover:border-amber-400/50 hover:bg-amber-400/10 hover:text-white transition-all active:scale-95 cursor-pointer font-mono"
+              title="Pencarian Cepat (Ctrl+K)"
+            >
+              <span className="text-amber-400">🔍</span>
+              <span className="hidden lg:inline text-slate-400">Cari hero, item...</span>
+              <kbd className="hidden sm:inline-block rounded bg-white/10 px-1.5 py-0.5 text-[9px] text-slate-300 border border-white/10">
+                ⌘K
+              </kbd>
+            </button>
+
             <Link
               href="/tournament/create"
               className="inline-flex items-center gap-1.5 rounded-lg border border-amber-400/40 bg-amber-400/10 px-2.5 py-1.5 sm:px-3 sm:py-1.5 text-[10px] sm:text-[11px] font-black uppercase text-amber-400 transition-all duration-200 hover:bg-amber-400 hover:text-black active:scale-95"
@@ -311,6 +333,25 @@ export default function Navbar({ activeSection = 'beranda' }: NavbarProps) {
               <span>KLASIM TELEMETRY</span>
             </div>
 
+            {/* Quick Search in Mobile Drawer */}
+            <div className="mb-4">
+              <button
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  setIsCommandPaletteOpen(true);
+                }}
+                className="flex w-full items-center justify-between rounded-xl border border-white/15 bg-white/5 p-3 text-xs font-mono text-slate-200 hover:border-amber-400/40 transition-all active:scale-98"
+              >
+                <span className="flex items-center gap-2.5">
+                  <span className="text-amber-400 text-sm">🔍</span>
+                  <span className="font-sans text-slate-300">Cari hero, item, modul...</span>
+                </span>
+                <kbd className="rounded bg-white/10 px-2 py-0.5 text-[10px] text-slate-400 border border-white/10">
+                  ⌘K
+                </kbd>
+              </button>
+            </div>
+
             <div className="space-y-2">
               {navItems.map((item) => {
                 const isActive = activeSection === item.id;
@@ -330,7 +371,7 @@ export default function Navbar({ activeSection = 'beranda' }: NavbarProps) {
                         <span>{item.label}</span>
                         {item.id === 'mlbb' && (
                           <span className="rounded bg-amber-400/20 px-1 py-0.2 text-[8px] font-mono text-amber-300 border border-amber-400/30">
-                            9 TOOLS
+                            10 TOOLS
                           </span>
                         )}
                       </div>
@@ -416,6 +457,12 @@ export default function Navbar({ activeSection = 'beranda' }: NavbarProps) {
           </div>
         </div>
       )}
+
+      {/* Global Command Palette Modal */}
+      <CommandPalette
+        isOpen={isCommandPaletteOpen}
+        onClose={() => setIsCommandPaletteOpen(false)}
+      />
     </>
   );
 }
