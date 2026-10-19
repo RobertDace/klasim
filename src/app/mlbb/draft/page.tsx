@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useMemo, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Navbar from '@/components/ui/Navbar';
