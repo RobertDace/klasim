@@ -309,6 +309,30 @@ export default function BuildsHubPage() {
                           💰 {totalCost.toLocaleString()}g
                         </span>
                       </div>
+
+                      {/* 3 Talents Preview */}
+                      {item.build.talents && (
+                        <div className="grid grid-cols-3 gap-1.5 pt-2 border-t border-white/5 mt-2">
+                          {item.build.talents.tier1 && (
+                            <div title={`Tier 1: ${item.build.talents.tier1.name} — ${item.build.talents.tier1.description}`} className="flex items-center gap-1 rounded-md border border-amber-400/20 bg-amber-400/5 px-1.5 py-0.5">
+                              <img src={item.build.talents.tier1.image} alt={item.build.talents.tier1.name} className="h-3.5 w-3.5 object-contain shrink-0" />
+                              <span className="text-[9px] font-mono text-amber-300 truncate">{item.build.talents.tier1.name}</span>
+                            </div>
+                          )}
+                          {item.build.talents.tier2 && (
+                            <div title={`Tier 2: ${item.build.talents.tier2.name} — ${item.build.talents.tier2.description}`} className="flex items-center gap-1 rounded-md border border-cyan-400/20 bg-cyan-400/5 px-1.5 py-0.5">
+                              <img src={item.build.talents.tier2.image} alt={item.build.talents.tier2.name} className="h-3.5 w-3.5 object-contain shrink-0" />
+                              <span className="text-[9px] font-mono text-cyan-300 truncate">{item.build.talents.tier2.name}</span>
+                            </div>
+                          )}
+                          {item.build.talents.tier3 && (
+                            <div title={`Tier 3: ${item.build.talents.tier3.name} — ${item.build.talents.tier3.description}`} className="flex items-center gap-1 rounded-md border border-purple-400/20 bg-purple-400/5 px-1.5 py-0.5">
+                              <img src={item.build.talents.tier3.image} alt={item.build.talents.tier3.name} className="h-3.5 w-3.5 object-contain shrink-0" />
+                              <span className="text-[9px] font-mono text-purple-300 truncate">{item.build.talents.tier3.name}</span>
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </div>
 
                     {/* Bottom Card Actions */}
@@ -393,6 +417,72 @@ export default function BuildsHubPage() {
               </div>
             </div>
 
+            {/* Spell & Emblem Details */}
+            <div className="grid grid-cols-2 gap-3">
+              {inspectedBuild.build.spell && (
+                <div className="flex items-center gap-3 rounded-2xl border border-white/5 bg-black/40 p-3">
+                  <img src={inspectedBuild.build.spell.image} alt={inspectedBuild.build.spell.name} className="h-10 w-10 rounded-xl object-contain border border-white/10 p-0.5 bg-slate-900" />
+                  <div className="min-w-0">
+                    <span className="text-[9px] font-mono text-slate-500 uppercase font-bold block">BATTLE SPELL</span>
+                    <span className="text-xs font-bold text-white truncate block">{inspectedBuild.build.spell.name}</span>
+                    <span className="text-[10px] font-mono text-amber-400">CD: {inspectedBuild.build.spell.cooldown}s</span>
+                  </div>
+                </div>
+              )}
+              {inspectedBuild.build.emblem && (
+                <div className="flex items-center gap-3 rounded-2xl border border-white/5 bg-black/40 p-3">
+                  <img src={inspectedBuild.build.emblem.image} alt={inspectedBuild.build.emblem.name} className="h-10 w-10 rounded-xl object-contain border border-white/10 p-0.5 bg-slate-900" />
+                  <div className="min-w-0">
+                    <span className="text-[9px] font-mono text-slate-500 uppercase font-bold block">CUSTOM EMBLEM</span>
+                    <span className="text-xs font-bold text-white truncate block">{inspectedBuild.build.emblem.name}</span>
+                    <span className="text-[10px] font-mono text-emerald-400">Adaptive Set</span>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* 3-Tier Talents Breakdown */}
+            {inspectedBuild.build.talents && (
+              <div className="rounded-2xl border border-white/10 bg-black/50 p-4 space-y-3">
+                <div className="flex items-center justify-between text-xs font-mono font-bold uppercase text-amber-400 tracking-wider">
+                  <span>✨ 3-TIER EMBLEM TALENTS CONFIGURATION</span>
+                  <span className="text-[10px] text-slate-500">Official MoleBuild</span>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                  {inspectedBuild.build.talents.tier1 && (
+                    <div className="rounded-xl border border-amber-400/20 bg-amber-400/5 p-2.5 space-y-1">
+                      <div className="flex items-center gap-2">
+                        <img src={inspectedBuild.build.talents.tier1.image} alt={inspectedBuild.build.talents.tier1.name} className="h-6 w-6 object-contain" />
+                        <span className="text-[10px] font-mono text-amber-400 font-bold uppercase">TIER 1 (STAT)</span>
+                      </div>
+                      <div className="text-xs font-bold text-white">{inspectedBuild.build.talents.tier1.name}</div>
+                      <p className="text-[10px] text-slate-400 line-clamp-2 leading-tight">{inspectedBuild.build.talents.tier1.description}</p>
+                    </div>
+                  )}
+                  {inspectedBuild.build.talents.tier2 && (
+                    <div className="rounded-xl border border-cyan-400/20 bg-cyan-400/5 p-2.5 space-y-1">
+                      <div className="flex items-center gap-2">
+                        <img src={inspectedBuild.build.talents.tier2.image} alt={inspectedBuild.build.talents.tier2.name} className="h-6 w-6 object-contain" />
+                        <span className="text-[10px] font-mono text-cyan-400 font-bold uppercase">TIER 2 (UTILITY)</span>
+                      </div>
+                      <div className="text-xs font-bold text-white">{inspectedBuild.build.talents.tier2.name}</div>
+                      <p className="text-[10px] text-slate-400 line-clamp-2 leading-tight">{inspectedBuild.build.talents.tier2.description}</p>
+                    </div>
+                  )}
+                  {inspectedBuild.build.talents.tier3 && (
+                    <div className="rounded-xl border border-purple-400/20 bg-purple-400/5 p-2.5 space-y-1">
+                      <div className="flex items-center gap-2">
+                        <img src={inspectedBuild.build.talents.tier3.image} alt={inspectedBuild.build.talents.tier3.name} className="h-6 w-6 object-contain" />
+                        <span className="text-[10px] font-mono text-purple-400 font-bold uppercase">TIER 3 (CORE)</span>
+                      </div>
+                      <div className="text-xs font-bold text-white">{inspectedBuild.build.talents.tier3.name}</div>
+                      <p className="text-[10px] text-slate-400 line-clamp-2 leading-tight">{inspectedBuild.build.talents.tier3.description}</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
             {/* Total Stats Telemetry */}
             {inspectedBuild.build.totalStats && (
               <div className="rounded-2xl border border-amber-400/20 bg-amber-400/5 p-4 space-y-2">
@@ -411,13 +501,23 @@ export default function BuildsHubPage() {
             )}
 
             {/* Modal Bottom Actions */}
-            <div className="flex items-center justify-between pt-4 border-t border-white/10">
-              <Link
-                href={`/mlbb/heroes/${inspectedBuild.hero.slug}`}
-                className="text-xs font-mono font-bold text-amber-400 hover:underline"
-              >
-                Lihat Detail Lengkap Hero →
-              </Link>
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-4 border-t border-white/10">
+              <div className="flex items-center gap-4">
+                <Link
+                  href={`/mlbb/heroes/${inspectedBuild.hero.slug}`}
+                  className="text-xs font-mono font-bold text-amber-400 hover:underline"
+                >
+                  Detail Hero →
+                </Link>
+
+                <Link
+                  href={`/mlbb/builder?hero=${encodeURIComponent(inspectedBuild.hero.slug)}&items=${encodeURIComponent(inspectedBuild.build.items.map((i: any) => i.slug).join(','))}&spell=${encodeURIComponent(inspectedBuild.build.spell?.id || '')}&emblem=${encodeURIComponent(inspectedBuild.build.emblem?.id || '')}&t1=${encodeURIComponent(inspectedBuild.build.talents?.tier1?.id || '')}&t2=${encodeURIComponent(inspectedBuild.build.talents?.tier2?.id || '')}&t3=${encodeURIComponent(inspectedBuild.build.talents?.tier3?.id || '')}&title=${encodeURIComponent(inspectedBuild.build.title)}`}
+                  className="text-xs font-mono font-bold text-cyan-400 hover:underline flex items-center gap-1"
+                >
+                  <span>Buka di Workshop Builder</span>
+                  <span>🛠️</span>
+                </Link>
+              </div>
 
               <button
                 onClick={() => setInspectedBuild(null)}

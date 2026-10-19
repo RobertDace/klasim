@@ -7,6 +7,7 @@ import relationsData from './hero_relations.json';
 import itemsData from './items.json';
 import battleSpellsData from './battle_spells.json';
 import emblemsData from './emblems.json';
+import emblemTalentsData from './emblem_talents.json';
 import buildsData from './builds.json';
 
 export interface MLBBHeroSkill {
@@ -103,12 +104,24 @@ export interface MLBBEmblem {
   mpl_id: string;
 }
 
+export interface MLBBEmblemTalent {
+  id: string;
+  name: string;
+  slug: string;
+  tier: 1 | 2 | 3;
+  description: string;
+  image: string;
+  image_remote: string;
+  mpl_id: string;
+}
+
 export const heroes: MLBBHero[] = heroesData as MLBBHero[];
 export const heroTierStats: MLBBTierStat[] = tierStatsData as MLBBTierStat[];
 export const heroRelations: MLBBHeroRelation[] = relationsData as MLBBHeroRelation[];
 export const items: MLBBItem[] = itemsData as MLBBItem[];
 export const battleSpells: MLBBBattleSpell[] = battleSpellsData as MLBBBattleSpell[];
 export const emblems: MLBBEmblem[] = emblemsData as MLBBEmblem[];
+export const emblemTalents: MLBBEmblemTalent[] = emblemTalentsData as MLBBEmblemTalent[];
 
 export function getAllHeroes(): MLBBHero[] {
   return heroes;
@@ -142,6 +155,18 @@ export function getHeroRelations(heroName: string): MLBBHeroRelation | undefined
   return heroRelations.find(r => r.hero_name.toLowerCase() === heroName.toLowerCase());
 }
 
+export function getTalentsByTier(tier: 1 | 2 | 3): MLBBEmblemTalent[] {
+  return emblemTalents.filter(t => t.tier === tier);
+}
+
+export function getTalentById(id: string): MLBBEmblemTalent | undefined {
+  return emblemTalents.find(t => t.id === id);
+}
+
+export function getTalentBySlug(slug: string): MLBBEmblemTalent | undefined {
+  return emblemTalents.find(t => t.slug === slug.toLowerCase());
+}
+
 export interface MLBBEnrichedBuild {
   id: string;
   title: string;
@@ -152,6 +177,11 @@ export interface MLBBEnrichedBuild {
   conditional_items: MLBBItem[];
   spell: MLBBBattleSpell | null;
   emblem: MLBBEmblem | null;
+  talents?: {
+    tier1?: MLBBEmblemTalent | null;
+    tier2?: MLBBEmblemTalent | null;
+    tier3?: MLBBEmblemTalent | null;
+  };
   totalStats: Record<string, number>;
 }
 
@@ -160,3 +190,4 @@ export const buildsMap: Record<string, MLBBEnrichedBuild[]> = (buildsData as unk
 export function getHeroBuilds(slug: string): MLBBEnrichedBuild[] {
   return buildsMap[slug.toLowerCase()] || [];
 }
+

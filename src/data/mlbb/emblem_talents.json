@@ -1,0 +1,262 @@
+[
+  {
+    "id": "2ed523e9-944b-40c3-86e1-aaa345617891",
+    "name": "Agility",
+    "slug": "agility",
+    "tier": 1,
+    "description": "Gain 4% extra Movement Speed",
+    "image": "/mlbb/talents/agility.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/1/14/Agility.png",
+    "mpl_id": "811"
+  },
+  {
+    "id": "ad7a8023-cc1f-463d-b750-b523b09e531e",
+    "name": "Fatal",
+    "slug": "fatal",
+    "tier": 1,
+    "description": "Gain 5% extra Crit Chance and 5% extra Crit Damage",
+    "image": "/mlbb/talents/fatal.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/5/5e/Fatal.png",
+    "mpl_id": "1211"
+  },
+  {
+    "id": "7ff592c2-d748-49ce-b375-85c3ce9698c6",
+    "name": "Firmness",
+    "slug": "firmness",
+    "tier": 1,
+    "description": "Gain 8 extra Physical & Magic Defense",
+    "image": "/mlbb/talents/firmness.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/b/b9/Firmness.png",
+    "mpl_id": "711"
+  },
+  {
+    "id": "44463c09-e34e-45b0-b73a-9cbecf2f26f5",
+    "name": "Inspire",
+    "slug": "inspire",
+    "tier": 1,
+    "description": "Cooldown Reduction is increased by 5% and Mana Regen by 2",
+    "image": "/mlbb/talents/inspire.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/3/32/Inspire_%28Talent%29.png",
+    "mpl_id": "611"
+  },
+  {
+    "id": "8b232e89-893f-4398-8395-13815aa28886",
+    "name": "Rupture",
+    "slug": "rupture",
+    "tier": 1,
+    "description": "Gain 5 Adaptive Penetration. Gain Physical Penetration if extra Physical Attack is higher than extra Magic Power; otherwise, gain Magic Penetration.",
+    "image": "/mlbb/talents/rupture.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/3/38/Rupture.png",
+    "mpl_id": "511"
+  },
+  {
+    "id": "96e08972-7992-41d6-942d-39059f0e23c3",
+    "name": "Swift",
+    "slug": "swift",
+    "tier": 1,
+    "description": "Gain 10% extra Attack Speed",
+    "image": "/mlbb/talents/swift.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/0/00/Swift.png",
+    "mpl_id": "112"
+  },
+  {
+    "id": "1cce7851-f92e-4f6e-980d-b9941fbcf151",
+    "name": "Thrill",
+    "slug": "thrill",
+    "tier": 1,
+    "description": "Gain 16 Adaptive Attack",
+    "image": "/mlbb/talents/thrill.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/2/2e/Thrill.png",
+    "mpl_id": "111"
+  },
+  {
+    "id": "fbf4d20d-1eb4-4fb4-8d43-18e7952d88d1",
+    "name": "Vitality",
+    "slug": "vitality",
+    "tier": 1,
+    "description": "Gain 225 extra Max HP",
+    "image": "/mlbb/talents/vitality.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/b/be/Vitality.png",
+    "mpl_id": "311"
+  },
+  {
+    "id": "06b244be-f0c3-4cde-97b2-2e5a3b018661",
+    "name": "Bargain Hunter",
+    "slug": "bargain-hunter",
+    "tier": 2,
+    "description": "Equipment can be purchased at 95% of their base price.",
+    "image": "/mlbb/talents/bargain-hunter.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/6/69/Bargain_Hunter.png",
+    "mpl_id": "621"
+  },
+  {
+    "id": "45872951-faf4-4311-8557-7c1a534abbe4",
+    "name": "Festival of Blood",
+    "slug": "festival-of-blood",
+    "tier": 2,
+    "description": "Gain 6% Spell Vamp. Each hero kill or assist grants an additional 0.5% Spell Vamp, up to 12 stacks.",
+    "image": "/mlbb/talents/festival-of-blood.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/0/0c/Festival_of_Blood.png",
+    "mpl_id": "721"
+  },
+  {
+    "id": "a01d3b8b-f9a8-4260-b439-fd54b3eb2274",
+    "name": "Master Assassin",
+    "slug": "master-assassin",
+    "tier": 2,
+    "description": "If there is only one enemy hero nearby, damage dealt to them is increased by 7%.",
+    "image": "/mlbb/talents/master-assassin.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/8/85/Master_Assassin.png",
+    "mpl_id": "521"
+  },
+  {
+    "id": "3bec0101-a991-49f7-a84d-38331c257a3a",
+    "name": "Pull Yourself Together",
+    "slug": "pull-yourself-together",
+    "tier": 2,
+    "description": "Cooldowns of Battle Spells and equipment's active skills are reduced by 12% initially. Each hero kill or assist grants an additional 1% reduction, up to 8 stacks.",
+    "image": "/mlbb/talents/pull-yourself-together.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/6/69/Pull_Yourself_Together.png",
+    "mpl_id": "821"
+  },
+  {
+    "id": "f2650d70-e154-43c4-b257-c5e2edfbab0b",
+    "name": "Seasoned Hunter",
+    "slug": "seasoned-hunter",
+    "tier": 2,
+    "description": "Damage against Lord and Turtle is increased by 15%. This bonus is halved against regular Creeps and doesn't",
+    "image": "/mlbb/talents/seasoned-hunter.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/f/f9/Seasoned_Hunter.png",
+    "mpl_id": "122"
+  },
+  {
+    "id": "383a91d7-183e-435e-ae43-a97456261361",
+    "name": "Tenacity",
+    "slug": "tenacity",
+    "tier": 2,
+    "description": "When HP is below 50%, Damage Reduction is increased by 5%.",
+    "image": "/mlbb/talents/tenacity.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/9/99/Tenacity.png",
+    "mpl_id": "321"
+  },
+  {
+    "id": "6ef0f8d5-cc87-4926-99db-0a42394b0590",
+    "name": "Weapon Master",
+    "slug": "weapon-master",
+    "tier": 2,
+    "description": "Physical Attack and Magic Power gained from equipment, emblem, talents, and skills are increased by 8%.",
+    "image": "/mlbb/talents/weapon-master.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/3/33/Weapon_Master_%28Talent%29.png",
+    "mpl_id": "1221"
+  },
+  {
+    "id": "143ef1e0-f848-4b66-8759-6fdfc39d9405",
+    "name": "Wilderness Blessing",
+    "slug": "wilderness-blessing",
+    "tier": 2,
+    "description": "Movement Speed in the Jungle and River is increased by 10%. This bonus is halved when in combat with enemy heroes, Lord or Turtle.",
+    "image": "/mlbb/talents/wilderness-blessing.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/b/b2/Wilderness_Blessing.png",
+    "mpl_id": "121"
+  },
+  {
+    "id": "4b67327b-150f-42c3-a9b0-192a598168f5",
+    "name": "Brave Smite",
+    "slug": "brave-smite",
+    "tier": 3,
+    "description": "Brave Smite: Dealing skill damage to an enemy hero recovers 5% Max HP. CD: 6 seconds.",
+    "image": "/mlbb/talents/brave-smite.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/f/fd/Brave_Smite.png",
+    "mpl_id": "731"
+  },
+  {
+    "id": "707360b7-f674-48b4-9bbc-93b2876a5da3",
+    "name": "Concussive Blast",
+    "slug": "concussive-blast",
+    "tier": 3,
+    "description": "After the next Basic Attack, deal 100(+7% Total HP) Magic Damage to nearby enemies. Cooldown: 15s.",
+    "image": "/mlbb/talents/concussive-blast.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/7/74/Concussive_Blast.png",
+    "mpl_id": "331"
+  },
+  {
+    "id": "f710e5d1-0c78-418a-a47f-4b74e31e0235",
+    "name": "Focusing Mark",
+    "slug": "focusing-mark",
+    "tier": 3,
+    "description": "After damaging an enemy hero, allied heroes deal 6% more damage to them and gain 10% Movement Speed. Duration: 3 seconds. Cooldown: 4 seconds.",
+    "image": "/mlbb/talents/focusing-mark.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/3/3c/Focusing_Mark.png",
+    "mpl_id": "831"
+  },
+  {
+    "id": "30336e34-0929-47a6-b228-e99dbc7d9faf",
+    "name": "Impure Rage",
+    "slug": "impure-rage",
+    "tier": 3,
+    "description": "Dealing damage with skills deals 4% of target's Max HP extra Adaptive Damage and restores 2% Mana on hit. (If the hero does not use Mana, restores 1% HP instead. The extra Adaptive Damage dealt to non-hero units is up to 120. Cooldown: 5 seconds.",
+    "image": "/mlbb/talents/impure-rage.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/b/b5/Impure_Rage.png",
+    "mpl_id": "131"
+  },
+  {
+    "id": "0822539a-2b72-4a01-b05f-b1e5e9defc22",
+    "name": "Killing Spree",
+    "slug": "killing-spree",
+    "tier": 3,
+    "description": "When damaging heroes below 30% HP, instantly recover 15% of Lost HP and gains 20% Movement Speed. Additional Effect: Reset cooldown upon killing an enemy hero. Duration: 3 seconds. Cooldown: 30 seconds.",
+    "image": "/mlbb/talents/killing-spree.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/b/be/Killing_Spree.png",
+    "mpl_id": "531"
+  },
+  {
+    "id": "67eb88b1-6b74-47ec-9936-4797f84945dc",
+    "name": "Lethal Ignition",
+    "slug": "lethal-ignition",
+    "tier": 3,
+    "description": "Dealing damage greater than 7% of an enemy hero's Max HP 3 times within 5s will scorch the target for an additional 162-750 Adaptive Damage (scales with level). Cooldown 15 seconds.",
+    "image": "/mlbb/talents/lethal-ignition.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/c/ce/Lethal_Ignition.png",
+    "mpl_id": "631"
+  },
+  {
+    "id": "f1b022f6-aac4-4b0b-b573-ab99c4cc2f65",
+    "name": "Quantum Charge",
+    "slug": "quantum-charge",
+    "tier": 3,
+    "description": "Dealing damage with Basic Attacks increases Movement Speed by 30% for 1.5s and restores 75-180 HP (scales with level). Cooldown: 10 seconds.",
+    "image": "/mlbb/talents/quantum-charge.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/9/9b/Quantum_Charge.png",
+    "mpl_id": "132"
+  },
+  {
+    "id": "dbd4d98a-7e58-4571-9cc6-98abbb230732",
+    "name": "Temporal Reign",
+    "slug": "temporal-reign",
+    "tier": 3,
+    "description": "The next Ultimate cast decreases other active skills' remaining cooldowns by 1.5 times within 4 seconds. This effect is extended by 2 seconds after getting hero kills or assists. (This only applies to the hero themselves. Cooldown: 20 seconds.)",
+    "image": "/mlbb/talents/temporal-reign.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/2/21/Temporal_Reign.png",
+    "mpl_id": "134"
+  },
+  {
+    "id": "e4277478-d370-4c49-96d5-d4b92e7dc5e0",
+    "name": "War Cry",
+    "slug": "war-cry",
+    "tier": 3,
+    "description": "After every 3 separate Basic Attacks or skills hit an enemy hero, all damage dealt increases by 8% for 6 seconds. (A single Basic Attack or skill that deals damage multiple times only counts as 1. Cooldown: 6 seconds.)",
+    "image": "/mlbb/talents/war-cry.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/a/a9/War_Cry.png",
+    "mpl_id": "133"
+  },
+  {
+    "id": "1222f5a6-2d4e-4cdc-a222-d2dd6d3a3895",
+    "name": "Weaknes Finder",
+    "slug": "weaknes-finder",
+    "tier": 3,
+    "description": "Basic Attacks slow enemies by 50% and reduce their Attack Speed by 30%. Duration: 1 second. Cooldown: 10 seconds (each Basic Attack reduces it bv 1 seconds, down to 3 seconds).",
+    "image": "/mlbb/talents/weaknes-finder.png",
+    "image_remote": "https://static.wikia.nocookie.net/mobile-legends/images/2/28/Weakness_Finder.png",
+    "mpl_id": "1231"
+  }
+]

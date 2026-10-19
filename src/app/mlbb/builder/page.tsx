@@ -10,10 +10,12 @@ import {
   items as allItems,
   battleSpells as allSpells,
   emblems as allEmblems,
+  emblemTalents as allTalents,
   type MLBBHero,
   type MLBBItem,
   type MLBBBattleSpell,
   type MLBBEmblem,
+  type MLBBEmblemTalent,
 } from '@/data/mlbb';
 
 export default function BuildWorkshopPage() {
@@ -45,6 +47,31 @@ export default function BuildWorkshopPage() {
     return allEmblems.find(e => e.id === selectedEmblemId) || allEmblems[0];
   }, [selectedEmblemId]);
 
+  // 3-Tier Talents
+  const defaultT1 = useMemo(() => allTalents.find(t => t.tier === 1 && t.name === 'Thrill') || allTalents.filter(t => t.tier === 1)[0], []);
+  const defaultT2 = useMemo(() => allTalents.find(t => t.tier === 2 && t.name === 'Weapon Master') || allTalents.filter(t => t.tier === 2)[0], []);
+  const defaultT3 = useMemo(() => allTalents.find(t => t.tier === 3 && t.name === 'War Cry') || allTalents.filter(t => t.tier === 3)[0], []);
+
+  const [selectedTalent1Id, setSelectedTalent1Id] = useState<string>('');
+  const [selectedTalent2Id, setSelectedTalent2Id] = useState<string>('');
+  const [selectedTalent3Id, setSelectedTalent3Id] = useState<string>('');
+
+  const talent1 = useMemo(() => {
+    return (selectedTalent1Id ? allTalents.find(t => t.id === selectedTalent1Id) : null) || defaultT1;
+  }, [selectedTalent1Id, defaultT1]);
+
+  const talent2 = useMemo(() => {
+    return (selectedTalent2Id ? allTalents.find(t => t.id === selectedTalent2Id) : null) || defaultT2;
+  }, [selectedTalent2Id, defaultT2]);
+
+  const talent3 = useMemo(() => {
+    return (selectedTalent3Id ? allTalents.find(t => t.id === selectedTalent3Id) : null) || defaultT3;
+  }, [selectedTalent3Id, defaultT3]);
+
+  // Talent Picker Modal
+  const [isTalentModalOpen, setIsTalentModalOpen] = useState(false);
+  const [activeTalentTier, setActiveTalentTier] = useState<1 | 2 | 3 | null>(null);
+
   // Simulation Level (1-15)
   const [level, setLevel] = useState<number>(15);
   const [buildTitle, setBuildTitle] = useState<string>('Tournament High-Impact Build');
@@ -75,6 +102,9 @@ export default function BuildWorkshopPage() {
     itemSlugs: string[];
     spellId: string;
     emblemId: string;
+    talent1Id?: string;
+    talent2Id?: string;
+    talent3Id?: string;
     savedAt: string;
   }>>([]);
 
@@ -96,6 +126,9 @@ export default function BuildWorkshopPage() {
       const spellParam = params.get('spell');
       const emblemParam = params.get('emblem');
       const titleParam = params.get('title');
+      const t1Param = params.get('t1');
+      const t2Param = params.get('t2');
+      const t3Param = params.get('t3');
 
       if (heroParam) {
         const foundHero = allHeroes.find(h => h.slug === heroParam.toLowerCase() || h.name.toLowerCase() === heroParam.toLowerCase());
@@ -110,6 +143,18 @@ export default function BuildWorkshopPage() {
         const foundEmblem = allEmblems.find(e => e.id === emblemParam || e.slug === emblemParam);
         if (foundEmblem) setSelectedEmblemId(foundEmblem.id);
       }
+      if (t1Param) {
+        const foundT1 = allTalents.find(t => t.id === t1Param || t.slug === t1Param);
+        if (foundT1) setSelectedTalent1Id(foundT1.id);
+      }
+      if (t2Param) {
+        const foundT2 = allTalents.find(t => t.id === t2Param || t.slug === t2Param);
+        if (foundT2) setSelectedTalent2Id(foundT2.id);
+      }
+      if (t3Param) {
+        const foundT3 = allTalents.find(t => t.id === t3Param || t.slug === t3Param);
+        if (foundT3) setSelectedTalent3Id(foundT3.id);
+      }
       if (itemsParam) {
         const slugs = itemsParam.split(',');
         const hydrated = slugs.slice(0, 6).map(slug => allItems.find(i => i.slug === slug.trim() || i.id === slug.trim()) || null);
@@ -117,7 +162,7 @@ export default function BuildWorkshopPage() {
         setEquippedItems(hydrated);
       }
     }
-  }, []);
+  }, [defaultT1, defaultT2, defaultT3]);
 
   const saveCurrentBuild = () => {
     const newEntry = {
@@ -127,6 +172,9 @@ export default function BuildWorkshopPage() {
       itemSlugs: equippedItems.map(i => i?.slug || ''),
       spellId: spell?.id || '',
       emblemId: emblem?.id || '',
+      talent1Id: talent1?.id || '',
+      talent2Id: talent2?.id || '',
+      talent3Id: talent3?.id || '',
       savedAt: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }),
     };
 
@@ -144,6 +192,9 @@ export default function BuildWorkshopPage() {
     setBuildTitle(b.title);
     setSelectedSpellId(b.spellId);
     setSelectedEmblemId(b.emblemId);
+    if (b.talent1Id) setSelectedTalent1Id(b.talent1Id);
+    if (b.talent2Id) setSelectedTalent2Id(b.talent2Id);
+    if (b.talent3Id) setSelectedTalent3Id(b.talent3Id);
 
     const itemsFromSlugs = b.itemSlugs.map(slug => allItems.find(i => i.slug === slug) || null);
     setEquippedItems(itemsFromSlugs);
@@ -255,6 +306,26 @@ export default function BuildWorkshopPage() {
       if (emblem.attributes.adaptive_penetration) itemPenetration += Number(emblem.attributes.adaptive_penetration) || 0;
     }
 
+    // Talent 1 Attribute Bonuses
+    if (talent1?.name === 'Thrill') {
+      itemPhyAtk += 16;
+    } else if (talent1?.name === 'Swift') {
+      itemAtkSpeedBonus += 0.10;
+    } else if (talent1?.name === 'Vitality') {
+      itemHp += 225;
+    } else if (talent1?.name === 'Firmness') {
+      itemPhyDef += 6;
+      itemMagDef += 6;
+    } else if (talent1?.name === 'Rupture') {
+      itemPenetration += 5;
+    } else if (talent1?.name === 'Inspire') {
+      itemCdr += 5;
+    } else if (talent1?.name === 'Agility') {
+      itemMovement += 10;
+    } else if (talent1?.name === 'Fatal') {
+      itemCrit += 5;
+    }
+
     const cappedCdr = Math.min(itemCdr, 40); // MLBB cap is 40% CDR
 
     return {
@@ -271,7 +342,7 @@ export default function BuildWorkshopPage() {
       finalMovement: 240 + itemMovement,
       finalPenetration: itemPenetration,
     };
-  }, [hero, level, equippedItems, emblem]);
+  }, [hero, level, equippedItems, emblem, talent1]);
 
   // Aggregate Passives & check duplicate passives
   const uniquePassives = useMemo(() => {
@@ -281,12 +352,19 @@ export default function BuildWorkshopPage() {
         list.push({ itemName: item.name, passive: item.passive_description });
       }
     });
+    if (talent2) {
+      list.push({ itemName: `Talent Tier 2: ${talent2.name}`, passive: talent2.description });
+    }
+    if (talent3) {
+      list.push({ itemName: `Core Talent (Tier 3): ${talent3.name}`, passive: talent3.description });
+    }
     return list;
-  }, [equippedItems]);
+  }, [equippedItems, talent2, talent3]);
 
   const copyBuildSummary = () => {
     const itemList = equippedItems.filter(Boolean).map(i => i!.name).join(', ');
-    const text = `🎮 KLASIM MLBB PRO BUILD\nHero: ${hero.name}\nBuild: ${buildTitle}\nItems: ${itemList}\nSpell: ${spell.name}\nEmblem: ${emblem.name}\nTotal Cost: ${calculatedStats.totalCost.toLocaleString()} Gold\nCombat Stats (Lv.${level}): HP ${calculatedStats.finalHp.toLocaleString()} | ATK ${calculatedStats.finalPhyAtk} | DEF ${calculatedStats.finalPhyDef}/${calculatedStats.finalMagDef} | CDR ${calculatedStats.finalCdr}%\nRacik di Klasim: https://klasim.com/mlbb/builder`;
+    const talentSummary = `${talent1?.name || '-'} / ${talent2?.name || '-'} / ${talent3?.name || '-'}`;
+    const text = `🎮 KLASIM MLBB PRO BUILD\nHero: ${hero.name}\nBuild: ${buildTitle}\nItems: ${itemList}\nSpell: ${spell.name}\nEmblem: ${emblem.name} (Talents: ${talentSummary})\nTotal Cost: ${calculatedStats.totalCost.toLocaleString()} Gold\nCombat Stats (Lv.${level}): HP ${calculatedStats.finalHp.toLocaleString()} | ATK ${calculatedStats.finalPhyAtk} | DEF ${calculatedStats.finalPhyDef}/${calculatedStats.finalMagDef} | CDR ${calculatedStats.finalCdr}%\nRacik di Klasim: https://klasim.com/mlbb/builder`;
     navigator.clipboard.writeText(text);
     setCopiedSuccess(true);
     setTimeout(() => setCopiedSuccess(false), 2500);
@@ -320,7 +398,7 @@ export default function BuildWorkshopPage() {
   const handleCopyShareUrl = () => {
     if (typeof window === 'undefined') return;
     const itemSlugs = equippedItems.map(i => i?.slug || '').filter(Boolean).join(',');
-    const url = `${window.location.origin}/mlbb/builder?hero=${encodeURIComponent(hero.slug)}&items=${encodeURIComponent(itemSlugs)}&spell=${encodeURIComponent(spell?.id || '')}&emblem=${encodeURIComponent(emblem?.id || '')}&title=${encodeURIComponent(buildTitle)}`;
+    const url = `${window.location.origin}/mlbb/builder?hero=${encodeURIComponent(hero.slug)}&items=${encodeURIComponent(itemSlugs)}&spell=${encodeURIComponent(spell?.id || '')}&emblem=${encodeURIComponent(emblem?.id || '')}&t1=${encodeURIComponent(talent1?.id || '')}&t2=${encodeURIComponent(talent2?.id || '')}&t3=${encodeURIComponent(talent3?.id || '')}&title=${encodeURIComponent(buildTitle)}`;
     navigator.clipboard.writeText(url);
     setShareUrlCopied(true);
     setTimeout(() => setShareUrlCopied(false), 2500);
@@ -563,6 +641,94 @@ export default function BuildWorkshopPage() {
                   >
                     Ganti Emblem ↗
                   </button>
+                </div>
+              </div>
+
+              {/* 3-Tier Emblem Talent Configuration */}
+              <div className="rounded-3xl border border-white/10 bg-[#080d16] p-5 sm:p-6 shadow-2xl space-y-4">
+                <div className="flex items-center justify-between border-b border-white/10 pb-3">
+                  <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase text-amber-400">
+                    <span>✨</span>
+                    <span>EMBLEM TALENT SETUP (3-TIER)</span>
+                  </div>
+                  <span className="text-[10px] font-mono text-slate-500">MoleBuild Official Talent Matrix</span>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  {/* Tier 1 */}
+                  <div className="rounded-2xl border border-white/10 bg-black/40 p-4 flex flex-col justify-between gap-3 hover:border-amber-400/50 transition-all">
+                    <div className="flex items-start gap-3">
+                      <div className="relative h-12 w-12 shrink-0 rounded-xl overflow-hidden border border-amber-400/40 bg-slate-900 p-1">
+                        {talent1 && <img src={talent1.image} alt={talent1.name} className="h-full w-full object-contain" />}
+                      </div>
+                      <div className="min-w-0">
+                        <span className="rounded bg-amber-400/10 text-amber-300 border border-amber-400/20 text-[9px] font-mono font-bold px-1.5 py-0.5 uppercase block w-fit">
+                          TIER 1 • STAT ATTR
+                        </span>
+                        <h5 className="text-sm font-bold text-white font-sans mt-1 truncate">{talent1?.name}</h5>
+                        <p className="text-[11px] text-slate-400 font-sans line-clamp-2 mt-0.5 leading-snug">{talent1?.description}</p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => {
+                        setActiveTalentTier(1);
+                        setIsTalentModalOpen(true);
+                      }}
+                      className="w-full rounded-xl border border-white/10 bg-white/5 py-1.5 text-xs font-mono text-slate-300 hover:border-amber-400 hover:text-amber-400 transition-all cursor-pointer font-bold"
+                    >
+                      Ganti Talent T1 ↗
+                    </button>
+                  </div>
+
+                  {/* Tier 2 */}
+                  <div className="rounded-2xl border border-white/10 bg-black/40 p-4 flex flex-col justify-between gap-3 hover:border-cyan-400/50 transition-all">
+                    <div className="flex items-start gap-3">
+                      <div className="relative h-12 w-12 shrink-0 rounded-xl overflow-hidden border border-cyan-400/40 bg-slate-900 p-1">
+                        {talent2 && <img src={talent2.image} alt={talent2.name} className="h-full w-full object-contain" />}
+                      </div>
+                      <div className="min-w-0">
+                        <span className="rounded bg-cyan-400/10 text-cyan-300 border border-cyan-400/20 text-[9px] font-mono font-bold px-1.5 py-0.5 uppercase block w-fit">
+                          TIER 2 • UTILITY
+                        </span>
+                        <h5 className="text-sm font-bold text-white font-sans mt-1 truncate">{talent2?.name}</h5>
+                        <p className="text-[11px] text-slate-400 font-sans line-clamp-2 mt-0.5 leading-snug">{talent2?.description}</p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => {
+                        setActiveTalentTier(2);
+                        setIsTalentModalOpen(true);
+                      }}
+                      className="w-full rounded-xl border border-white/10 bg-white/5 py-1.5 text-xs font-mono text-slate-300 hover:border-amber-400 hover:text-amber-400 transition-all cursor-pointer font-bold"
+                    >
+                      Ganti Talent T2 ↗
+                    </button>
+                  </div>
+
+                  {/* Tier 3 */}
+                  <div className="rounded-2xl border border-white/10 bg-black/40 p-4 flex flex-col justify-between gap-3 hover:border-purple-400/50 transition-all">
+                    <div className="flex items-start gap-3">
+                      <div className="relative h-12 w-12 shrink-0 rounded-xl overflow-hidden border border-purple-400/40 bg-slate-900 p-1">
+                        {talent3 && <img src={talent3.image} alt={talent3.name} className="h-full w-full object-contain" />}
+                      </div>
+                      <div className="min-w-0">
+                        <span className="rounded bg-purple-400/10 text-purple-300 border border-purple-400/20 text-[9px] font-mono font-bold px-1.5 py-0.5 uppercase block w-fit">
+                          TIER 3 • KEYSTONE
+                        </span>
+                        <h5 className="text-sm font-bold text-white font-sans mt-1 truncate">{talent3?.name}</h5>
+                        <p className="text-[11px] text-slate-400 font-sans line-clamp-2 mt-0.5 leading-snug">{talent3?.description}</p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => {
+                        setActiveTalentTier(3);
+                        setIsTalentModalOpen(true);
+                      }}
+                      className="w-full rounded-xl border border-white/10 bg-white/5 py-1.5 text-xs font-mono text-slate-300 hover:border-amber-400 hover:text-amber-400 transition-all cursor-pointer font-bold"
+                    >
+                      Ganti Talent T3 ↗
+                    </button>
+                  </div>
                 </div>
               </div>
 
@@ -894,6 +1060,37 @@ export default function BuildWorkshopPage() {
                     </div>
                   </div>
 
+                  {/* 3-Tier Talents Bar in Export Card */}
+                  <div className="rounded-xl border border-white/10 bg-black/60 p-2.5">
+                    <div className="flex items-center justify-between text-[8px] font-mono font-bold text-slate-400 mb-1.5">
+                      <span className="uppercase tracking-wider">EMBLEM TALENT SET:</span>
+                      <span className="text-amber-400">TIER 1 / TIER 2 / TIER 3</span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-2">
+                      <div className="flex items-center gap-1.5 rounded-lg border border-amber-400/20 bg-white/[0.02] p-1.5">
+                        <img src={talent1?.image} alt={talent1?.name} className="h-6 w-6 rounded object-contain shrink-0" />
+                        <div className="min-w-0">
+                          <span className="text-[7px] text-amber-400 font-bold block uppercase leading-none">T1 STAT</span>
+                          <span className="text-[10px] font-bold text-white truncate block mt-0.5">{talent1?.name}</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-1.5 rounded-lg border border-cyan-400/20 bg-white/[0.02] p-1.5">
+                        <img src={talent2?.image} alt={talent2?.name} className="h-6 w-6 rounded object-contain shrink-0" />
+                        <div className="min-w-0">
+                          <span className="text-[7px] text-cyan-400 font-bold block uppercase leading-none">T2 UTILITY</span>
+                          <span className="text-[10px] font-bold text-white truncate block mt-0.5">{talent2?.name}</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-1.5 rounded-lg border border-purple-400/20 bg-white/[0.02] p-1.5">
+                        <img src={talent3?.image} alt={talent3?.name} className="h-6 w-6 rounded object-contain shrink-0" />
+                        <div className="min-w-0">
+                          <span className="text-[7px] text-purple-400 font-bold block uppercase leading-none">T3 CORE</span>
+                          <span className="text-[10px] font-bold text-white truncate block mt-0.5">{talent3?.name}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                   {/* Calculated Stats Matrix Bar */}
                   <div className="grid grid-cols-4 gap-2 text-center text-[10px]">
                     <div className="rounded-xl border border-white/5 bg-white/[0.02] p-2">
@@ -1171,6 +1368,85 @@ export default function BuildWorkshopPage() {
                   </div>
                 </button>
               ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 3-Tier Talent Modal */}
+      {isTalentModalOpen && activeTalentTier !== null && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-4 backdrop-blur-md animate-in fade-in duration-150"
+        >
+          <div className="relative w-full max-w-2xl max-h-[85vh] overflow-hidden flex flex-col rounded-3xl border border-white/15 bg-[#080d16] p-6 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-white/10">
+              <div>
+                <span className="text-[10px] font-mono font-bold uppercase text-amber-400 block">
+                  PILIH TALENT EMBLEM
+                </span>
+                <h3 className="text-lg font-black text-white font-sans">
+                  {activeTalentTier === 1 && 'Tier 1 — Atribut Stat Dasar'}
+                  {activeTalentTier === 2 && 'Tier 2 — Utilitas & Diskon Gold'}
+                  {activeTalentTier === 3 && 'Tier 3 — Core Keystone Talent'}
+                </h3>
+              </div>
+              <button
+                onClick={() => {
+                  setIsTalentModalOpen(false);
+                  setActiveTalentTier(null);
+                }}
+                className="h-8 w-8 rounded-full border border-white/10 bg-white/5 text-slate-400 hover:text-white flex items-center justify-center font-mono cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto py-2 space-y-2.5 pr-1">
+              {allTalents
+                .filter(t => t.tier === activeTalentTier)
+                .map(t => {
+                  const isSelected =
+                    (activeTalentTier === 1 && talent1?.id === t.id) ||
+                    (activeTalentTier === 2 && talent2?.id === t.id) ||
+                    (activeTalentTier === 3 && talent3?.id === t.id);
+
+                  return (
+                    <button
+                      key={t.id}
+                      onClick={() => {
+                        if (activeTalentTier === 1) setSelectedTalent1Id(t.id);
+                        if (activeTalentTier === 2) setSelectedTalent2Id(t.id);
+                        if (activeTalentTier === 3) setSelectedTalent3Id(t.id);
+                        setIsTalentModalOpen(false);
+                        setActiveTalentTier(null);
+                      }}
+                      className={`w-full text-left rounded-2xl border p-3.5 transition-all flex items-start gap-3.5 cursor-pointer ${
+                        isSelected
+                          ? 'border-amber-400 bg-amber-400/10 shadow-lg shadow-amber-400/10'
+                          : 'border-white/10 bg-black/40 hover:border-amber-400/50 hover:bg-white/[0.02]'
+                      }`}
+                    >
+                      <div className="relative h-12 w-12 shrink-0 rounded-xl overflow-hidden border border-white/15 bg-slate-900 p-1">
+                        <img src={t.image} alt={t.name} className="h-full w-full object-contain" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center justify-between">
+                          <h4 className="text-sm font-bold text-white font-sans">{t.name}</h4>
+                          {isSelected && (
+                            <span className="rounded bg-amber-400 text-black text-[10px] font-mono font-bold px-2 py-0.5">
+                              DIPILIH
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-xs text-slate-300 font-sans mt-1 leading-relaxed">
+                          {t.description}
+                        </p>
+                      </div>
+                    </button>
+                  );
+                })}
             </div>
           </div>
         </div>

@@ -17,15 +17,37 @@ async function main() {
   const items = JSON.parse(fs.readFileSync(path.join(dataDir, 'items.json')));
   const spells = JSON.parse(fs.readFileSync(path.join(dataDir, 'battle_spells.json')));
   const emblems = JSON.parse(fs.readFileSync(path.join(dataDir, 'emblems.json')));
+  const talents = JSON.parse(fs.readFileSync(path.join(dataDir, 'emblem_talents.json')));
 
   const itemsById = new Map(items.map(i => [i.id, i]));
   const spellsById = new Map(spells.map(s => [s.id, s]));
   const emblemsById = new Map(emblems.map(e => [e.id, e]));
+  const talentsById = new Map(talents.map(t => [t.id, t]));
 
-  console.log('[BUILDS] Fetching top community & pro builds from MoleBuild API...');
+  // Default talent fallbacks by role
+  const talentsByTier = {
+    1: talents.filter(t => t.tier === 1),
+    2: talents.filter(t => t.tier === 2),
+    3: talents.filter(t => t.tier === 3)
+  };
+
+  function getDefaultTalents(hero) {
+    const isMage = hero.roles.includes('Mage');
+    const isAssassin = hero.roles.includes('Assassin');
+    const isTank = hero.roles.includes('Tank');
+    const isMarksman = hero.roles.includes('Marksman');
+
+    let t1 = talents.find(t => isMage ? t.name === 'Thrill' : isTank ? t.name === 'Firmness' : isAssassin ? t.name === 'Rupture' : isMarksman ? t.name === 'Swift' : t.name === 'Firmness') || talentsByTier[1][0];
+    let t2 = talents.find(t => isMage ? t.name === 'Bargain Hunter' : isTank ? t.name === 'Tenacity' : isAssassin ? t.name === 'Master Assassin' : isMarksman ? t.name === 'Weapon Master' : t.name === 'Festival of Blood') || talentsByTier[2][0];
+    let t3 = talents.find(t => isMage ? t.name === 'Lethal Ignition' : isTank ? t.name === 'Brave Smite' : isAssassin ? t.name === 'Killing Spree' : isMarksman ? t.name === 'Quantum Charge' : t.name === 'War Cry') || talentsByTier[3][0];
+
+    return { tier1: t1, tier2: t2, tier3: t3 };
+  }
+
+  console.log('[BUILDS] Fetching top community & pro builds from MoleBuild API with talents...');
   
   // 1. Fetch top 1500 builds ordered by likes
-  const res = await fetch(`${API_BASE}/builds?select=id,hero_id,title,description,items,conditional_items,emblem_id,battle_spell_id,likes_count,is_verified&order=likes_count.desc&limit=1500`, {
+  const res = await fetch(`${API_BASE}/builds?select=id,hero_id,title,description,items,conditional_items,emblem_id,battle_spell_id,selected_emblem_attributes,likes_count,is_verified&order=likes_count.desc&limit=1500`, {
     headers: HEADERS
   });
   const allBuilds = await res.json();
@@ -49,7 +71,7 @@ async function main() {
 
   for (const h of missingHeroes) {
     try {
-      const hRes = await fetch(`${API_BASE}/builds?hero_id=eq.${h.id}&select=id,hero_id,title,description,items,conditional_items,emblem_id,battle_spell_id,likes_count,is_verified&order=created_at.desc&limit=2`, {
+      const hRes = await fetch(`${API_BASE}/builds?hero_id=eq.${h.id}&select=id,hero_id,title,description,items,conditional_items,emblem_id,battle_spell_id,selected_emblem_attributes,likes_count,is_verified&order=created_at.desc&limit=2`, {
         headers: HEADERS
       });
       if (hRes.ok) {
@@ -63,15 +85,15 @@ async function main() {
     }
   }
 
-  // Format and enrich builds with resolved items, spells, emblems
+  // Format and enrich builds with resolved items, spells, emblems, and 3-tier talents
   const enrichedBuilds = {};
 
   heroes.forEach(h => {
     const rawList = buildsByHeroId.get(h.id) || [];
+    const defaults = getDefaultTalents(h);
     
     // If hero still has no build, create a sensible default template
     if (rawList.length === 0) {
-      // Find default spell & emblem based on role
       const isMage = h.roles.includes('Mage');
       const isAssassin = h.roles.includes('Assassin');
       const isTank = h.roles.includes('Tank');
@@ -80,7 +102,6 @@ async function main() {
       let defaultEmblem = emblems.find(e => isMage ? e.name === 'Mage' : isTank ? e.name === 'Tank' : isAssassin ? e.name === 'Assassin' : isMarksman ? e.name === 'Marksman' : e.name === 'Fighter') || emblems[0];
       let defaultSpell = spells.find(s => isAssassin ? s.name.includes('Retribution') : isTank ? s.name === 'Vengeance' : s.name === 'Flicker') || spells[0];
       
-      // Filter 6 suitable items
       const sampleItems = items.filter(i => isMage ? i.type === 'Magic' || i.type === 'Movement' : isTank ? i.type === 'Defense' || i.type === 'Movement' : i.type === 'Physical' || i.type === 'Attack' || i.type === 'Movement').slice(0, 6);
 
       rawList.push({
@@ -92,6 +113,11 @@ async function main() {
         conditional_items: [],
         emblem_id: defaultEmblem?.id || null,
         battle_spell_id: defaultSpell?.id || null,
+        selected_emblem_attributes: {
+          tier1: defaults.tier1.id,
+          tier2: defaults.tier2.id,
+          tier3: defaults.tier3.id
+        },
         likes_count: 10,
         is_verified: true
       });
@@ -102,6 +128,12 @@ async function main() {
       const resolvedConditionals = (b.conditional_items || []).map(id => itemsById.get(id)).filter(Boolean);
       const resolvedSpell = spellsById.get(b.battle_spell_id) || null;
       const resolvedEmblem = emblemsById.get(b.emblem_id) || null;
+
+      // Resolve 3-tier talents
+      const selAttrs = b.selected_emblem_attributes || {};
+      const resolvedTier1 = talentsById.get(selAttrs.tier1) || defaults.tier1;
+      const resolvedTier2 = talentsById.get(selAttrs.tier2) || defaults.tier2;
+      const resolvedTier3 = talentsById.get(selAttrs.tier3) || defaults.tier3;
 
       // Accumulate item stats
       const totalStats = {};
@@ -126,6 +158,11 @@ async function main() {
         conditional_items: resolvedConditionals,
         spell: resolvedSpell,
         emblem: resolvedEmblem,
+        talents: {
+          tier1: resolvedTier1,
+          tier2: resolvedTier2,
+          tier3: resolvedTier3
+        },
         totalStats
       };
     });
@@ -133,7 +170,7 @@ async function main() {
 
   const outputPath = path.join(dataDir, 'builds.json');
   fs.writeFileSync(outputPath, JSON.stringify(enrichedBuilds, null, 2));
-  console.log(`[SUCCESS] Saved enriched builds for all ${heroes.length} heroes to ${outputPath}!`);
+  console.log(`[SUCCESS] Saved enriched builds with 3-tier talents for all ${heroes.length} heroes to ${outputPath}!`);
 }
 
 main().catch(console.error);
