@@ -85,9 +85,20 @@ export default function MatchSimulator({ matches, onScoreChange }: MatchSimulato
                     </span>
                   </div>
 
-                  <span className="rounded bg-white/10 px-1.5 py-0.5 text-[9px] text-slate-400 shrink-0">
-                    BO3
-                  </span>
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <span className="rounded bg-white/10 px-1.5 py-0.5 text-[9px] text-slate-400">
+                      BO3
+                    </span>
+                    <a
+                      href={`/mlbb/draft?blueName=${encodeURIComponent(homeName)}&redName=${encodeURIComponent(awayName)}&title=${encodeURIComponent(`Week ${match.week} • ${homeCode} vs ${awayCode}`)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title="Simulasi 5v5 Draft Pick untuk Match ini"
+                      className="rounded bg-amber-400/10 border border-amber-400/30 px-1.5 py-0.5 text-[9px] font-bold text-amber-400 hover:bg-amber-400 hover:text-black transition-all flex items-center gap-0.5"
+                    >
+                      <span>🎮 Draft</span>
+                    </a>
+                  </div>
 
                   <div className="flex items-center gap-1.5 truncate max-w-[42%] justify-end text-right">
                     <span className="text-white uppercase truncate text-[11px]" title={awayName}>

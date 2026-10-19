@@ -1,10 +1,8 @@
-// src/app/mlbb/draft/page.tsx
-'use client';
-
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Navbar from '@/components/ui/Navbar';
 import Footer from '@/components/ui/Footer';
+import { toPng } from 'html-to-image';
 import {
   heroes as allHeroes,
   heroTierStats,
@@ -28,11 +26,155 @@ export default function DraftSimulatorPage() {
   const [draftMode, setDraftMode] = useState<'tournament' | 'free'>('tournament');
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
 
+  // Team Customization & Export Card
+  const [blueTeamName, setBlueTeamName] = useState('BLUE TEAM');
+  const [redTeamName, setRedTeamName] = useState('RED TEAM');
+  const [matchTitle, setMatchTitle] = useState('MPL 5V5 TOURNAMENT DRAFT');
+  const [isEditingTeams, setIsEditingTeams] = useState(false);
+  const [tempBlueName, setTempBlueName] = useState('');
+  const [tempRedName, setTempRedName] = useState('');
+  const [tempMatchTitle, setTempMatchTitle] = useState('');
+  const [isPresetModalOpen, setIsPresetModalOpen] = useState(false);
+  const [isExportingCard, setIsExportingCard] = useState(false);
+  const [downloadSuccess, setDownloadSuccess] = useState(false);
+  const [shareUrlCopied, setShareUrlCopied] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+
   // 5 Bans & 5 Picks per team (Official Tournament Format)
   const [blueBans, setBlueBans] = useState<(MLBBHero | null)[]>([null, null, null, null, null]);
   const [redBans, setRedBans] = useState<(MLBBHero | null)[]>([null, null, null, null, null]);
   const [bluePicks, setBluePicks] = useState<(MLBBHero | null)[]>([null, null, null, null, null]);
   const [redPicks, setRedPicks] = useState<(MLBBHero | null)[]>([null, null, null, null, null]);
+
+  const PRO_PRESETS = [
+    {
+      title: 'MPL ID S14 Grand Finals',
+      blueName: 'TEAM LIQUID ID',
+      redName: 'RRQ HOSHI',
+      bluePicks: ['fanny', 'phoveus', 'zhask', 'roger', 'tigreal'],
+      redPicks: ['ling', 'cici', 'vexana', 'moskov', 'minotaur'],
+      blueBans: ['harith', 'nolan', 'luo-yi', 'mathilda', 'edith'],
+      redBans: ['hayabusa', 'suyou', 'valentina', 'gatotkaca', 'hylos'],
+      description: 'Pertarungan drafting legendaris tempo tinggi antara Fanny Jungle vs Ling Jungle.',
+    },
+    {
+      title: 'M5 World Championship Showdown',
+      blueName: 'ONIC ESPORTS',
+      redName: 'AP.BREN',
+      bluePicks: ['nolan', 'terizla', 'faramis', 'bruno', 'mathilda'],
+      redPicks: ['joy', 'arlott', 'novaria', 'claude', 'grock'],
+      blueBans: ['guinevere', 'wanwan', 'valentina', 'fredrinn', 'baxia'],
+      redBans: ['fanny', 'angela', 'kadita', 'ruby', 'khufra'],
+      description: 'Duel meta global M5 dengan setup sustain front-to-back dan dive counterpick.',
+    },
+    {
+      title: 'Classic Burst Assassin vs Tank Jungle',
+      blueName: 'EVOS GLORY',
+      redName: 'BIGETRON ALPHA',
+      bluePicks: ['hayabusa', 'chou', 'valentina', 'harith', 'khufra'],
+      redPicks: ['baxia', 'yu-zhong', 'yve', 'karrie', 'hylos'],
+      blueBans: ['ling', 'fanny', 'floryn', 'diggie', 'claude'],
+      redBans: ['lancelot', 'mathilda', 'luo-yi', 'ruby', 'akai'],
+      description: 'Komposisi klasik burst pickoff melawan wall tanky frontline anti-burst.',
+    },
+  ];
+
+  // Hydrate from URL query parameters if present
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    const titleParam = params.get('title');
+    const blueNameParam = params.get('blueName');
+    const redNameParam = params.get('redName');
+    const bluePicksParam = params.get('bluePicks');
+    const redPicksParam = params.get('redPicks');
+    const blueBansParam = params.get('blueBans');
+    const redBansParam = params.get('redBans');
+
+    if (titleParam) setMatchTitle(titleParam);
+    if (blueNameParam) setBlueTeamName(blueNameParam);
+    if (redNameParam) setRedTeamName(redNameParam);
+
+    if (bluePicksParam) {
+      const slugs = bluePicksParam.split(',');
+      const loaded = slugs.map(s => allHeroes.find(h => h.slug === s.trim() || h.id === s.trim()) || null);
+      while (loaded.length < 5) loaded.push(null);
+      setBluePicks(loaded.slice(0, 5));
+    }
+    if (redPicksParam) {
+      const slugs = redPicksParam.split(',');
+      const loaded = slugs.map(s => allHeroes.find(h => h.slug === s.trim() || h.id === s.trim()) || null);
+      while (loaded.length < 5) loaded.push(null);
+      setRedPicks(loaded.slice(0, 5));
+    }
+    if (blueBansParam) {
+      const slugs = blueBansParam.split(',');
+      const loaded = slugs.map(s => allHeroes.find(h => h.slug === s.trim() || h.id === s.trim()) || null);
+      while (loaded.length < 5) loaded.push(null);
+      setBlueBans(loaded.slice(0, 5));
+    }
+    if (redBansParam) {
+      const slugs = redBansParam.split(',');
+      const loaded = slugs.map(s => allHeroes.find(h => h.slug === s.trim() || h.id === s.trim()) || null);
+      while (loaded.length < 5) loaded.push(null);
+      setRedBans(loaded.slice(0, 5));
+    }
+  }, []);
+
+  const handleLoadPreset = (preset: typeof PRO_PRESETS[0]) => {
+    setMatchTitle(preset.title);
+    setBlueTeamName(preset.blueName);
+    setRedTeamName(preset.redName);
+
+    const bp = preset.bluePicks.map(slug => allHeroes.find(h => h.slug === slug) || null);
+    const rp = preset.redPicks.map(slug => allHeroes.find(h => h.slug === slug) || null);
+    const bb = preset.blueBans.map(slug => allHeroes.find(h => h.slug === slug) || null);
+    const rb = preset.redBans.map(slug => allHeroes.find(h => h.slug === slug) || null);
+
+    setBluePicks(bp);
+    setRedPicks(rp);
+    setBlueBans(bb);
+    setRedBans(rb);
+    setIsPresetModalOpen(false);
+  };
+
+  const handleCopyShareUrl = () => {
+    if (typeof window === 'undefined') return;
+    const bp = bluePicks.map(h => h?.slug || '').filter(Boolean).join(',');
+    const rp = redPicks.map(h => h?.slug || '').filter(Boolean).join(',');
+    const bb = blueBans.map(h => h?.slug || '').filter(Boolean).join(',');
+    const rb = redBans.map(h => h?.slug || '').filter(Boolean).join(',');
+
+    const url = `${window.location.origin}/mlbb/draft?title=${encodeURIComponent(matchTitle)}&blueName=${encodeURIComponent(blueTeamName)}&redName=${encodeURIComponent(redTeamName)}&bluePicks=${encodeURIComponent(bp)}&redPicks=${encodeURIComponent(rp)}&blueBans=${encodeURIComponent(bb)}&redBans=${encodeURIComponent(rb)}`;
+    navigator.clipboard.writeText(url);
+    setShareUrlCopied(true);
+    setTimeout(() => setShareUrlCopied(false), 2500);
+  };
+
+  const handleDownloadCard = async () => {
+    if (!cardRef.current) return;
+    try {
+      setIsExportingCard(true);
+      const dataUrl = await toPng(cardRef.current, {
+        cacheBust: true,
+        pixelRatio: 2,
+        quality: 0.95,
+      });
+
+      const link = document.createElement('a');
+      link.download = `klasim-draft-${blueTeamName.toLowerCase().replace(/[^a-z0-9]/g, '-')}-vs-${redTeamName.toLowerCase().replace(/[^a-z0-9]/g, '-')}.png`;
+      link.href = dataUrl;
+      link.click();
+
+      setDownloadSuccess(true);
+      setTimeout(() => setDownloadSuccess(false), 3000);
+    } catch (err) {
+      console.error('Failed to export card image:', err);
+      alert('Gagal mengekspor kartu grafis showdown. Silakan coba kembali.');
+    } finally {
+      setIsExportingCard(false);
+    }
+  };
 
   // Selected slot for free mode
   const [activeSlot, setActiveSlot] = useState<{ team: 'blue' | 'red'; type: 'ban' | 'pick'; index: number } | null>({
@@ -250,6 +392,75 @@ export default function DraftSimulatorPage() {
   const blueAnalysis = useMemo(() => analyzeTeam(bluePicks, redPicks), [bluePicks, redPicks]);
   const redAnalysis = useMemo(() => analyzeTeam(redPicks, bluePicks), [redPicks, bluePicks]);
 
+  // Predictive Win Probability Engine
+  const matchPrediction = useMemo(() => {
+    const validBlue = bluePicks.filter(Boolean) as MLBBHero[];
+    const validRed = redPicks.filter(Boolean) as MLBBHero[];
+
+    if (validBlue.length === 0 && validRed.length === 0) {
+      return { blueProb: 50, redProb: 50, advantageReason: 'Belum ada hero yang dipilih di kedua sisi.' };
+    }
+
+    let blueScore = 50;
+    let redScore = 50;
+
+    const blueAvgDmg = validBlue.length > 0 ? validBlue.reduce((s, h) => s + h.stats.offense, 0) / validBlue.length : 50;
+    const redAvgDmg = validRed.length > 0 ? validRed.reduce((s, h) => s + h.stats.offense, 0) / validRed.length : 50;
+
+    const blueAvgDur = validBlue.length > 0 ? validBlue.reduce((s, h) => s + h.stats.durability, 0) / validBlue.length : 50;
+    const redAvgDur = validRed.length > 0 ? validRed.reduce((s, h) => s + h.stats.durability, 0) / validRed.length : 50;
+
+    blueScore += (blueAvgDmg - redAvgDmg) * 0.15 + (blueAvgDur - redAvgDur) * 0.15;
+    redScore += (redAvgDmg - blueAvgDmg) * 0.15 + (redAvgDur - blueAvgDur) * 0.15;
+
+    let blueCounters = 0;
+    let redCounters = 0;
+
+    validBlue.forEach(b => {
+      const rel = heroRelations.find(r => r.hero_name.toLowerCase() === b.name.toLowerCase());
+      validRed.forEach(r => {
+        if (rel?.counters?.some((c: any) => c.name.toLowerCase() === r.name.toLowerCase())) {
+          redCounters++;
+        }
+      });
+    });
+
+    validRed.forEach(r => {
+      const rel = heroRelations.find(rel => rel.hero_name.toLowerCase() === r.name.toLowerCase());
+      validBlue.forEach(b => {
+        if (rel?.counters?.some((c: any) => c.name.toLowerCase() === b.name.toLowerCase())) {
+          blueCounters++;
+        }
+      });
+    });
+
+    blueScore += (blueCounters - redCounters) * 3.5;
+    redScore += (redCounters - blueCounters) * 3.5;
+
+    const blueLanes = Object.values(blueAnalysis.lanesCovered).filter(Boolean).length;
+    const redLanes = Object.values(redAnalysis.lanesCovered).filter(Boolean).length;
+    blueScore += (blueLanes - redLanes) * 2;
+    redScore += (redLanes - blueLanes) * 2;
+
+    const total = blueScore + redScore || 100;
+    let blueProb = Math.round((blueScore / total) * 100);
+    blueProb = Math.max(25, Math.min(75, blueProb));
+    const redProb = 100 - blueProb;
+
+    let advantageReason = 'Draft seimbang dengan kekuatan tempo dan matchup yang relatif berimbang.';
+    if (blueCounters > redCounters) {
+      advantageReason = `${blueTeamName} mengungguli draft dengan ${blueCounters} counter-pick aktif terhadap komposisi lawan.`;
+    } else if (redCounters > blueCounters) {
+      advantageReason = `${redTeamName} mengungguli draft dengan ${redCounters} counter-pick aktif terhadap komposisi lawan.`;
+    } else if (blueLanes > redLanes) {
+      advantageReason = `${blueTeamName} memiliki kelengkapan lane yang lebih solid dan map control lebih luas.`;
+    } else if (redLanes > blueLanes) {
+      advantageReason = `${redTeamName} memiliki kelengkapan lane yang lebih solid dan map control lebih luas.`;
+    }
+
+    return { blueProb, redProb, advantageReason, blueCounters, redCounters };
+  }, [bluePicks, redPicks, blueAnalysis, redAnalysis, blueTeamName, redTeamName]);
+
   const rolesList = ['all', 'Tank', 'Fighter', 'Assassin', 'Mage', 'Marksman', 'Support'];
 
   return (
@@ -258,41 +469,92 @@ export default function DraftSimulatorPage() {
 
       <main className="flex-1 pt-24 pb-20 px-3.5 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full space-y-6">
         {/* Top Header & Mode Toggles */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/10 pb-4">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-white/10 pb-4">
           <div>
             <div className="flex items-center gap-2">
               <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
               <span className="font-mono text-xs font-bold uppercase tracking-wider text-amber-400">
-                KLASIM DRAFT SIMULATOR V2.4 // 5V5 TOURNAMENT ENGINE
+                KLASIM DRAFT SIMULATOR // 5V5 ESPORTS SUITE
               </span>
             </div>
-            <h1 className="font-sans text-2xl sm:text-3xl font-black uppercase text-white mt-1">
-              SIMULATOR DRAFT PICK & BAN TURNAMEN
-            </h1>
+            <div className="flex items-center gap-3 mt-1">
+              <h1 className="font-sans text-xl sm:text-2xl lg:text-3xl font-black uppercase text-white truncate max-w-xl">
+                {matchTitle}
+              </h1>
+              <button
+                onClick={() => {
+                  setTempBlueName(blueTeamName);
+                  setTempRedName(redTeamName);
+                  setTempMatchTitle(matchTitle);
+                  setIsEditingTeams(true);
+                }}
+                className="rounded-lg border border-white/15 bg-white/5 px-2.5 py-1 text-xs font-mono text-slate-300 hover:border-amber-400 hover:text-amber-400 transition-colors"
+                title="Edit Nama Tim & Judul Pertandingan"
+              >
+                ✏️ Edit Tim
+              </button>
+            </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2 font-mono text-xs">
+            {/* Quick Presets */}
+            <button
+              onClick={() => setIsPresetModalOpen(true)}
+              className="rounded-xl border border-cyan-400/40 bg-cyan-400/10 px-3 py-2 font-bold text-cyan-300 hover:bg-cyan-400 hover:text-black transition-all flex items-center gap-1.5 cursor-pointer"
+            >
+              <span>⚡</span>
+              <span>Preset Pro Meta</span>
+            </button>
+
+            {/* Export Card PNG */}
+            <button
+              onClick={handleDownloadCard}
+              disabled={isExportingCard}
+              className="rounded-xl border border-amber-400/50 bg-amber-400 px-3.5 py-2 font-black text-black hover:bg-amber-300 transition-all flex items-center gap-1.5 cursor-pointer shadow-lg shadow-amber-400/20 disabled:opacity-50"
+              title="Unduh Kartu Showdown Format HD PNG"
+            >
+              {isExportingCard ? (
+                <span>MEMPROSES...</span>
+              ) : downloadSuccess ? (
+                <span>✓ TERSIMPAN!</span>
+              ) : (
+                <>
+                  <span>📸</span>
+                  <span>KARTU HD</span>
+                </>
+              )}
+            </button>
+
+            {/* Share URL */}
+            <button
+              onClick={handleCopyShareUrl}
+              className="rounded-xl border border-white/10 bg-black/60 px-3 py-2 text-slate-300 hover:border-white/30 hover:text-white transition-all flex items-center gap-1.5 cursor-pointer"
+            >
+              <span>🔗</span>
+              <span>{shareUrlCopied ? 'URL DISALIN!' : 'BAGIKAN'}</span>
+            </button>
+
             {/* Mode Switcher */}
             <div className="flex rounded-xl border border-white/10 bg-slate-950/80 p-1 font-mono text-xs">
               <button
                 onClick={() => setDraftMode('tournament')}
-                className={`rounded-lg px-3 py-1.5 transition-all cursor-pointer ${
+                className={`rounded-lg px-2.5 py-1 transition-all cursor-pointer ${
                   draftMode === 'tournament'
                     ? 'bg-amber-400 text-black font-black'
                     : 'text-slate-400 hover:text-white'
                 }`}
               >
-                TURNAMEN RESMI (STEP)
+                TURNAMEN
               </button>
               <button
                 onClick={() => setDraftMode('free')}
-                className={`rounded-lg px-3 py-1.5 transition-all cursor-pointer ${
+                className={`rounded-lg px-2.5 py-1 transition-all cursor-pointer ${
                   draftMode === 'free'
                     ? 'bg-amber-400 text-black font-black'
                     : 'text-slate-400 hover:text-white'
                 }`}
               >
-                FREE DRAFT (BEBAS)
+                BEBAS
               </button>
             </div>
 
@@ -300,8 +562,41 @@ export default function DraftSimulatorPage() {
               onClick={handleResetDraft}
               className="rounded-xl border border-rose-500/30 bg-rose-500/10 px-3 py-2 font-mono text-xs font-bold text-rose-300 hover:bg-rose-500/20 transition-all cursor-pointer"
             >
-              ↺ Reset Draft
+              ↺ Reset
             </button>
+          </div>
+        </div>
+
+        {/* Win Probability & Matchup Breakdown Bar */}
+        <div className="rounded-3xl border border-white/10 bg-[#070a14] p-4 sm:p-5 shadow-2xl space-y-3 font-mono">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+            <div className="flex items-center gap-3">
+              <span className="font-bold uppercase text-blue-400 flex items-center gap-1.5">
+                <span className="h-2 w-2 rounded-full bg-blue-400" />
+                <span>{blueTeamName}: {matchPrediction.blueProb}%</span>
+              </span>
+              <span className="text-slate-600 font-bold">VS</span>
+              <span className="font-bold uppercase text-rose-400 flex items-center gap-1.5">
+                <span className="h-2 w-2 rounded-full bg-rose-400" />
+                <span>{redTeamName}: {matchPrediction.redProb}%</span>
+              </span>
+            </div>
+
+            <span className="text-[11px] text-slate-400 italic">
+              {matchPrediction.advantageReason}
+            </span>
+          </div>
+
+          {/* Visual Probability Dual Bar */}
+          <div className="relative h-3 w-full rounded-full bg-slate-900 overflow-hidden flex shadow-inner border border-white/10">
+            <div
+              style={{ width: `${matchPrediction.blueProb}%` }}
+              className="h-full bg-gradient-to-r from-blue-600 to-cyan-400 transition-all duration-500"
+            />
+            <div
+              style={{ width: `${matchPrediction.redProb}%` }}
+              className="h-full bg-gradient-to-l from-rose-600 to-pink-400 transition-all duration-500"
+            />
           </div>
         </div>
 
@@ -360,7 +655,7 @@ export default function DraftSimulatorPage() {
             <div className="flex items-center justify-between border-b border-blue-500/20 pb-2">
               <div className="flex items-center gap-2">
                 <span className="h-2.5 w-2.5 rounded-full bg-blue-400" />
-                <span className="font-sans text-base font-black uppercase text-blue-400">BLUE TEAM</span>
+                <span className="font-sans text-base font-black uppercase text-blue-400">{blueTeamName}</span>
               </div>
               <span className="font-mono text-[10px] text-slate-400">FIRST PICK ADVANTAGE</span>
             </div>
@@ -503,7 +798,7 @@ export default function DraftSimulatorPage() {
             <div className="flex items-center justify-between border-b border-rose-500/20 pb-2">
               <div className="flex items-center gap-2">
                 <span className="h-2.5 w-2.5 rounded-full bg-rose-400" />
-                <span className="font-sans text-base font-black uppercase text-rose-400">RED TEAM</span>
+                <span className="font-sans text-base font-black uppercase text-rose-400">{redTeamName}</span>
               </div>
               <span className="font-mono text-[10px] text-slate-400">LAST PICK COUNTER ADVANTAGE</span>
             </div>
@@ -708,6 +1003,253 @@ export default function DraftSimulatorPage() {
           </div>
         </div>
       </main>
+
+      {/* Hidden HD Export Card Ref (Captured via html-to-image) */}
+      <div className="fixed -left-[9999px] top-0 pointer-events-none">
+        <div
+          ref={cardRef}
+          className="w-[1080px] bg-gradient-to-br from-[#070b14] via-[#05070c] to-[#030408] text-white p-8 font-sans border-4 border-amber-400/50 shadow-2xl relative overflow-hidden"
+        >
+          {/* Card Top Header */}
+          <div className="flex items-center justify-between border-b border-white/15 pb-4 mb-6">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-xl bg-amber-400 flex items-center justify-center text-black font-black text-xl font-mono">
+                K
+              </div>
+              <div>
+                <span className="text-[10px] font-mono font-bold tracking-widest text-amber-400 uppercase block">
+                  KLASIM ESPORTS DRAFT SHOWDOWN // 5V5 TOURNAMENT REPORT
+                </span>
+                <h2 className="text-2xl font-black uppercase tracking-tight text-white font-sans">
+                  {matchTitle}
+                </h2>
+              </div>
+            </div>
+
+            <div className="text-right font-mono">
+              <span className="text-xs font-bold text-emerald-400 block">OFFICIAL SIMULATOR RESULT</span>
+              <span className="text-[10px] text-slate-500">WWW.KLASIM.COM</span>
+            </div>
+          </div>
+
+          {/* Probability Bar in Export Card */}
+          <div className="rounded-2xl border border-white/10 bg-black/50 p-4 mb-6 space-y-2 font-mono">
+            <div className="flex justify-between text-xs font-black">
+              <span className="text-blue-400 uppercase">{blueTeamName}: {matchPrediction.blueProb}%</span>
+              <span className="text-slate-400 text-[10px]">{matchPrediction.advantageReason}</span>
+              <span className="text-rose-400 uppercase">{redTeamName}: {matchPrediction.redProb}%</span>
+            </div>
+            <div className="h-3 w-full rounded-full bg-slate-900 overflow-hidden flex border border-white/10">
+              <div style={{ width: `${matchPrediction.blueProb}%` }} className="h-full bg-blue-500" />
+              <div style={{ width: `${matchPrediction.redProb}%` }} className="h-full bg-rose-500" />
+            </div>
+          </div>
+
+          {/* 5v5 Showdown Face-off Grid */}
+          <div className="grid grid-cols-2 gap-6">
+            {/* Blue Side */}
+            <div className="rounded-2xl border border-blue-500/30 bg-blue-950/20 p-4 space-y-4">
+              <div className="flex items-center justify-between border-b border-blue-500/30 pb-2">
+                <span className="text-lg font-black text-blue-400 uppercase">{blueTeamName}</span>
+                <span className="text-[10px] font-mono text-slate-400">FIRST PICK</span>
+              </div>
+
+              {/* Bans */}
+              <div className="flex items-center gap-2">
+                <span className="text-[9px] font-mono text-slate-400 uppercase">Bans:</span>
+                <div className="flex gap-1.5">
+                  {blueBans.map((h, i) => (
+                    <div key={i} className="h-8 w-8 rounded-lg overflow-hidden border border-white/10 bg-slate-900">
+                      {h ? <img src={h.image} alt={h.name} className="h-full w-full object-cover grayscale" /> : <div className="h-full w-full bg-slate-800" />}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Picks */}
+              <div className="space-y-2">
+                {bluePicks.map((h, i) => (
+                  <div key={i} className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/60 p-2">
+                    <div className="h-12 w-12 rounded-lg overflow-hidden border border-blue-400/50 bg-slate-900 shrink-0">
+                      {h ? <img src={h.image} alt={h.name} className="h-full w-full object-cover" /> : null}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <span className="text-sm font-black text-white uppercase block truncate">{h?.name || `Slot #${i + 1}`}</span>
+                      <span className="text-[10px] font-mono text-slate-400 block">{h ? `${h.roles.join(', ')} · ${h.lane[0] || 'Flex'}` : 'Kosong'}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Red Side */}
+            <div className="rounded-2xl border border-rose-500/30 bg-rose-950/20 p-4 space-y-4">
+              <div className="flex items-center justify-between border-b border-rose-500/30 pb-2">
+                <span className="text-lg font-black text-rose-400 uppercase">{redTeamName}</span>
+                <span className="text-[10px] font-mono text-slate-400">COUNTER PICK</span>
+              </div>
+
+              {/* Bans */}
+              <div className="flex items-center gap-2">
+                <span className="text-[9px] font-mono text-slate-400 uppercase">Bans:</span>
+                <div className="flex gap-1.5">
+                  {redBans.map((h, i) => (
+                    <div key={i} className="h-8 w-8 rounded-lg overflow-hidden border border-white/10 bg-slate-900">
+                      {h ? <img src={h.image} alt={h.name} className="h-full w-full object-cover grayscale" /> : <div className="h-full w-full bg-slate-800" />}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Picks */}
+              <div className="space-y-2">
+                {redPicks.map((h, i) => (
+                  <div key={i} className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/60 p-2">
+                    <div className="h-12 w-12 rounded-lg overflow-hidden border border-rose-400/50 bg-slate-900 shrink-0">
+                      {h ? <img src={h.image} alt={h.name} className="h-full w-full object-cover" /> : null}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <span className="text-sm font-black text-white uppercase block truncate">{h?.name || `Slot #${i + 1}`}</span>
+                      <span className="text-[10px] font-mono text-slate-400 block">{h ? `${h.roles.join(', ')} · ${h.lane[0] || 'Flex'}` : 'Kosong'}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Card Footer */}
+          <div className="mt-6 pt-4 border-t border-white/15 flex items-center justify-between text-[10px] font-mono text-slate-400">
+            <span>DRAFT MATRIX & TELEMETRY ENGINE BY KLASIM MLBB</span>
+            <span className="text-amber-400 font-bold uppercase">AUTHENTIC ESPORTS MATCHUP REPORT</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Edit Match & Teams Modal */}
+      {isEditingTeams && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-4 backdrop-blur-md animate-in fade-in duration-150"
+        >
+          <div className="relative w-full max-w-lg rounded-3xl border border-white/15 bg-[#080d16] p-6 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-white/10">
+              <h3 className="text-lg font-black text-white font-sans uppercase">Edit Tim & Judul Match</h3>
+              <button
+                onClick={() => setIsEditingTeams(false)}
+                className="h-8 w-8 rounded-full border border-white/10 bg-white/5 text-slate-400 hover:text-white flex items-center justify-center font-mono cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="space-y-3 font-sans text-xs">
+              <div>
+                <label className="text-[11px] font-mono text-slate-400 uppercase font-bold block mb-1">Judul Pertandingan</label>
+                <input
+                  type="text"
+                  value={tempMatchTitle}
+                  onChange={e => setTempMatchTitle(e.target.value)}
+                  placeholder="Contoh: MPL ID S14 Grand Finals"
+                  className="w-full rounded-xl border border-white/10 bg-black/60 px-3.5 py-2 text-white focus:border-amber-400 outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="text-[11px] font-mono text-blue-400 uppercase font-bold block mb-1">Nama Blue Team (First Pick)</label>
+                <input
+                  type="text"
+                  value={tempBlueName}
+                  onChange={e => setTempBlueName(e.target.value)}
+                  placeholder="Contoh: ONIC ESPORTS"
+                  className="w-full rounded-xl border border-blue-500/30 bg-black/60 px-3.5 py-2 text-white focus:border-blue-400 outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="text-[11px] font-mono text-rose-400 uppercase font-bold block mb-1">Nama Red Team (Last Pick)</label>
+                <input
+                  type="text"
+                  value={tempRedName}
+                  onChange={e => setTempRedName(e.target.value)}
+                  placeholder="Contoh: RRQ HOSHI"
+                  className="w-full rounded-xl border border-rose-500/30 bg-black/60 px-3.5 py-2 text-white focus:border-rose-400 outline-none"
+                />
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-2 pt-3 border-t border-white/10">
+              <button
+                onClick={() => setIsEditingTeams(false)}
+                className="rounded-xl border border-white/10 px-4 py-2 text-xs font-mono text-slate-400 hover:text-white cursor-pointer"
+              >
+                Batal
+              </button>
+              <button
+                onClick={() => {
+                  if (tempMatchTitle.trim()) setMatchTitle(tempMatchTitle.trim());
+                  if (tempBlueName.trim()) setBlueTeamName(tempBlueName.trim());
+                  if (tempRedName.trim()) setRedTeamName(tempRedName.trim());
+                  setIsEditingTeams(false);
+                }}
+                className="rounded-xl bg-amber-400 px-4 py-2 text-xs font-mono font-bold text-black hover:bg-amber-300 cursor-pointer"
+              >
+                Simpan Perubahan
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Preset Pro Meta Modal */}
+      {isPresetModalOpen && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-4 backdrop-blur-md animate-in fade-in duration-150"
+        >
+          <div className="relative w-full max-w-xl rounded-3xl border border-white/15 bg-[#080d16] p-6 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-white/10">
+              <div>
+                <span className="text-[10px] font-mono text-amber-400 font-bold uppercase block">ARSIP DRAFT TURNAMEN</span>
+                <h3 className="text-lg font-black text-white font-sans uppercase">Pilih Preset Pro Meta</h3>
+              </div>
+              <button
+                onClick={() => setIsPresetModalOpen(false)}
+                className="h-8 w-8 rounded-full border border-white/10 bg-white/5 text-slate-400 hover:text-white flex items-center justify-center font-mono cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="space-y-3">
+              {PRO_PRESETS.map((p, idx) => (
+                <div
+                  key={idx}
+                  className="rounded-2xl border border-white/10 bg-black/50 p-4 space-y-2 hover:border-amber-400/50 transition-all"
+                >
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-sm font-black text-white font-sans">{p.title}</h4>
+                    <button
+                      onClick={() => handleLoadPreset(p)}
+                      className="rounded-lg bg-amber-400 px-3 py-1 text-xs font-mono font-bold text-black hover:bg-amber-300 transition-colors cursor-pointer"
+                    >
+                      Terapkan Draft ⚡
+                    </button>
+                  </div>
+                  <div className="flex items-center gap-2 text-xs font-mono font-bold">
+                    <span className="text-blue-400">{p.blueName}</span>
+                    <span className="text-slate-500">VS</span>
+                    <span className="text-rose-400">{p.redName}</span>
+                  </div>
+                  <p className="text-[11px] text-slate-400 font-sans">{p.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       <Footer />
     </div>
